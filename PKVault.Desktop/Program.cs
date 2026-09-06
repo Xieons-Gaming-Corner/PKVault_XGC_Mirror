@@ -17,31 +17,41 @@ namespace PKVault.Desktop;
 
 class Program
 {
-    private static readonly bool WindowsOS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-    private static readonly bool LinuxOS = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-    private static readonly bool MacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+    private static readonly bool WindowsOS =
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-    private static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    private static readonly string AssemblyStaticPrefix = "PKVault.Desktop.Resources.wwwroot.";
+    private static readonly bool LinuxOS =
+        RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+    private static readonly bool MacOS =
+        RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+    private static readonly Assembly Assembly =
+        Assembly.GetExecutingAssembly();
+
+    private static readonly string AssemblyStaticPrefix =
+        "PKVault.Desktop.Resources.wwwroot.";
 
     private static readonly DesktopMessageJsonContext messageJsonContext = new(new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     });
 
-    private static IFileChooser fileChooser = new DefaultFileChooser();
+    private static IFileChooser fileChooser =
+        new DefaultFileChooser();
 
     private static Task<IServiceProvider>? SetupTask;
 
     [DllImport("kernel32.dll")]
-    static extern bool AttachConsole(uint dwProcessId);
+    private static extern bool AttachConsole(uint dwProcessId);
 
     private const uint ATTACH_PARENT_PROCESS = 0x0ffffffff;
 
     [STAThread]
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         AttachConsole(ATTACH_PARENT_PROCESS);
+
         Core.Program.Initialize();
 
         if (LinuxOS)
@@ -75,7 +85,8 @@ class Program
                     return false;
                 }
 
-                var emptyActionList = Core.Program.HasEmptyActionList(SetupTask.Result);
+                var emptyActionList =
+                    Core.Program.HasEmptyActionList(SetupTask.Result);
 
                 if (!emptyActionList)
                 {
@@ -111,12 +122,15 @@ class Program
         }
     }
 
-    private static async Task StartStaticServerAsync(Func<Task> staticServerRun)
+    private static async Task StartStaticServerAsync(
+        Func<Task> staticServerRun)
     {
         try
         {
             Log.Information("Starting PKVault local static web server...");
+
             await staticServerRun();
+
             Log.Warning("PKVault local static web server stopped.");
         }
         catch (Exception ex)
@@ -201,6 +215,8 @@ class Program
                         context.Response.StatusCode =
                             StatusCodes.Status503ServiceUnavailable;
 
+                        context.Response.ContentType = "text/plain";
+
                         await context.Response.WriteAsync(
                             "PKVault is still starting.");
 
@@ -228,7 +244,8 @@ class Program
                         queryString,
                         request.Body);
 
-                    response.StatusCode = result.StatusCode ?? StatusCodes.Status200OK;
+                    response.StatusCode =
+                        result.StatusCode ?? StatusCodes.Status200OK;
 
                     if (result.Header is not null)
                     {
@@ -261,9 +278,11 @@ class Program
                                 fileResponse.LastModified;
                         }
 
-                        await using var stream = fileResponse.File.Stream;
+                        await using var fileResponseStream =
+                            fileResponse.File.Stream;
 
-                        await stream.CopyToAsync(response.Body);
+                        await fileResponseStream.CopyToAsync(
+                            response.Body);
 
                         return;
                     }
@@ -312,10 +331,9 @@ class Program
                     requestedPath = "index.html";
                 }
 
-                var pathSegments = requestedPath
-                    .Split(
-                        '/',
-                        StringSplitOptions.RemoveEmptyEntries);
+                var pathSegments = requestedPath.Split(
+                    '/',
+                    StringSplitOptions.RemoveEmptyEntries);
 
                 if (pathSegments.Length == 0)
                 {
@@ -326,6 +344,7 @@ class Program
                 }
 
                 var fileName = pathSegments[^1];
+
                 var directories = pathSegments.SkipLast(1);
 
                 var resourcePath = string.Join(
@@ -334,16 +353,18 @@ class Program
                         .Select(directory => directory.Replace('-', '_'))
                         .Append(fileName));
 
-                var streamKey = $"{AssemblyStaticPrefix}{resourcePath}";
+                var streamKey =
+                    $"{AssemblyStaticPrefix}{resourcePath}";
 
                 Log.Debug(
                     "Static request {RequestPath}; looking for embedded resource {ResourceKey}",
                     requestPath,
                     streamKey);
 
-                using var stream = Assembly.GetManifestResourceStream(streamKey);
+                using var resourceStream =
+                    Assembly.GetManifestResourceStream(streamKey);
 
-                if (stream is null)
+                if (resourceStream is null)
                 {
                     Log.Error(
                         "Embedded static resource not found. Request: {RequestPath}; key: {ResourceKey}",
@@ -372,7 +393,7 @@ class Program
 
                 context.Response.ContentType = contentType;
 
-                await stream.CopyToAsync(context.Response.Body);
+                await resourceStream.CopyToAsync(context.Response.Body);
             }
             catch (Exception ex)
             {
@@ -425,9 +446,10 @@ class Program
                     Path.GetTempPath(),
                     $"pkvault-icon-{Guid.NewGuid():N}.ico");
 
-                using var fileStream = File.Create(temporaryIconPath);
+                using var iconFileStream =
+                    File.Create(temporaryIconPath);
 
-                iconStream.CopyTo(fileStream);
+                iconStream.CopyTo(iconFileStream);
 
                 Log.Debug(
                     "Extracted embedded icon resource to {IconPath}",
@@ -522,7 +544,8 @@ class Program
                         }
 
                         var appBasePath = MatcherUtil
-                            .NormalizePath(SettingsService.GetAppDirectory())
+                            .NormalizePath(
+                                SettingsService.GetAppDirectory())
                             .Replace('/', '\\');
 
                         string? GetDefaultPath()
