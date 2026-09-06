@@ -1,0 +1,1125 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <AssemblyName>PKVault</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>14.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.alpha-DkWyiPBX.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.alpha-sapphire-Ba49tRAL.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.battle-rev-RoqLQiZc.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.black--X9Xo0To.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.black2-CH6GIOcT.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.blue-DRTBnzH_.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.box-rs-BV31qcp4.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.brilliant-diamond-DbtXw66L.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.bug-BMgI49H9.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.colosseum-BE7C9MxB.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.crystal-YxTj8WKD.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.cured-DZj4P7C_.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.dark-DO7_pxPv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.default-BxIwYRZu.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.diamond-KUPzwEDk.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.dragon-DTlf0cWG.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.electric-DZIXcxSg.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.emerald-WG3cBF6R.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.fairy-YYODOCeM.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.fighting-DUgcFQfq.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.fire-D7XbF710.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.fire-red-BNJLUmbo.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.flying-C7DB0Eh7.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ghost-BYk4Fbyv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.go-w5RLWph3.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.gold-B__9NJT1.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.grass-k_fc1K8S.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ground-BsIXk_FV.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.heart-gold-SQp77XFm.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ice-9c56oPij.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.infected-jPHbJN4W.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.leaf-green-BO4mzgJw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.legend-arceus-CpfLkuV2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.legend-za-CK3xdvzz.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.lets-go-evoli-D39SwMoU.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.lets-go-pikachu-_oQEStW7.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.moon-CaRBl1Li.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.n-Cq16oD5r.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.normal-C4PdqIZ7.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.omega-ruby-pOkgP8c9.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pearl-CFRQm3BC.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.physical-DeokRkT4.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.platinum-DVw4jFD0.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.poison-fyxL1oJd.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.psychic-DAO2vBwU.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.rare_icon-CNgC3fAq.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.red-BqH1il23.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.rock-CRWTeg6t.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ruby-kwOClXBM.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.sapphire-oD_Kdyr0.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.scarlet-tcRD6rkX.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.shield-wIryMLkD.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.shining-pearl-DwFjupW6.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.silver-DqOIWcM_.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.soul-silver-BQmfh3TN.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.special-BXhX2kZw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.status-cqVEEfnV.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.steel-vpmpq5wi.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.stellar-BQDZ9IvA.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.sun-eU_2TvJV.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.sword-wpT7z0oT.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ultra-moon-CcdvAc6w.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ultra-sun-BHtZLL8v.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.unknown--0IqmL8K.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.violet-Bf7ofHy_.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.water-Bz8NIG72.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.white-DcC7SIkK.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.white2-CaoAVjsO.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.x-lXux3jU0.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.xd--LlXCfX-.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.y-DulVPpry.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.yellow-D89z0iha.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.backups.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.banks-boxes.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.centralized-pokedex.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.centralized-storage.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.controllers.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.dark-mode.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.edit-action.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.evolve-action.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.move-action.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.move-attached.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.multi-select.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.parameters.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.pokedex-saves.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.saves-storage.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.sort-action.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.sprite-sizing.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.img.synchro-pokedex.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.icon.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp17ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp18ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp19ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp20ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp21ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp22ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp23ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp24ao.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp17b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp18b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp19b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp20b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp21b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp22b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp23b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp24b2w2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp01bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp02bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp03bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp04bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp05bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp06bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp07bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp08bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp09bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp10bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp11bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp12bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp13bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp14bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp15bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp16bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp17bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp18bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp19bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp20bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp21bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp22bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp23bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp24bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp25bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp26bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp27bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp28bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp29bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp30bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp31bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp32bdsp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp01bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp02bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp03bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp04bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp05bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp06bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp07bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp08bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp09bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp10bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp11bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp12bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp13bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp14bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp15bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp16bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp17bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp18bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp19bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp20bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp21bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp22bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp23bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp24bw.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp01dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp02dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp03dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp04dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp05dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp06dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp07dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp08dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp09dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp10dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp11dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp12dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp13dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp14dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp15dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp16dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp17dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp18dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp19dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp20dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp21dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp22dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp23dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp24dp.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp01e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp02e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp03e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp04e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp05e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp06e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp07e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp08e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp09e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp10e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp11e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp12e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp13e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp14e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp15e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp16e.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp13frlg.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp14frlg.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp15frlg.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp16frlg.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp17hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp18hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp19hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp20hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp21hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp22hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp23hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp24hgss.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp17pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp18pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp19pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp20pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp21pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp22pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp23pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp24pt.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp01rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp02rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp03rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp04rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp05rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp06rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp07rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp08rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp09rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp10rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp11rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp12rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp13rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp14rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp15rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp16rs.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp01sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp02sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp03sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp04sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp05sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp06sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp07sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp08sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp09sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp10sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp11sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp12sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp13sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp14sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp15sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp16sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp17sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp18sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp19sv.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp20sv_n.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp20sv_u.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp01swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp02swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp03swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp04swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp05swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp06swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp07swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp08swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp09swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp10swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp11swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp12swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp13swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp14swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp15swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp16swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp17swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp18swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp19swsh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp01xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp02xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp03xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp04xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp05xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp06xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp07xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp08xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp09xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp10xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp11xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp12xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp13xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp14xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp15xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp16xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp17xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp18xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp19xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp20xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp21xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp22xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp23xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp24xy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonability.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitydouble.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitygreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitymulti.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitypair.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilityworld.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonalert.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonartist.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattlerexpert.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattleroyale.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattlerskillful.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattletreegreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattletreemaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbestfriends.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbirthday.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncareless.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionalola.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionbattle.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiong3.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiong6hoenn.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiongalar.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionkalos.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionnational.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionpaldea.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionregional.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionsinnoh.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionworld.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonclassic.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonconteststar.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorybattle.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorybattle2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorycontest.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorycontest2.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountry.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbondowncast.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonearth.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboneffort.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonevent.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonfootprint.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beauty.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautyhyper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautymaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautysuper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cool.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolhyper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolmaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolsuper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cute.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutehyper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutemaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutesuper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smart.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smarthyper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smartmaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smartsuper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3tough.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughhyper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughmaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughsuper.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beauty.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautygreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautymaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautyultra.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cool.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolgreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolmaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolultra.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cute.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cutegreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cutemaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cuteultra.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smart.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartgreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartmaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartultra.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4tough.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughgreat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughmaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughultra.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbongorgeous.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbongorgeousroyal.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonhisui.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonlegend.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkabsentminded.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkalpha.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkangry.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkblizzard.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcalmness.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcharismatic.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcloudy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcrafty.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcurry.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdawn.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdestiny.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdry.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdusk.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkexcited.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkferocious.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkfishing.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkflustered.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkgourmand.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkhumble.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkintellectual.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkintense.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkitemfinder.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjittery.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjoyful.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjumbo.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkkindly.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarklunchtime.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmightiest.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmini.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmisty.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpartner.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpeeved.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkprideful.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpumpedup.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrainy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrare.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrowdy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksandstorm.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkscowling.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksleepytime.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkslump.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksmiley.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksnowy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkstormy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkteary.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkthorny.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarktitan.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkuncommon.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkunsure.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkupbeat.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkvigor.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkzeroenergy.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkzonedout.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmasterbeauty.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercleverness.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercoolness.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercuteness.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmasterrank.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastertoughness.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonnational.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbononceinalifetime.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonpartner.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonpremier.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonrecord.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonrelax.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonroyal.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonshock.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsmile.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsnooze.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsouvenir.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonspecial.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontowermaster.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontraining.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontwinklingstar.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonvictory.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonwinning.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonwishing.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonworld.png" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.check-Bly1sJ47.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.game-expanded-J7PZPe4p.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.get-scroll-padding-JAIxD-co.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.index-DRb2IJ7d.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.list-Dlq1ctC_.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pokedex-D-cz5_ao.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.routes-BpyHFy5k.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.saves-mY4oZjBq.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.settings-cWWgeGX1.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.storage-CAxwBx-l.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-game-img-DxdwXxSj.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-multi-select-DF3RIHiT.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-path-line-BoFyWHPB.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-select-I3DQAdaO.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.use-panel-controls-HOFO1B5m.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.useNavigate-OY-LrFwr.js" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.game-expanded-DhPq8ypM.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.index-DlAx4VNu.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pokedex-CPZyL9gA.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.storage-DyAyAWAZ.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-game-img-CHVHbJfT.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-multi-select-IddndEPj.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.ui-path-line-Cl42lZ7h.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.use-panel-controls-DgYn6N-y.css" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.mega-UzRJVfoD.svg" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.tera_mask-DWX9iLWn.svg" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.logo.svg" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-bold-Dg4XBFkQ.woff2" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-hb-B2Sdvkhq.woff2" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-regular-gZmSMZcu.woff2" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-bold-Pt6ZkQNr.woff" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-hb-2aIOF6TZ.woff" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-regular-CarrGJvm.woff" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.0-technical.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.1-quick-start.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.2-session.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.3-storage.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.4-pokedex.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.5-settings.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.6-issues.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.en.README.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.0-technical.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.1-quick-start.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.2-session.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.3-storage.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.4-pokedex.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.5-settings.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.6-issues.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.fr.README.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.0-technical.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.1-quick-start.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.2-session.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.3-storage.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.4-pokedex.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.5-settings.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.6-issues.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.docs.pt_br.README.md" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.icon.ico" />
+    <None Remove="PKVault.Desktop.Resources.wwwroot.index.html" />
+    <None Remove="Microsoft.Extensions.FileProviders.Embedded.Manifest.xml" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.alpha-DkWyiPBX.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.alpha-DkWyiPBX.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.alpha-sapphire-Ba49tRAL.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.alpha-sapphire-Ba49tRAL.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.battle-rev-RoqLQiZc.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.battle-rev-RoqLQiZc.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.black--X9Xo0To.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.black--X9Xo0To.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.black2-CH6GIOcT.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.black2-CH6GIOcT.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.blue-DRTBnzH_.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.blue-DRTBnzH_.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.box-rs-BV31qcp4.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.box-rs-BV31qcp4.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.brilliant-diamond-DbtXw66L.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.brilliant-diamond-DbtXw66L.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.bug-BMgI49H9.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.bug-BMgI49H9.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.colosseum-BE7C9MxB.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.colosseum-BE7C9MxB.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.crystal-YxTj8WKD.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.crystal-YxTj8WKD.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.cured-DZj4P7C_.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.cured-DZj4P7C_.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.dark-DO7_pxPv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.dark-DO7_pxPv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.default-BxIwYRZu.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.default-BxIwYRZu.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.diamond-KUPzwEDk.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.diamond-KUPzwEDk.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.dragon-DTlf0cWG.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.dragon-DTlf0cWG.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.electric-DZIXcxSg.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.electric-DZIXcxSg.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.emerald-WG3cBF6R.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.emerald-WG3cBF6R.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.fairy-YYODOCeM.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.fairy-YYODOCeM.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.fighting-DUgcFQfq.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.fighting-DUgcFQfq.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.fire-D7XbF710.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.fire-D7XbF710.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.fire-red-BNJLUmbo.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.fire-red-BNJLUmbo.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.flying-C7DB0Eh7.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.flying-C7DB0Eh7.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ghost-BYk4Fbyv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ghost-BYk4Fbyv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.go-w5RLWph3.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.go-w5RLWph3.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.gold-B__9NJT1.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.gold-B__9NJT1.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.grass-k_fc1K8S.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.grass-k_fc1K8S.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ground-BsIXk_FV.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ground-BsIXk_FV.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.heart-gold-SQp77XFm.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.heart-gold-SQp77XFm.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ice-9c56oPij.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ice-9c56oPij.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.infected-jPHbJN4W.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.infected-jPHbJN4W.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.leaf-green-BO4mzgJw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.leaf-green-BO4mzgJw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.legend-arceus-CpfLkuV2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.legend-arceus-CpfLkuV2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.legend-za-CK3xdvzz.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.legend-za-CK3xdvzz.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.lets-go-evoli-D39SwMoU.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.lets-go-evoli-D39SwMoU.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.lets-go-pikachu-_oQEStW7.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.lets-go-pikachu-_oQEStW7.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.moon-CaRBl1Li.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.moon-CaRBl1Li.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.n-Cq16oD5r.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.n-Cq16oD5r.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.normal-C4PdqIZ7.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.normal-C4PdqIZ7.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.omega-ruby-pOkgP8c9.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.omega-ruby-pOkgP8c9.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pearl-CFRQm3BC.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pearl-CFRQm3BC.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.physical-DeokRkT4.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.physical-DeokRkT4.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.platinum-DVw4jFD0.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.platinum-DVw4jFD0.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.poison-fyxL1oJd.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.poison-fyxL1oJd.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.psychic-DAO2vBwU.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.psychic-DAO2vBwU.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.rare_icon-CNgC3fAq.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.rare_icon-CNgC3fAq.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.red-BqH1il23.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.red-BqH1il23.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.rock-CRWTeg6t.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.rock-CRWTeg6t.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ruby-kwOClXBM.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ruby-kwOClXBM.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.sapphire-oD_Kdyr0.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.sapphire-oD_Kdyr0.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.scarlet-tcRD6rkX.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.scarlet-tcRD6rkX.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.shield-wIryMLkD.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.shield-wIryMLkD.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.shining-pearl-DwFjupW6.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.shining-pearl-DwFjupW6.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.silver-DqOIWcM_.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.silver-DqOIWcM_.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.soul-silver-BQmfh3TN.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.soul-silver-BQmfh3TN.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.special-BXhX2kZw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.special-BXhX2kZw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.status-cqVEEfnV.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.status-cqVEEfnV.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.steel-vpmpq5wi.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.steel-vpmpq5wi.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.stellar-BQDZ9IvA.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.stellar-BQDZ9IvA.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.sun-eU_2TvJV.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.sun-eU_2TvJV.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.sword-wpT7z0oT.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.sword-wpT7z0oT.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ultra-moon-CcdvAc6w.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ultra-moon-CcdvAc6w.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ultra-sun-BHtZLL8v.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ultra-sun-BHtZLL8v.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.unknown--0IqmL8K.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.unknown--0IqmL8K.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.violet-Bf7ofHy_.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.violet-Bf7ofHy_.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.water-Bz8NIG72.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.water-Bz8NIG72.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.white-DcC7SIkK.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.white-DcC7SIkK.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.white2-CaoAVjsO.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.white2-CaoAVjsO.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.x-lXux3jU0.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.x-lXux3jU0.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.xd--LlXCfX-.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.xd--LlXCfX-.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.y-DulVPpry.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.y-DulVPpry.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.yellow-D89z0iha.png" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.yellow-D89z0iha.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.backups.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.backups.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.banks-boxes.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.banks-boxes.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.centralized-pokedex.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.centralized-pokedex.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.centralized-storage.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.centralized-storage.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.controllers.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.controllers.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.dark-mode.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.dark-mode.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.edit-action.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.edit-action.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.evolve-action.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.evolve-action.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.move-action.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.move-action.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.move-attached.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.move-attached.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.multi-select.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.multi-select.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.parameters.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.parameters.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.pokedex-saves.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.pokedex-saves.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.saves-storage.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.saves-storage.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.sort-action.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.sort-action.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.sprite-sizing.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.sprite-sizing.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.img.synchro-pokedex.png" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.img.synchro-pokedex.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.icon.png" LogicalName="PKVault.Desktop.Resources.wwwroot.icon.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp17ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp17ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp18ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp18ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp19ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp19ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp20ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp20ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp21ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp21ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp22ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp22ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp23ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp23ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp24ao.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.ao.box_wp24ao.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp17b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp17b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp18b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp18b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp19b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp19b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp20b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp20b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp21b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp21b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp22b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp22b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp23b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp23b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp24b2w2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.b2w2.box_wp24b2w2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp01bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp01bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp02bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp02bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp03bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp03bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp04bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp04bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp05bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp05bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp06bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp06bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp07bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp07bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp08bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp08bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp09bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp09bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp10bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp10bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp11bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp11bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp12bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp12bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp13bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp13bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp14bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp14bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp15bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp15bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp16bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp16bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp17bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp17bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp18bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp18bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp19bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp19bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp20bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp20bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp21bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp21bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp22bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp22bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp23bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp23bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp24bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp24bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp25bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp25bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp26bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp26bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp27bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp27bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp28bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp28bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp29bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp29bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp30bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp30bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp31bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp31bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp32bdsp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bdsp.box_wp32bdsp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp01bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp01bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp02bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp02bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp03bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp03bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp04bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp04bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp05bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp05bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp06bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp06bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp07bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp07bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp08bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp08bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp09bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp09bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp10bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp10bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp11bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp11bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp12bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp12bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp13bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp13bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp14bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp14bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp15bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp15bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp16bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp16bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp17bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp17bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp18bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp18bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp19bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp19bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp20bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp20bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp21bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp21bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp22bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp22bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp23bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp23bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp24bw.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.bw.box_wp24bw.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp01dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp01dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp02dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp02dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp03dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp03dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp04dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp04dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp05dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp05dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp06dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp06dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp07dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp07dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp08dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp08dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp09dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp09dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp10dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp10dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp11dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp11dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp12dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp12dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp13dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp13dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp14dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp14dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp15dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp15dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp16dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp16dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp17dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp17dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp18dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp18dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp19dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp19dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp20dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp20dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp21dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp21dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp22dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp22dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp23dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp23dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp24dp.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.dp.box_wp24dp.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp01e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp01e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp02e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp02e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp03e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp03e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp04e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp04e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp05e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp05e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp06e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp06e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp07e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp07e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp08e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp08e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp09e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp09e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp10e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp10e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp11e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp11e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp12e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp12e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp13e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp13e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp14e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp14e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp15e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp15e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp16e.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.e.box_wp16e.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp13frlg.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp13frlg.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp14frlg.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp14frlg.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp15frlg.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp15frlg.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp16frlg.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.frlg.box_wp16frlg.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp17hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp17hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp18hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp18hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp19hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp19hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp20hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp20hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp21hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp21hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp22hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp22hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp23hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp23hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp24hgss.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.hgss.box_wp24hgss.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp17pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp17pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp18pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp18pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp19pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp19pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp20pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp20pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp21pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp21pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp22pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp22pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp23pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp23pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp24pt.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.pt.box_wp24pt.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp01rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp01rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp02rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp02rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp03rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp03rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp04rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp04rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp05rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp05rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp06rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp06rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp07rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp07rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp08rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp08rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp09rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp09rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp10rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp10rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp11rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp11rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp12rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp12rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp13rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp13rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp14rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp14rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp15rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp15rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp16rs.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.rs.box_wp16rs.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp01sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp01sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp02sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp02sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp03sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp03sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp04sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp04sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp05sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp05sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp06sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp06sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp07sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp07sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp08sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp08sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp09sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp09sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp10sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp10sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp11sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp11sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp12sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp12sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp13sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp13sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp14sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp14sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp15sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp15sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp16sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp16sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp17sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp17sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp18sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp18sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp19sv.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp19sv.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp20sv_n.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp20sv_n.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp20sv_u.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.sv.box_wp20sv_u.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp01swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp01swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp02swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp02swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp03swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp03swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp04swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp04swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp05swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp05swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp06swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp06swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp07swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp07swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp08swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp08swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp09swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp09swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp10swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp10swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp11swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp11swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp12swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp12swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp13swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp13swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp14swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp14swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp15swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp15swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp16swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp16swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp17swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp17swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp18swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp18swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp19swsh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.swsh.box_wp19swsh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp01xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp01xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp02xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp02xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp03xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp03xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp04xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp04xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp05xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp05xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp06xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp06xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp07xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp07xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp08xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp08xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp09xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp09xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp10xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp10xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp11xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp11xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp12xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp12xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp13xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp13xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp14xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp14xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp15xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp15xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp16xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp16xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp17xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp17xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp18xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp18xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp19xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp19xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp20xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp20xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp21xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp21xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp22xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp22xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp23xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp23xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp24xy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.box_backgrounds.xy.box_wp24xy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonability.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonability.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitydouble.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitydouble.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitygreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitygreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitymulti.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitymulti.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitypair.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilitypair.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilityworld.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonabilityworld.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonalert.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonalert.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonartist.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonartist.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattlerexpert.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattlerexpert.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattleroyale.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattleroyale.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattlerskillful.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattlerskillful.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattletreegreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattletreegreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattletreemaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbattletreemaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbestfriends.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbestfriends.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbirthday.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonbirthday.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncareless.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncareless.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionalola.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionalola.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionbattle.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionbattle.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiong3.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiong3.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiong6hoenn.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiong6hoenn.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiongalar.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampiongalar.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionkalos.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionkalos.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionnational.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionnational.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionpaldea.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionpaldea.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionregional.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionregional.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionsinnoh.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionsinnoh.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionworld.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonchampionworld.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonclassic.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonclassic.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonconteststar.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonconteststar.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorybattle.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorybattle.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorybattle2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorybattle2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorycontest.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorycontest.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorycontest2.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountmemorycontest2.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountry.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboncountry.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbondowncast.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbondowncast.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonearth.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonearth.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboneffort.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribboneffort.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonevent.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonevent.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonfootprint.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonfootprint.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beauty.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beauty.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautyhyper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautyhyper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautymaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautymaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautysuper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3beautysuper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cool.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cool.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolhyper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolhyper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolmaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolmaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolsuper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3coolsuper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cute.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cute.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutehyper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutehyper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutemaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutemaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutesuper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3cutesuper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smart.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smart.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smarthyper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smarthyper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smartmaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smartmaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smartsuper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3smartsuper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3tough.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3tough.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughhyper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughhyper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughmaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughmaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughsuper.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong3toughsuper.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beauty.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beauty.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautygreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautygreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautymaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautymaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautyultra.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4beautyultra.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cool.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cool.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolgreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolgreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolmaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolmaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolultra.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4coolultra.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cute.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cute.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cutegreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cutegreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cutemaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cutemaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cuteultra.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4cuteultra.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smart.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smart.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartgreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartgreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartmaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartmaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartultra.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4smartultra.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4tough.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4tough.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughgreat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughgreat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughmaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughmaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughultra.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbong4toughultra.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbongorgeous.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbongorgeous.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbongorgeousroyal.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbongorgeousroyal.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonhisui.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonhisui.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonlegend.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonlegend.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkabsentminded.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkabsentminded.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkalpha.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkalpha.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkangry.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkangry.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkblizzard.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkblizzard.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcalmness.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcalmness.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcharismatic.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcharismatic.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcloudy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcloudy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcrafty.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcrafty.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcurry.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkcurry.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdawn.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdawn.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdestiny.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdestiny.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdry.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdry.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdusk.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkdusk.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkexcited.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkexcited.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkferocious.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkferocious.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkfishing.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkfishing.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkflustered.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkflustered.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkgourmand.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkgourmand.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkhumble.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkhumble.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkintellectual.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkintellectual.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkintense.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkintense.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkitemfinder.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkitemfinder.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjittery.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjittery.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjoyful.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjoyful.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjumbo.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkjumbo.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkkindly.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkkindly.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarklunchtime.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarklunchtime.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmightiest.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmightiest.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmini.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmini.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmisty.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkmisty.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpartner.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpartner.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpeeved.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpeeved.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkprideful.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkprideful.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpumpedup.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkpumpedup.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrainy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrainy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrare.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrare.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrowdy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkrowdy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksandstorm.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksandstorm.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkscowling.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkscowling.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksleepytime.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksleepytime.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkslump.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkslump.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksmiley.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksmiley.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksnowy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarksnowy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkstormy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkstormy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkteary.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkteary.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkthorny.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkthorny.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarktitan.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarktitan.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkuncommon.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkuncommon.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkunsure.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkunsure.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkupbeat.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkupbeat.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkvigor.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkvigor.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkzeroenergy.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkzeroenergy.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkzonedout.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmarkzonedout.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmasterbeauty.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmasterbeauty.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercleverness.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercleverness.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercoolness.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercoolness.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercuteness.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastercuteness.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmasterrank.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmasterrank.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastertoughness.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonmastertoughness.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonnational.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonnational.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbononceinalifetime.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbononceinalifetime.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonpartner.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonpartner.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonpremier.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonpremier.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonrecord.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonrecord.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonrelax.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonrelax.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonroyal.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonroyal.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonshock.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonshock.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsmile.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsmile.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsnooze.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsnooze.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsouvenir.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonsouvenir.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonspecial.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonspecial.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontowermaster.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontowermaster.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontraining.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontraining.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontwinklingstar.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbontwinklingstar.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonvictory.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonvictory.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonwinning.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonwinning.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonwishing.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonwishing.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonworld.png" LogicalName="PKVault.Desktop.Resources.wwwroot.imgs.ribbons.ribbonworld.png" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.check-Bly1sJ47.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.check-Bly1sJ47.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.game-expanded-J7PZPe4p.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.game-expanded-J7PZPe4p.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.get-scroll-padding-JAIxD-co.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.get-scroll-padding-JAIxD-co.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.index-DRb2IJ7d.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.index-DRb2IJ7d.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.list-Dlq1ctC_.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.list-Dlq1ctC_.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pokedex-D-cz5_ao.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pokedex-D-cz5_ao.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.routes-BpyHFy5k.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.routes-BpyHFy5k.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.saves-mY4oZjBq.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.saves-mY4oZjBq.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.settings-cWWgeGX1.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.settings-cWWgeGX1.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.storage-CAxwBx-l.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.storage-CAxwBx-l.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-game-img-DxdwXxSj.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-game-img-DxdwXxSj.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-multi-select-DF3RIHiT.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-multi-select-DF3RIHiT.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-path-line-BoFyWHPB.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-path-line-BoFyWHPB.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-select-I3DQAdaO.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-select-I3DQAdaO.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.use-panel-controls-HOFO1B5m.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.use-panel-controls-HOFO1B5m.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.useNavigate-OY-LrFwr.js" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.useNavigate-OY-LrFwr.js" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.game-expanded-DhPq8ypM.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.game-expanded-DhPq8ypM.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.index-DlAx4VNu.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.index-DlAx4VNu.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pokedex-CPZyL9gA.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pokedex-CPZyL9gA.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.storage-DyAyAWAZ.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.storage-DyAyAWAZ.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-game-img-CHVHbJfT.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-game-img-CHVHbJfT.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-multi-select-IddndEPj.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-multi-select-IddndEPj.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.ui-path-line-Cl42lZ7h.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.ui-path-line-Cl42lZ7h.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.use-panel-controls-DgYn6N-y.css" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.use-panel-controls-DgYn6N-y.css" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.mega-UzRJVfoD.svg" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.mega-UzRJVfoD.svg" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.tera_mask-DWX9iLWn.svg" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.tera_mask-DWX9iLWn.svg" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.logo.svg" LogicalName="PKVault.Desktop.Resources.wwwroot.logo.svg" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-bold-Dg4XBFkQ.woff2" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-bold-Dg4XBFkQ.woff2" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-hb-B2Sdvkhq.woff2" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-hb-B2Sdvkhq.woff2" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-regular-gZmSMZcu.woff2" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-regular-gZmSMZcu.woff2" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-bold-Pt6ZkQNr.woff" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-bold-Pt6ZkQNr.woff" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-hb-2aIOF6TZ.woff" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-hb-2aIOF6TZ.woff" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-regular-CarrGJvm.woff" LogicalName="PKVault.Desktop.Resources.wwwroot.assets.pixel-operator-regular-CarrGJvm.woff" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.0-technical.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.0-technical.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.1-quick-start.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.1-quick-start.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.2-session.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.2-session.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.3-storage.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.3-storage.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.4-pokedex.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.4-pokedex.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.5-settings.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.5-settings.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.6-issues.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.6-issues.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.en.README.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.en.README.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.0-technical.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.0-technical.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.1-quick-start.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.1-quick-start.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.2-session.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.2-session.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.3-storage.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.3-storage.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.4-pokedex.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.4-pokedex.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.5-settings.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.5-settings.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.6-issues.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.6-issues.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.fr.README.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.fr.README.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.0-technical.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.0-technical.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.1-quick-start.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.1-quick-start.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.2-session.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.2-session.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.3-storage.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.3-storage.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.4-pokedex.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.4-pokedex.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.5-settings.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.5-settings.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.6-issues.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.6-issues.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.docs.pt_br.README.md" LogicalName="PKVault.Desktop.Resources.wwwroot.docs.pt_br.README.md" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.icon.ico" LogicalName="PKVault.Desktop.Resources.wwwroot.icon.ico" />
+    <EmbeddedResource Include="PKVault.Desktop.Resources.wwwroot.index.html" LogicalName="PKVault.Desktop.Resources.wwwroot.index.html" />
+    <EmbeddedResource Include="Microsoft.Extensions.FileProviders.Embedded.Manifest.xml" LogicalName="Microsoft.Extensions.FileProviders.Embedded.Manifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Private.CoreLib">
+      <HintPath>System.Private.CoreLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json">
+      <HintPath>System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web">
+      <HintPath>System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Photino.NET">
+      <HintPath>Photino.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog">
+      <HintPath>Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="GtkSharp">
+      <HintPath>GtkSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq">
+      <HintPath>System.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+      <HintPath>Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Hosting">
+      <HintPath>Microsoft.Extensions.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
+      <HintPath>Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore">
+      <HintPath>Microsoft.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PKVault.Backend">
+      <HintPath>PKVault.Backend.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting">
+      <HintPath>Microsoft.AspNetCore.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Photino.NET.Server">
+      <HintPath>Photino.NET.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.StaticFiles">
+      <HintPath>Microsoft.AspNetCore.StaticFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Routing">
+      <HintPath>Microsoft.AspNetCore.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Process">
+      <HintPath>System.Diagnostics.Process.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Extensions">
+      <HintPath>Microsoft.AspNetCore.Http.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
