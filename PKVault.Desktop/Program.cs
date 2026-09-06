@@ -108,6 +108,26 @@ class Program
 
             SetupTask = SetupCore();
 
+            _ = SetupTask.ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Log.Fatal(
+                        task.Exception,
+                        "PKVault core startup failed.");
+                }
+                else if (task.IsCanceled)
+                {
+                    Log.Error(
+                        "PKVault core startup was cancelled.");
+                }
+                else
+                {
+                    Log.Information(
+                        "PKVault core startup completed successfully.");
+                }
+            }, TaskScheduler.Default);
+
             InjectIntoFrontend(window);
 
             window.WaitForClose();
@@ -199,6 +219,11 @@ class Program
         server.Map("{**catchAll}", async context =>
         {
             var requestPath = context.Request.Path.Value ?? "";
+
+            Log.Debug(
+                "HTTP {Method} {RequestPath}",
+                context.Request.Method,
+                requestPath);
 
             try
             {
