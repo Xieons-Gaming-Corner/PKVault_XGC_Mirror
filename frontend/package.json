@@ -87,7 +87,7 @@
     "knip": "^6.15.0",
     "msw": "^2.12.10",
     "orval": "^8.8.0",
-    "postcss": "^8.5.13",
+    "postcss": "^8.5.28",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.8.1",
