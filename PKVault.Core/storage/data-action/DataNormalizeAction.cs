@@ -114,7 +114,7 @@ public class DataNormalizeAction(
             await MigrateVariantsFrom200(input);
         }
         // <= 2.2.2
-        if (GetVersionValue(currentVersion.Value) <= GetVersionValue("2.2.2"))
+        else if (GetVersionValue(currentVersion.Value) <= GetVersionValue("2.2.2"))
         {
             await MigrateIdsFrom222();
         }
