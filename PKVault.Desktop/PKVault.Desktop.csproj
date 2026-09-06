@@ -3,19 +3,15 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
 
+    <!-- Build a Windows self-contained single-file executable. -->
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 
-    <PublishTrimmed>true</PublishTrimmed>
+    <!-- Keep all runtime-discovered ASP.NET Core / EF Core / Photino code. -->
+    <PublishTrimmed>false</PublishTrimmed>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-
-    <!-- Can be enabled temporarily to investigate trimming warnings. -->
-    <!-- <EnableTrimAnalyzer>true</EnableTrimAnalyzer> -->
-
-    <!-- Suppresses known trimming warnings from ASP.NET Core MVC, EF Core, etc. -->
-    <NoWarn>$(NoWarn);IL2026;IL2037;IL2104</NoWarn>
 
     <RuntimeIdentifiers>
       win-x64;
@@ -30,29 +26,25 @@
     <ApplicationTitle>PKVault</ApplicationTitle>
     <ApplicationId>com.chnapy.pkvault</ApplicationId>
 
-    <!-- Must exist at PKVault.Desktop/Resources/wwwroot/icon.ico. -->
+    <!-- This source file must exist before the project can compile. -->
     <ApplicationIcon>Resources\wwwroot\icon.ico</ApplicationIcon>
 
     <Product>PKVault</Product>
     <Description>PKVault is a Pokemon storage and save manipulation tool based on PKHeX.</Description>
     <AssemblyDescription>PKVault is a Pokemon storage and save manipulation tool based on PKHeX.</AssemblyDescription>
 
-    <!-- Required by ManifestEmbeddedFileProvider. -->
+    <!-- Generates the manifest required by ManifestEmbeddedFileProvider. -->
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
 
   <ItemGroup>
     <!--
-      Recovered wwwroot files may contain files that were accidentally
-      given a .cs extension during extraction. Do not treat them as code.
+      The recovered frontend contains at least one non-C# resource
+      whose extracted filename ends in .cs. Never compile wwwroot files.
     -->
     <Compile Remove="Resources\wwwroot\**\*.cs" />
 
-    <!--
-      Embed the complete recovered frontend bundle into PKVault.dll.
-      This includes HTML, CSS, JS, PNG/SVG images, fonts, icons,
-      JSON files, and any extracted resource with an unusual extension.
-    -->
+    <!-- Embed every restored frontend file into PKVault.dll. -->
     <EmbeddedResource Include="Resources\wwwroot\**\*" />
   </ItemGroup>
 
