@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
@@ -17,40 +17,50 @@ namespace PKVault.Desktop;
 
 class Program
 {
-    private static readonly bool WindowsOS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-    private static readonly bool LinuxOS = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-    private static readonly bool MacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+    private static readonly bool WindowsOS =
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-    private static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    private static readonly string AssemblyStaticPrefix = "PKVault.Desktop.Resources.wwwroot.";
+    private static readonly bool LinuxOS =
+        RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+    private static readonly bool MacOS =
+        RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+    private static readonly Assembly Assembly =
+        Assembly.GetExecutingAssembly();
+
+    private static readonly string AssemblyStaticPrefix =
+        "PKVault.Desktop.Resources.wwwroot.";
 
     private static readonly DesktopMessageJsonContext messageJsonContext = new(new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     });
 
-    private static IFileChooser fileChooser = new DefaultFileChooser();
+    private static IFileChooser fileChooser =
+        new DefaultFileChooser();
 
-    private static Task<IServiceProvider>? SetupTask = null;
+    private static Task<IServiceProvider>? SetupTask;
 
     [DllImport("kernel32.dll")]
-    static extern bool AttachConsole(uint dwProcessId);
+    private static extern bool AttachConsole(uint dwProcessId);
 
-    const uint ATTACH_PARENT_PROCESS = 0x0ffffffff;
+    private const uint ATTACH_PARENT_PROCESS = 0x0ffffffff;
 
     [STAThread]
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         AttachConsole(ATTACH_PARENT_PROCESS);
+
         Core.Program.Initialize();
 
         if (LinuxOS)
         {
             fileChooser = new LinuxFileChooser();
 
-            // Fix https://github.com/Chnapy/PKVault/issues/190
-            // This variable affects only nvidia-based systems, with small perf impact
-            Environment.SetEnvironmentVariable("__NV_DISABLE_EXPLICIT_SYNC", "1");
+            Environment.SetEnvironmentVariable(
+                "__NV_DISABLE_EXPLICIT_SYNC",
+                "1");
         }
 
         try
@@ -60,22 +70,31 @@ class Program
             var window = new PhotinoWindow();
 
             var staticServerRun = SetupServer(out var baseUrl);
-            _ = staticServerRun();
 
-            window.RegisterWindowCreatedHandler(async (sender, e) =>
+            _ = StartStaticServerAsync(staticServerRun);
+
+            window.RegisterWindowCreatedHandler((sender, e) =>
             {
-                Log.Logger.Debug("CREATED");
+                Log.Debug("CREATED");
             });
+
             window.RegisterWindowClosingHandler((sender, e) =>
             {
-                if (SetupTask == null || !SetupTask.IsCompletedSuccessfully)
+                if (SetupTask is null || !SetupTask.IsCompletedSuccessfully)
+                {
                     return false;
+                }
 
-                var emptyActionList = Core.Program.HasEmptyActionList(SetupTask.Result);
+                var emptyActionList =
+                    Core.Program.HasEmptyActionList(SetupTask.Result);
 
                 if (!emptyActionList)
                 {
-                    var result = window.ShowMessage("PKVault", "You have unsaved changes. Are you sure ?", PhotinoDialogButtons.OkCancel);
+                    var result = window.ShowMessage(
+                        "PKVault",
+                        "You have unsaved changes. Are you sure ?",
+                        PhotinoDialogButtons.OkCancel);
+
                     if (result == PhotinoDialogResult.Cancel)
                     {
                         return true;
@@ -84,11 +103,6 @@ class Program
 
                 return false;
             });
-            // window.RegisterWindowCreatingHandler((sender, e) =>
-            // {
-            //     log.LogInformation("CREATING");
-
-            // });
 
             SetupWindow(window, baseUrl);
 
@@ -108,169 +122,389 @@ class Program
         }
     }
 
+    private static async Task StartStaticServerAsync(
+        Func<Task> staticServerRun)
+    {
+        try
+        {
+            Log.Information("Starting PKVault local static web server...");
+
+            await staticServerRun();
+
+            Log.Warning("PKVault local static web server stopped.");
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "PKVault local static web server failed.");
+        }
+    }
+
     private static async Task<IServiceProvider> SetupCore()
     {
         var services = new ServiceCollection();
+
         Core.Program.ConfigureServices(services);
-        var sp = services.BuildServiceProvider();
 
-        await Core.Program.SetupData(sp);
+        var serviceProvider = services.BuildServiceProvider();
 
-        return sp;
+        await Core.Program.SetupData(serviceProvider);
+
+        return serviceProvider;
+    }
+
+    private static void LogEmbeddedResourceNames()
+    {
+        var resources = Assembly.GetManifestResourceNames();
+
+        Log.Information(
+            "Embedded resource count: {ResourceCount}",
+            resources.Length);
+
+        var staticResources = resources
+            .Where(resourceName => resourceName.StartsWith(
+                AssemblyStaticPrefix,
+                StringComparison.OrdinalIgnoreCase))
+            .OrderBy(resourceName => resourceName)
+            .ToArray();
+
+        Log.Information(
+            "Embedded wwwroot resource count: {ResourceCount}",
+            staticResources.Length);
+
+        foreach (var resourceName in staticResources)
+        {
+            Log.Debug(
+                "Embedded web resource: {ResourceName}",
+                resourceName);
+        }
     }
 
     private static Func<Task> SetupServer(out string baseUrl)
     {
-        // IANA (RFC 6335) less-used ports
-        var server = PhotinoServer.CreateStaticFileServer([], 49152, 16000, "wwwroot", out baseUrl);
+        LogEmbeddedResourceNames();
+
+        var server = PhotinoServer.CreateStaticFileServer(
+            [],
+            49152,
+            16000,
+            "wwwroot",
+            out baseUrl);
+
+        Log.Information(
+            "Local static web server prepared for {BaseUrl}",
+            baseUrl);
 
         var contentTypeProvider = new FileExtensionContentTypeProvider();
 
         server.Map("{**catchAll}", async context =>
         {
-            var path = context.Request.Path.Value ?? "";
-            // Log.Debug($"PATH {path}");
+            var requestPath = context.Request.Path.Value ?? "";
 
             try
             {
-                if (path.StartsWith("/api/"))
+                if (requestPath.StartsWith(
+                    "/api/",
+                    StringComparison.OrdinalIgnoreCase))
                 {
-                    var sp = await SetupTask!;
-                    using var scope = sp.CreateScope();
-                    var coreRouter = scope.ServiceProvider.GetRequiredService<CoreRouter>();
-
-                    var req = context.Request;
-                    var res = context.Response;
-
-                    string queryString = context.Request.QueryString.HasValue
-                        ? context.Request.QueryString.Value
-                        : "";
-
-                    var result = await coreRouter.Dispatch(scope.ServiceProvider, req.Method, req.Path, queryString, req.Body);
-
-                    res.StatusCode = result.StatusCode ?? 200;
-
-                    if (result.Header is not null)
-                        foreach (var (key, values) in result.Header)
-                            res.Headers[key] = values;
-
-                    if (result is CoreFileResponse fileResponse)
+                    if (SetupTask is null)
                     {
-                        res.ContentType = fileResponse.ContentType ?? "application/octet-stream";
+                        Log.Error(
+                            "API request received before PKVault core setup began: {RequestPath}",
+                            requestPath);
 
-                        var contentDispositionHeader = new System.Net.Mime.ContentDisposition()
-                        {
-                            FileName = fileResponse.File.FileName,
-                            DispositionType = "attachment"
-                        };
-                        res.Headers.Append("Content-Disposition", contentDispositionHeader.ToString());
+                        context.Response.StatusCode =
+                            StatusCodes.Status503ServiceUnavailable;
 
-                        if (fileResponse.LastModified is not null)
-                            res.GetTypedHeaders().LastModified = fileResponse.LastModified;
+                        context.Response.ContentType = "text/plain";
 
-                        await using var stream = fileResponse.File.Stream;
-                        await stream.CopyToAsync(res.Body);
-                    }
+                        await context.Response.WriteAsync(
+                            "PKVault is still starting.");
 
-                    else if (result is CoreJSONResponse jsonResponse)
-                    {
-                        res.ContentType = jsonResponse.ContentType ?? "application/json";
-                        if (jsonResponse.Data is not null)
-                        {
-                            var typeInfo = RouteJsonContext.DefaultWithOptions.GetTypeInfo(jsonResponse.Data.GetType())
-                                ?? throw new InvalidOperationException($"Missing TypeInfo for type {jsonResponse.Data.GetType()}");
-
-                            await JsonSerializer.SerializeAsync(
-                                res.Body,
-                                jsonResponse.Data,
-                                typeInfo
-                            );
-                        }
-                    }
-                }
-                else
-                {
-                    // http://localhost:8000/api/storage/main/pkm-version
-                    // http://localhost:8000/index.html?server=http://localhost:57471
-                    var uri = context.Request.GetDisplayUrl();
-                    // log.LogInformation($"DEBUG {uri}");
-
-                    if (uri.EndsWith("/.well-known/appspecific/com.chrome.devtools.json"))
-                    {
-                        context.Response.StatusCode = StatusCodes.Status404NotFound;
                         return;
                     }
 
-                    var uriParts = uri.Split('?')[0].Split('/');
+                    var serviceProvider = await SetupTask;
 
-                    var uriActionAndRest = uriParts.Skip(3);
-                    var uriAction = uriActionAndRest.First();
-                    var uriDirectories = uriActionAndRest.SkipLast(1);
-                    var uriFilename = uriActionAndRest.Last();
-                    var uriFilenameExt = Path.GetExtension(uriFilename);
-                    var assemblyActionAndRest = string.Join('.', [
-                        ..uriDirectories.Select(part => part.Replace('-', '_')),
-                        uriFilename
-                    ]);
+                    using var scope = serviceProvider.CreateScope();
 
-                    var streamKey = $"{AssemblyStaticPrefix}{assemblyActionAndRest}";
-                    var stream = Assembly.GetManifestResourceStream(streamKey)
-                        ?? throw new ArgumentException($"Stream not found for key {streamKey}, uri {uri}");
-                    contentTypeProvider.Mappings.TryGetValue(uriFilenameExt, out var contentType);
+                    var coreRouter = scope.ServiceProvider
+                        .GetRequiredService<CoreRouter>();
 
-                    context.Response.ContentType = contentType;
-                    await stream.CopyToAsync(context.Response.Body);
+                    var request = context.Request;
+                    var response = context.Response;
+
+                    var queryString = request.QueryString.HasValue
+                        ? request.QueryString.Value ?? ""
+                        : "";
+
+                    var result = await coreRouter.Dispatch(
+                        scope.ServiceProvider,
+                        request.Method,
+                        request.Path,
+                        queryString,
+                        request.Body);
+
+                    response.StatusCode =
+                        result.StatusCode ?? StatusCodes.Status200OK;
+
+                    if (result.Header is not null)
+                    {
+                        foreach (var (key, values) in result.Header)
+                        {
+                            response.Headers[key] = values;
+                        }
+                    }
+
+                    if (result is CoreFileResponse fileResponse)
+                    {
+                        response.ContentType =
+                            fileResponse.ContentType ??
+                            "application/octet-stream";
+
+                        var contentDispositionHeader =
+                            new System.Net.Mime.ContentDisposition
+                            {
+                                FileName = fileResponse.File.FileName,
+                                DispositionType = "attachment"
+                            };
+
+                        response.Headers.Append(
+                            "Content-Disposition",
+                            contentDispositionHeader.ToString());
+
+                        if (fileResponse.LastModified is not null)
+                        {
+                            response.GetTypedHeaders().LastModified =
+                                fileResponse.LastModified;
+                        }
+
+                        await using var fileResponseStream =
+                            fileResponse.File.Stream;
+
+                        await fileResponseStream.CopyToAsync(
+                            response.Body);
+
+                        return;
+                    }
+
+                    if (result is CoreJSONResponse jsonResponse)
+                    {
+                        response.ContentType =
+                            jsonResponse.ContentType ??
+                            "application/json";
+
+                        if (jsonResponse.Data is not null)
+                        {
+                            var typeInfo =
+                                RouteJsonContext.DefaultWithOptions
+                                    .GetTypeInfo(jsonResponse.Data.GetType())
+                                ?? throw new InvalidOperationException(
+                                    $"Missing TypeInfo for type " +
+                                    $"{jsonResponse.Data.GetType()}");
+
+                            await JsonSerializer.SerializeAsync(
+                                response.Body,
+                                jsonResponse.Data,
+                                typeInfo);
+                        }
+
+                        return;
+                    }
+
+                    return;
                 }
+
+                if (requestPath.Equals(
+                    "/.well-known/appspecific/com.chrome.devtools.json",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Response.StatusCode =
+                        StatusCodes.Status404NotFound;
+
+                    return;
+                }
+
+                var requestedPath = requestPath.TrimStart('/');
+
+                if (string.IsNullOrWhiteSpace(requestedPath))
+                {
+                    requestedPath = "index.html";
+                }
+
+                var pathSegments = requestedPath.Split(
+                    '/',
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                if (pathSegments.Length == 0)
+                {
+                    context.Response.StatusCode =
+                        StatusCodes.Status404NotFound;
+
+                    return;
+                }
+
+                var fileName = pathSegments[^1];
+
+                var directories = pathSegments.SkipLast(1);
+
+                var resourcePath = string.Join(
+                    '.',
+                    directories
+                        .Select(directory => directory.Replace('-', '_'))
+                        .Append(fileName));
+
+                var streamKey =
+                    $"{AssemblyStaticPrefix}{resourcePath}";
+
+                Log.Debug(
+                    "Static request {RequestPath}; looking for embedded resource {ResourceKey}",
+                    requestPath,
+                    streamKey);
+
+                using var resourceStream =
+                    Assembly.GetManifestResourceStream(streamKey);
+
+                if (resourceStream is null)
+                {
+                    Log.Error(
+                        "Embedded static resource not found. Request: {RequestPath}; key: {ResourceKey}",
+                        requestPath,
+                        streamKey);
+
+                    context.Response.StatusCode =
+                        StatusCodes.Status404NotFound;
+
+                    context.Response.ContentType = "text/plain";
+
+                    await context.Response.WriteAsync(
+                        $"Missing embedded resource: {streamKey}");
+
+                    return;
+                }
+
+                var extension = Path.GetExtension(fileName);
+
+                if (!contentTypeProvider.Mappings.TryGetValue(
+                    extension,
+                    out var contentType))
+                {
+                    contentType = "application/octet-stream";
+                }
+
+                context.Response.ContentType = contentType;
+
+                await resourceStream.CopyToAsync(context.Response.Body);
             }
-            catch
+            catch (Exception ex)
             {
-                // await ExceptionHandlingMiddleware.WriteExceptionResponse(context, ex);
-                throw;
+                Log.Error(
+                    ex,
+                    "Failed to process HTTP request {RequestPath}",
+                    requestPath);
+
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.StatusCode =
+                        StatusCodes.Status500InternalServerError;
+
+                    context.Response.ContentType = "text/plain";
+
+                    await context.Response.WriteAsync(
+                        "PKVault encountered an error while processing this request. " +
+                        "Check the application log for details.");
+                }
             }
         });
 
         return () => server.RunAsync();
     }
 
-    private static void SetupWindow(PhotinoWindow window, string baseUrl)
+    private static void SetupWindow(
+        PhotinoWindow window,
+        string baseUrl)
     {
-        using Stream? iconStream = Assembly.GetManifestResourceStream($"{AssemblyStaticPrefix}icon.png");
+        string? temporaryIconPath = null;
 
-        var tmpIconFilepath = Path.Combine(Path.GetTempPath(), $"pkvault-icon.png");
+        var iconResourceName =
+            $"{AssemblyStaticPrefix}icon.ico";
 
-        using var fileStream = File.Create(tmpIconFilepath);
-        iconStream.CopyTo(fileStream);
+        try
+        {
+            using Stream? iconStream =
+                Assembly.GetManifestResourceStream(iconResourceName);
+
+            if (iconStream is null)
+            {
+                Log.Warning(
+                    "Embedded icon resource was not found: {ResourceName}. " +
+                    "Starting PKVault with the default system icon.",
+                    iconResourceName);
+            }
+            else
+            {
+                temporaryIconPath = Path.Combine(
+                    Path.GetTempPath(),
+                    $"pkvault-icon-{Guid.NewGuid():N}.ico");
+
+                using var iconFileStream =
+                    File.Create(temporaryIconPath);
+
+                iconStream.CopyTo(iconFileStream);
+
+                Log.Debug(
+                    "Extracted embedded icon resource to {IconPath}",
+                    temporaryIconPath);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(
+                ex,
+                "Could not extract the embedded PKVault icon. " +
+                "Starting with the default system icon.");
+        }
 
         window
             .SetTitle("PKVault")
-            // Windows only: resize to a percentage of the main monitor work area
             .SetUseOsDefaultSize(WindowsOS)
-            // Linux only: static initial size
             .SetSize(1280, 755)
             .Center()
-            .SetResizable(true)
-            .SetIconFile(tmpIconFilepath)
-            // .RegisterCustomSchemeHandler("app", (sender, scheme, url, out contentType) =>
-            // {
-            //     log.LogInformation("APP => " + url);
+            .SetResizable(true);
 
-            //     contentType = "text/html";
-            //     return new MemoryStream(Encoding.UTF8.GetBytes(@"<html>foo</html>"));
-            // })
+        if (!string.IsNullOrWhiteSpace(temporaryIconPath) &&
+            File.Exists(temporaryIconPath))
+        {
+            window.SetIconFile(temporaryIconPath);
+        }
+
+        window
             .RegisterWindowCreatedHandler((sender, e) =>
             {
-                // remove created temp icon since not useful anymore
-                if (File.Exists(tmpIconFilepath))
-                    File.Delete(tmpIconFilepath);
+                if (!string.IsNullOrWhiteSpace(temporaryIconPath) &&
+                    File.Exists(temporaryIconPath))
+                {
+                    try
+                    {
+                        File.Delete(temporaryIconPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Debug(
+                            ex,
+                            "Unable to delete temporary icon file {IconPath}",
+                            temporaryIconPath);
+                    }
+                }
             })
-            .Load(baseUrl + $"/index.html");
+            .Load(baseUrl + "/index.html");
     }
 
     private static void InjectIntoFrontend(PhotinoWindow window)
     {
         window.RegisterWebMessageReceivedHandler(async (sender, message) =>
         {
-            Log.Logger.Debug($"Message received: {message}");
+            Log.Debug("Message received: {Message}", message);
+
             if (string.IsNullOrEmpty(message))
             {
                 return;
@@ -278,181 +512,251 @@ class Program
 
             try
             {
-                var desktopRequest = JsonSerializer.Deserialize(message, messageJsonContext.DesktopRequestMessage);
+                var desktopRequest = JsonSerializer.Deserialize(
+                    message,
+                    messageJsonContext.DesktopRequestMessage);
+
+                if (desktopRequest is null)
+                {
+                    Log.Warning(
+                        "Received an invalid or empty desktop request: {Message}",
+                        message);
+
+                    return;
+                }
 
                 string responseSerialized = "";
 
                 switch (desktopRequest.type)
                 {
                     case FileExploreRequestMessage.TYPE:
+                    {
+                        var fileExploreRequest = JsonSerializer.Deserialize(
+                            message,
+                            messageJsonContext.FileExploreRequestMessage);
+
+                        if (fileExploreRequest is null)
                         {
-                            var fileExploreRequest = JsonSerializer.Deserialize(message, messageJsonContext.FileExploreRequestMessage);
+                            Log.Warning(
+                                "Could not deserialize FileExplore request.");
 
-                            var appBasePath = MatcherUtil
-                                    .NormalizePath(SettingsService.GetAppDirectory())
-                                    .Replace('/', '\\');
-
-                            string? GetDefaultPath()
-                            {
-                                if (fileExploreRequest.basePath == default)
-                                {
-                                    return null;
-                                }
-
-                                return MatcherUtil
-                                    .NormalizePath(Path.Combine(appBasePath, fileExploreRequest.basePath))
-                                    .Replace('/', '\\');
-                            }
-
-                            string ToRelative(string path)
-                            {
-                                path = MatcherUtil
-                                    .NormalizePath(path)
-                                    .Replace('/', '\\');
-
-                                if (path.StartsWith(appBasePath))
-                                {
-                                    var pathWithoutBase = MatcherUtil.NormalizePath(path[appBasePath.Length..]);
-                                    if (pathWithoutBase[0] == '/')
-                                    {
-                                        pathWithoutBase = pathWithoutBase[1..];
-                                    }
-                                    return MatcherUtil.NormalizePath(
-                                        Path.Combine(".", pathWithoutBase)
-                                    );
-                                }
-
-                                return MatcherUtil.NormalizePath(path);
-                            }
-
-                            async Task<FileExploreResponseMessage> GetDialogResponse()
-                            {
-                                var results = await fileChooser.ShowChooserAsync(
-                                    window,
-                                    directoryOnly: fileExploreRequest.directoryOnly,
-                                    multiSelect: fileExploreRequest.multiselect,
-                                    defaultPath: GetDefaultPath()
-                                );
-
-                                return new(
-                                    type: fileExploreRequest.type,
-                                    id: fileExploreRequest.id,
-                                    directoryOnly: fileExploreRequest.directoryOnly,
-                                    values: [.. results.Select(ToRelative)]
-                                );
-                            }
-
-                            var response = await GetDialogResponse();
-                            responseSerialized = JsonSerializer.Serialize(response, messageJsonContext.FileExploreResponseMessage);
-                            break;
+                            return;
                         }
+
+                        var appBasePath = MatcherUtil
+                            .NormalizePath(
+                                SettingsService.GetAppDirectory())
+                            .Replace('/', '\\');
+
+                        string? GetDefaultPath()
+                        {
+                            if (fileExploreRequest.basePath == default)
+                            {
+                                return null;
+                            }
+
+                            return MatcherUtil
+                                .NormalizePath(
+                                    Path.Combine(
+                                        appBasePath,
+                                        fileExploreRequest.basePath))
+                                .Replace('/', '\\');
+                        }
+
+                        string ToRelative(string path)
+                        {
+                            path = MatcherUtil
+                                .NormalizePath(path)
+                                .Replace('/', '\\');
+
+                            if (path.StartsWith(
+                                appBasePath,
+                                StringComparison.OrdinalIgnoreCase))
+                            {
+                                var pathWithoutBase =
+                                    MatcherUtil.NormalizePath(
+                                        path[appBasePath.Length..]);
+
+                                if (pathWithoutBase.Length > 0 &&
+                                    pathWithoutBase[0] == '/')
+                                {
+                                    pathWithoutBase =
+                                        pathWithoutBase[1..];
+                                }
+
+                                return MatcherUtil.NormalizePath(
+                                    Path.Combine(
+                                        ".",
+                                        pathWithoutBase));
+                            }
+
+                            return MatcherUtil.NormalizePath(path);
+                        }
+
+                        var results = await fileChooser.ShowChooserAsync(
+                            window,
+                            directoryOnly: fileExploreRequest.directoryOnly,
+                            multiSelect: fileExploreRequest.multiselect,
+                            defaultPath: GetDefaultPath());
+
+                        var response = new FileExploreResponseMessage(
+                            type: fileExploreRequest.type,
+                            id: fileExploreRequest.id,
+                            directoryOnly: fileExploreRequest.directoryOnly,
+                            values: [.. results.Select(ToRelative)]);
+
+                        responseSerialized = JsonSerializer.Serialize(
+                            response,
+                            messageJsonContext.FileExploreResponseMessage);
+
+                        break;
+                    }
+
                     case OpenFolderRequestMessage.TYPE:
+                    {
+                        var openFolderRequest = JsonSerializer.Deserialize(
+                            message,
+                            messageJsonContext.OpenFolderRequestMessage);
+
+                        if (openFolderRequest is null)
                         {
-                            var openFolderRequest = JsonSerializer.Deserialize(message, messageJsonContext.OpenFolderRequestMessage);
+                            Log.Warning(
+                                "Could not deserialize OpenFolder request.");
 
-                            var normalizedPath = MatcherUtil.NormalizePath(Path.Combine(SettingsService.GetAppDirectory(), openFolderRequest.path));
-
-                            var path = normalizedPath.Replace('/', '\\');
-
-                            if (WindowsOS)
-                            {
-                                var arg = openFolderRequest.isDirectory
-                                    ? path
-                                    : string.Format("/e, /select, \"{0}\"", path);
-
-                                var psi = new ProcessStartInfo
-                                {
-                                    FileName = "explorer.exe",
-                                    Arguments = arg,
-                                    UseShellExecute = false
-                                };
-
-                                Log.Logger.Debug($"RUN explorer.exe {arg}");
-
-                                Process.Start(psi)?.WaitForInputIdle();
-                            }
-                            else if (LinuxOS)
-                            {
-                                // xdg can open only folders
-                                var arg = $"\"{(
-                                    openFolderRequest.isDirectory
-                                        ? MatcherUtil.NormalizePath(path)
-                                        : Path.GetDirectoryName(MatcherUtil.NormalizePath(path))!
-                                )}\"";
-
-                                var psi = new ProcessStartInfo
-                                {
-                                    FileName = "xdg-open",
-                                    Arguments = arg,
-                                    UseShellExecute = false
-                                };
-
-                                Log.Logger.Debug($"RUN xdg-open {arg}");
-                                try
-                                {
-                                    // Careful: WaitForInputIdle() causes crash on Linux
-                                    Process.Start(psi);
-                                }
-                                catch
-                                {
-                                    // if xdg-open doesn't work, try something else
-                                    var fallback = new ProcessStartInfo
-                                    {
-                                        FileName = openFolderRequest.path,
-                                        UseShellExecute = true
-                                    };
-                                    Process.Start(fallback);
-                                }
-                            }
-                            else if (MacOS)
-                            {
-                                // `open -R` reveals and selects a file/folder in Finder
-                                var arg = $"-R \"{MatcherUtil.NormalizePath(normalizedPath)}\"";
-
-                                var psi = new ProcessStartInfo
-                                {
-                                    FileName = "open",
-                                    Arguments = arg,
-                                    UseShellExecute = false
-                                };
-
-                                Log.Logger.Debug($"RUN open {arg}");
-                                Process.Start(psi);
-                            }
-                            else
-                            {
-                                throw new PlatformNotSupportedException($"OS not supported: {RuntimeInformation.OSDescription}");
-                            }
-                            break;
+                            return;
                         }
+
+                        var normalizedPath = MatcherUtil.NormalizePath(
+                            Path.Combine(
+                                SettingsService.GetAppDirectory(),
+                                openFolderRequest.path));
+
+                        var path = normalizedPath.Replace('/', '\\');
+
+                        if (WindowsOS)
+                        {
+                            var arguments = openFolderRequest.isDirectory
+                                ? path
+                                : string.Format(
+                                    "/e, /select, \"{0}\"",
+                                    path);
+
+                            var processStartInfo = new ProcessStartInfo
+                            {
+                                FileName = "explorer.exe",
+                                Arguments = arguments,
+                                UseShellExecute = false
+                            };
+
+                            Log.Debug(
+                                "RUN explorer.exe {Arguments}",
+                                arguments);
+
+                            Process.Start(processStartInfo)
+                                ?.WaitForInputIdle();
+                        }
+                        else if (LinuxOS)
+                        {
+                            var arguments = $"\"{(
+                                openFolderRequest.isDirectory
+                                    ? MatcherUtil.NormalizePath(path)
+                                    : Path.GetDirectoryName(
+                                        MatcherUtil.NormalizePath(path))!
+                            )}\"";
+
+                            var processStartInfo = new ProcessStartInfo
+                            {
+                                FileName = "xdg-open",
+                                Arguments = arguments,
+                                UseShellExecute = false
+                            };
+
+                            Log.Debug(
+                                "RUN xdg-open {Arguments}",
+                                arguments);
+
+                            try
+                            {
+                                Process.Start(processStartInfo);
+                            }
+                            catch
+                            {
+                                var fallback = new ProcessStartInfo
+                                {
+                                    FileName = openFolderRequest.path,
+                                    UseShellExecute = true
+                                };
+
+                                Process.Start(fallback);
+                            }
+                        }
+                        else if (MacOS)
+                        {
+                            var arguments =
+                                $"-R \"{MatcherUtil.NormalizePath(normalizedPath)}\"";
+
+                            var processStartInfo = new ProcessStartInfo
+                            {
+                                FileName = "open",
+                                Arguments = arguments,
+                                UseShellExecute = false
+                            };
+
+                            Log.Debug(
+                                "RUN open {Arguments}",
+                                arguments);
+
+                            Process.Start(processStartInfo);
+                        }
+                        else
+                        {
+                            throw new PlatformNotSupportedException(
+                                $"OS not supported: " +
+                                $"{RuntimeInformation.OSDescription}");
+                        }
+
+                        break;
+                    }
+
                     case StartFinishRequestMessage.TYPE:
-                        {
-                            // var startFinishRequest = JsonSerializer.Deserialize(message, messageJsonContext.StartFinishRequestMessage);
-                            // fullStartupTime.Dispose();
+                        break;
 
-                            break;
-                        }
+                    default:
+                        Log.Warning(
+                            "Received unhandled desktop message type: {MessageType}",
+                            desktopRequest.type);
+                        break;
                 }
 
-                if (responseSerialized == "")
+                if (string.IsNullOrEmpty(responseSerialized))
                 {
                     return;
                 }
 
                 if (WindowsOS)
                 {
-                    responseSerialized = responseSerialized.Replace("\\", "\\\\");
+                    responseSerialized = responseSerialized.Replace(
+                        "\\",
+                        "\\\\");
                 }
 
                 var data = $"{{ \"detail\": {responseSerialized} }}";
 
                 await window.SendWebMessageAsync(data);
 
-                Log.Logger.Debug($"Response = {data}");
+                Log.Debug("Response = {Response}", data);
             }
             catch (JsonException ex)
             {
-                Log.Error(ex, "JsonException during frontend message recept");
+                Log.Error(
+                    ex,
+                    "JsonException during frontend message receipt.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(
+                    ex,
+                    "Unhandled exception during frontend message processing.");
             }
         });
     }
