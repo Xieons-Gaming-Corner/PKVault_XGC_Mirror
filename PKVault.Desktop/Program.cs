@@ -234,36 +234,62 @@ class Program
 
     private static void SetupWindow(PhotinoWindow window, string baseUrl)
     {
-        using Stream? iconStream = Assembly.GetManifestResourceStream($"{AssemblyStaticPrefix}icon.png");
-
-        var tmpIconFilepath = Path.Combine(Path.GetTempPath(), $"pkvault-icon.png");
-
-        using var fileStream = File.Create(tmpIconFilepath);
-        iconStream.CopyTo(fileStream);
-
+        string? tmpIconFilepath = null;
+        var iconResourceName = $"{AssemblyStaticPrefix}icon.ico";
+    
+        try
+        {
+            using Stream? iconStream =
+                Assembly.GetManifestResourceStream(iconResourceName);
+    
+            if (iconStream is null)
+            {
+                Log.Warning(
+                    "Embedded icon resource was not found: {ResourceName}. " +
+                    "Starting PKVault with the default system icon.",
+                    iconResourceName);
+            }
+            else
+            {
+                tmpIconFilepath = Path.Combine(
+                    Path.GetTempPath(),
+                    $"pkvault-icon-{Guid.NewGuid():N}.ico");
+    
+                using var fileStream = File.Create(tmpIconFilepath);
+                iconStream.CopyTo(fileStream);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(
+                ex,
+                "Could not extract the embedded application icon. " +
+                "Starting PKVault with the default system icon.");
+        }
+    
         window
             .SetTitle("PKVault")
-            // Windows only: resize to a percentage of the main monitor work area
             .SetUseOsDefaultSize(WindowsOS)
-            // Linux only: static initial size
             .SetSize(1280, 755)
             .Center()
-            .SetResizable(true)
-            .SetIconFile(tmpIconFilepath)
-            // .RegisterCustomSchemeHandler("app", (sender, scheme, url, out contentType) =>
-            // {
-            //     log.LogInformation("APP => " + url);
-
-            //     contentType = "text/html";
-            //     return new MemoryStream(Encoding.UTF8.GetBytes(@"<html>foo</html>"));
-            // })
+            .SetResizable(true);
+    
+        if (!string.IsNullOrWhiteSpace(tmpIconFilepath) &&
+            File.Exists(tmpIconFilepath))
+        {
+            window.SetIconFile(tmpIconFilepath);
+        }
+    
+        window
             .RegisterWindowCreatedHandler((sender, e) =>
             {
-                // remove created temp icon since not useful anymore
-                if (File.Exists(tmpIconFilepath))
+                if (!string.IsNullOrWhiteSpace(tmpIconFilepath) &&
+                    File.Exists(tmpIconFilepath))
+                {
                     File.Delete(tmpIconFilepath);
+                }
             })
-            .Load(baseUrl + $"/index.html");
+            .Load(baseUrl + "/index.html");
     }
 
     private static void InjectIntoFrontend(PhotinoWindow window)
