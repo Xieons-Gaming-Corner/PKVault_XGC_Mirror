@@ -5,7 +5,7 @@ namespace PKVault.Core;
 
 public class PK7Converter(PKMConverterUtils utils)
 {
-    public PK8 ConvertToPK8(PK7 pk7, PKMRndValues? rndValues)
+    public PK8 ConvertToPK8(PK7 pk7, ConvertContext ctx)
     {
         var pk8 = new PK8()
         {
@@ -23,7 +23,7 @@ public class PK7Converter(PKMConverterUtils utils)
             PokerusState = pk7.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk8, pk7, 8, rndValues);
+        utils.CopyCommonPropertiesFrom(pk8, pk7, 8, ctx);
         utils.CopyIVsFrom(pk8, pk7);
         utils.CopyEVsFrom(pk8, pk7);
 
@@ -37,21 +37,13 @@ public class PK7Converter(PKMConverterUtils utils)
         pk7.CopyRibbonSetMemory6(pk8);
         pk7.CopyRibbonSetCommon7(pk8);
 
-        utils.CopyHeldItemFrom(pk8, pk7.HeldItem, pk7.Context, pk7.Version);
+        utils.CopyHeldItemFrom(pk8, pk7.HeldItem, pk7.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk8);
+        utils.FixAbility(pk8, ctx);
 
-        utils.FixMetLocation(pk8, [
-            GameVersion.S, GameVersion.R, GameVersion.E, GameVersion.FR, GameVersion.LG, GameVersion.CXD,
-            GameVersion.D, GameVersion.P, GameVersion.Pt, GameVersion.SS, GameVersion.HG,
-            GameVersion.B, GameVersion.W, GameVersion.B2, GameVersion.W2,
-            GameVersion.X, GameVersion.Y, GameVersion.OR, GameVersion.AS,
-            GameVersion.SN, GameVersion.MN, GameVersion.US, GameVersion.UM,
-            GameVersion.SW, GameVersion.SH, GameVersion.BD, GameVersion.SP, GameVersion.PLA,
-        ]);
+        utils.FixMetLocation(pk8, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk8, pk7.IsShiny, pk7.Form, pk7.Gender, pk7.Nature);
+        utils.FixPersonalData(pk8, pk7.IsShiny, pk7.Form, pk7.Gender, pk7.Nature, pk7.Ability, false, ctx);
 
         utils.CopyMovesFrom(pk8, pk7);
 
@@ -63,7 +55,7 @@ public class PK7Converter(PKMConverterUtils utils)
         return pk8;
     }
 
-    public PB7 ConvertToPB7(PK7 pk7, PKMRndValues? rndValues)
+    public PB7 ConvertToPB7(PK7 pk7, ConvertContext ctx)
     {
         byte convertEVToAV(float value) => byte.Max((byte)(value / pk7.MaxEV * 200), 2);
 
@@ -96,16 +88,11 @@ public class PK7Converter(PKMConverterUtils utils)
             PokerusState = 0,
         };
 
-        utils.CopyCommonPropertiesFrom(pb7, pk7, 7, rndValues);
+        utils.CopyCommonPropertiesFrom(pb7, pk7, 7, ctx);
 
         utils.CopyMovesFrom(pb7, pk7);
 
-        // pb7.FixMetLocation([
-        //     // GameVersion.RD, GameVersion.GN, GameVersion.BU, GameVersion.YW,
-        //     // GameVersion.GD, GameVersion.SI, GameVersion.C,
-        //     GameVersion.GP, GameVersion.GE,
-        //     GameVersion.GO,
-        // ]);
+        utils.FixMetLocation(pb7, ctx);
 
         pb7.ResetCalculatedValues();
 
@@ -150,7 +137,7 @@ public class PK7Converter(PKMConverterUtils utils)
         ];
     }
 
-    public PK6 ConvertToPK6(PK7 pk7, PKMRndValues? rndValues)
+    public PK6 ConvertToPK6(PK7 pk7, ConvertContext ctx)
     {
         var pk6 = new PK6()
         {
@@ -166,7 +153,7 @@ public class PK7Converter(PKMConverterUtils utils)
             PokerusState = pk7.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk6, pk7, 6, rndValues);
+        utils.CopyCommonPropertiesFrom(pk6, pk7, 6, ctx);
         utils.CopyIVsFrom(pk6, pk7);
         utils.CopyEVsFrom(pk6, pk7);
 
@@ -179,14 +166,13 @@ public class PK7Converter(PKMConverterUtils utils)
         pk7.CopyRibbonSetCommon6(pk6);
         pk7.CopyRibbonSetMemory6(pk6);
 
-        utils.CopyHeldItemFrom(pk6, pk7.HeldItem, pk7.Context, pk7.Version);
+        utils.CopyHeldItemFrom(pk6, pk7.HeldItem, pk7.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk6);
+        utils.FixAbility(pk6, ctx);
 
-        utils.FixMetLocation(pk6, [GameVersion.X, GameVersion.Y, GameVersion.AS, GameVersion.OR]);
+        utils.FixMetLocation(pk6, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk6, pk7.IsShiny, pk7.Form, pk7.Gender, pk7.Nature);
+        utils.FixPersonalData(pk6, pk7.IsShiny, pk7.Form, pk7.Gender, pk7.Nature, pk7.Ability, false, ctx);
 
         // for Furfrou and Hoopa
         pk6.FormArgumentRemain = pk7.FormArgumentRemain;
@@ -198,7 +184,7 @@ public class PK7Converter(PKMConverterUtils utils)
         return pk6;
     }
 
-    public PK7 ConvertToPK7(PB7 pb7, PKMRndValues? rndValues)
+    public PK7 ConvertToPK7(PB7 pb7, ConvertContext ctx)
     {
         byte convertAVToEV(float value) => (byte)(byte.Max(0, (byte)(value - 2)) * EffortValues.Max252 / 198);
 
@@ -241,7 +227,7 @@ public class PK7Converter(PKMConverterUtils utils)
             PokerusState = pb7.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk7, pb7, 7, rndValues);
+        utils.CopyCommonPropertiesFrom(pk7, pb7, 7, ctx);
         utils.CopyIVsFrom(pk7, pb7);
 
         pb7.CopyRibbonSetCommon3(pk7);
@@ -252,14 +238,13 @@ public class PK7Converter(PKMConverterUtils utils)
         pb7.CopyRibbonSetMemory6(pk7);
         pb7.CopyRibbonSetCommon7(pk7);
 
-        utils.CopyHeldItemFrom(pk7, pb7.HeldItem, pb7.Context, pb7.Version);
+        utils.CopyHeldItemFrom(pk7, pb7.HeldItem, pb7.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk7);
+        utils.FixAbility(pk7, ctx);
 
-        utils.FixMetLocation(pk7, [GameVersion.SN, GameVersion.MN, GameVersion.US, GameVersion.UM]);
+        utils.FixMetLocation(pk7, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk7, pb7.IsShiny, pb7.Form, pb7.Gender, pb7.Nature);
+        utils.FixPersonalData(pk7, pb7.IsShiny, pb7.Form, pb7.Gender, pb7.Nature, pb7.Ability, false, ctx);
 
         utils.CopyMovesFrom(pk7, pb7);
 

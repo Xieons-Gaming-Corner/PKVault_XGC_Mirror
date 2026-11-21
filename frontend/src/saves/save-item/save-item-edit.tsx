@@ -7,7 +7,6 @@ import { useSettingsEdit, useSettingsGet } from '../../data/sdk/settings/setting
 import { getEntityContextGenerationName } from '../../data/util/get-entity-context-generation-name';
 import { useStaticData } from '../../hooks/use-static-data';
 import { getGameInfos } from '../../pokedex/details/util/get-game-infos';
-import { isDesktop } from '../../settings/globs-input/hooks/use-desktop-message';
 import { useTranslate } from '../../translate/i18n';
 import { UIButton } from '../../ui/form/button/ui-button';
 import { UIPopoverCard } from '../../ui/popover/popover-card/ui-popover-card';
@@ -75,7 +74,7 @@ export const SaveItemEdit: React.FC<{ saveId: number }> = ({ saveId }) => {
                             });
                         }}
                         selected={!pathOverride}
-                        disabled={settings?.demoMode || !settings?.canUpdateSettings || !pathOverride}
+                        disabled={!settings?.canUpdateSettings || !pathOverride}
                         size='compact-sm'
                     >
                         {t('save.edit.duplicate.default')}
@@ -101,7 +100,7 @@ export const SaveItemEdit: React.FC<{ saveId: number }> = ({ saveId }) => {
                             imgSrc={getGameInfos(s.displayedVersion).img}
                             selected={save === s}
                             disabled={pathOverride === s.path}
-                            onSelect={settings?.demoMode || settings?.canUpdateSettings
+                            onSelect={settings?.canUpdateSettings
                                 ? (async () => {
                                     const savePathOverrides = { ...settingsMutable.savE_PATH_OVERRIDES };
                                     if (s.path === savePathOverrides[ s.id ]) {
@@ -125,7 +124,7 @@ export const SaveItemEdit: React.FC<{ saveId: number }> = ({ saveId }) => {
                             language={staticData.languages[ s.language ] ?? ''}
                             path={s.path}
                             editDropdown={null}
-                            actions={!isDesktop && <>
+                            actions={settings?.canDeleteSaves && <>
                                 <UIConfirmPopover
                                     label={t('saves.action.delete')}
                                     icon={<TriangleAlertIcon />}
@@ -136,7 +135,7 @@ export const SaveItemEdit: React.FC<{ saveId: number }> = ({ saveId }) => {
                                     nested
                                 >
                                     <Button
-                                        disabled={settings?.demoMode || !settings?.canUpdateSettings}
+                                        disabled={!settings?.canUpdateSettings}
                                         variant='filled'
                                         color='red'
                                         size='compact-xs'

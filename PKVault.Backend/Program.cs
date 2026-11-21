@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -26,8 +27,8 @@ public class Program
 
             var appTask = app.RunAsync();
 
-            #if DEBUG
-            
+#if DEBUG
+
             var coreRouter = app.Services.GetRequiredService<CoreRouter>();
             Core.OpenApi.OpenApiGenerator.GenerateOpenApiFile(
                 Path.Combine(
@@ -38,7 +39,7 @@ public class Program
                 coreRouter.Routes
             );
 
-            #endif
+#endif
 
             await appTask;
         }
@@ -66,8 +67,6 @@ public class Program
 
         app.Map("{*path}", async (HttpContext context) =>
         {
-            await SetupTask!;
-
             using var scope = app.Services.CreateScope();
             var coreRouter = scope.ServiceProvider.GetRequiredService<CoreRouter>();
 
@@ -78,9 +77,9 @@ public class Program
                 ? context.Request.QueryString.Value
                 : "";
 
-            var result = await coreRouter.Dispatch(scope.ServiceProvider, req.Method, req.Path, queryString, req.Body);
+            var result = await coreRouter.Dispatch(SetupTask!, scope.ServiceProvider, req.Method, req.Path, queryString, req.Body);
 
-            res.StatusCode = result.StatusCode ?? 200;
+            res.StatusCode = result.StatusCode;
 
             if (result.Header is not null)
                 foreach (var (key, values) in result.Header)
@@ -88,7 +87,7 @@ public class Program
 
             if (result is CoreFileResponse fileResponse)
             {
-                res.ContentType = fileResponse.ContentType ?? "application/octet-stream";
+                res.ContentType = fileResponse.ContentType ?? MediaTypeNames.Application.Octet;
 
                 var contentDispositionHeader = new System.Net.Mime.ContentDisposition()
                 {
@@ -106,7 +105,7 @@ public class Program
 
             else if (result is CoreJSONResponse jsonResponse)
             {
-                res.ContentType = jsonResponse.ContentType ?? "application/json";
+                res.ContentType = jsonResponse.ContentType ?? MediaTypeNames.Application.Json;
                 if (jsonResponse.Data is not null)
                 {
                     var typeInfo = RouteJsonContext.DefaultWithOptions.GetTypeInfo(jsonResponse.Data.GetType())
@@ -180,6 +179,8 @@ public class Program
         });
 
         Core.Program.ConfigureServices(services);
+
+        services.AddSerilog(Log.Logger);
 
         if (EnvUtil.DEMO_MODE)
             services.AddHostedService<DemoCleanupService>();

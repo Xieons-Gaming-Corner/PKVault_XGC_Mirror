@@ -1,31 +1,48 @@
+using System.Collections;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Moq;
 using PKHeX.Core;
 using PKVault.Core;
 
 public class PkmConvertServiceTests
 {
-    private static readonly byte[] pikachuForwardBytes = File.ReadAllBytes("./assets/pikachu-front.pk1");
+    public PkmConvertServiceTests()
+    {
+        Program.Initialize();
+    }
+
+    private static readonly byte[] pikachuForwardBytes = File.ReadAllBytes(Path.Combine(Program.InitialCurrentDirectory, "./assets/pikachu-front.pk1"));
     private static readonly Dictionary<string, object> pikachuForwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
-        File.ReadAllText("./assets/pikachu-front-expected.json")
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/pikachu-front-expected.json"))
     )!;
 
-    private static readonly byte[] pikachuBackwardBytes = File.ReadAllBytes("./assets/pikachu-back.pa9");
+    private static readonly byte[] pikachuBackwardBytes = File.ReadAllBytes(Path.Combine(Program.InitialCurrentDirectory, "./assets/pikachu-back.pa9"));
     private static readonly Dictionary<string, object> pikachuBackwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
-        File.ReadAllText("./assets/pikachu-back-expected.json")
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/pikachu-back-expected.json"))
     )!;
 
-    private static readonly byte[] bizarreForwardBytes = File.ReadAllBytes("./assets/bizarre-front.pk2");
+    private static readonly byte[] bizarreForwardBytes = File.ReadAllBytes(Path.Combine(Program.InitialCurrentDirectory, "./assets/bizarre-front.pk2"));
     private static readonly Dictionary<string, object> bizarreForwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
-        File.ReadAllText("./assets/bizarre-front-expected.json")
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/bizarre-front-expected.json"))
     )!;
     private static readonly Dictionary<string, object> bizarreVariantBackwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
-        File.ReadAllText("./assets/bizarre-variant-back-expected.json")
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/bizarre-variant-back-expected.json"))
     )!;
 
-    private static readonly byte[] mukForwardBytes = File.ReadAllBytes("./assets/muk-front.pk3");
+    private static readonly byte[] mukForwardBytes = File.ReadAllBytes(Path.Combine(Program.InitialCurrentDirectory, "./assets/muk-front.pk3"));
     private static readonly Dictionary<string, object> mukForwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
-        File.ReadAllText("./assets/muk-front-expected.json")
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/muk-front-expected.json"))
+    )!;
+
+    private static readonly byte[] chdingForwardBytes = File.ReadAllBytes(Path.Combine(Program.InitialCurrentDirectory, "./assets/chding-front.pk3"));
+    private static readonly Dictionary<string, object> chdingForwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/chding-front-expected.json"))
+    )!;
+
+    private static readonly byte[] marcForwardBytes = File.ReadAllBytes(Path.Combine(Program.InitialCurrentDirectory, "./assets/marc-front.pk3"));
+    private static readonly Dictionary<string, object> marcForwardExpectedData = JsonSerializer.Deserialize<Dictionary<string, object>>(
+        File.ReadAllText(Path.Combine(Program.InitialCurrentDirectory, "./assets/marc-front-expected.json"))
     )!;
 
     private static bool pkFolderCleaned = false;
@@ -36,13 +53,15 @@ public class PkmConvertServiceTests
         mockSettingsService.Setup(x => x.GetSettings()).Returns(new SettingsDTO(
             BuildID: default, RuntimeSystem: RuntimeSystem.LINUX, SourceProvider: SourceProvider.GithubRelease, FlatpakMigrated: false,
             Version: "", PkhexVersion: "", AppDirectory: "", SettingsPath: "", UserId: "",
-            CanUpdateSettings: false, CanScanSaves: false, DemoMode: false, SettingsMutable: new(
+            SettingsMutable: new(
                 DB_PATH: "", SAVE_GLOBS: [], PKM_EXTERNAL_GLOBS: [], STORAGE_PATH: "", BACKUP_PATH: "",
                 LANGUAGE: "fr", HIDE_CHEATS: false, SKIP_LEGALITY_CHECKS: false
             )
         ));
 
-        return new(mockSettingsService.Object, new LegalityAnalysisService(mockSettingsService.Object));
+        PKMConverterUtils pkmConverterUtils = new();
+
+        return new(mockSettingsService.Object, pkmConverterUtils);
     }
 
     private void SetupPKDirectory(string folderName)
@@ -117,8 +136,9 @@ public class PkmConvertServiceTests
         if (result is not GBPKM && blank is not GBPKM)
         {
             var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
-                PID: result.PID,
-                EncryptionConstant: result.EncryptionConstant
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
             )).GetMutablePkm();
 
             Assert.Equal(result.PID, result2.PID);
@@ -171,8 +191,9 @@ public class PkmConvertServiceTests
         if (result is not GBPKM && blank is not GBPKM)
         {
             var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
-                PID: result.PID,
-                EncryptionConstant: result.EncryptionConstant
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
             )).GetMutablePkm();
 
             Assert.Equal(result.PID, result2.PID);
@@ -235,8 +256,9 @@ public class PkmConvertServiceTests
         if (result is not GBPKM && blank is not GBPKM)
         {
             var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
-                PID: result.PID,
-                EncryptionConstant: result.EncryptionConstant
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
             )).GetMutablePkm();
 
             Assert.Equal(result.PID, result2.PID);
@@ -260,21 +282,16 @@ public class PkmConvertServiceTests
     ]
     [
         InlineData("PK6"),
-        InlineData("PK7"),
-        InlineData("PB7"),  // G2 pkms not available here
-        InlineData("PK8")
+        InlineData("PK7")
     ]
     [
         InlineData("PB8"),
-        InlineData("PA8"),
-        InlineData("PK9"),  // Unown not available here
-        InlineData("PA9")   // Unown not available here
+        InlineData("PA8")
     ]
     /**
      * Complex conversion with Unown (#201):
      * - Form, Shiny, Helditem
      * - direction: forward
-     * - PK2 to all games
      * - PID predictability with existing pkm
      */
     public async Task TestAllBizarreForwardConversions(string targetTypeName)
@@ -301,8 +318,70 @@ public class PkmConvertServiceTests
         if (result is not GBPKM && blank is not GBPKM)
         {
             var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
-                PID: result.PID,
-                EncryptionConstant: result.EncryptionConstant
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
+            )).GetMutablePkm();
+
+            Assert.Equal(result.PID, result2.PID);
+            Assert.Equal(result.EncryptionConstant, result2.EncryptionConstant);
+        }
+    }
+
+    [Theory]
+    [
+        InlineData("PK3"),
+        InlineData("CK3"),
+        InlineData("XK3")
+    ]
+    [
+        InlineData("PK4"),
+        InlineData("BK4"),
+        InlineData("RK4"),
+        InlineData("PK5")
+    ]
+    [
+        InlineData("PK6"),
+        InlineData("PK7"),
+        InlineData("PB7")
+    ]
+    [
+        InlineData("PB8"),
+        InlineData("PK9")
+    ]
+    /**
+     * Complex conversion with Muk (#89):
+     * - Nature, Ability, Helditem, Markings, Contest, Ribbon
+     * - direction: forward
+     * - PID predictability with existing pkm
+     */
+    public async Task TestAllMukForwardConversions(string targetTypeName)
+    {
+        SetupPKDirectory("muk-front");
+
+        var service = GetService();
+
+        FileUtil.TryGetPKM(mukForwardBytes, out var sourcePkm, "pk3");
+        Assert.NotNull(sourcePkm);
+        Assert.Equal(89, sourcePkm.Species);
+
+        var blank = CreateBlankTarget(targetTypeName);
+
+        var result = service.ConvertTo(new(sourcePkm), blank.GetType(), null).GetMutablePkm();
+
+        Assert.Equal(targetTypeName, result.GetType().Name);
+
+        File.WriteAllBytes(Path.Combine("./pkm-files", "muk-front", result.FileName), new ImmutablePKM(result).GetDecryptedDataParty());
+
+        AssertExpectedData(result, (JsonElement)mukForwardExpectedData[targetTypeName]);
+
+        // check PID predictability
+        if (result is not GBPKM && blank is not GBPKM)
+        {
+            var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
             )).GetMutablePkm();
 
             Assert.Equal(result.PID, result2.PID);
@@ -330,26 +409,22 @@ public class PkmConvertServiceTests
     ]
     [
         InlineData("PB8"),
-        InlineData("PA8"),
-        InlineData("PK9"),
         InlineData("PA9")
     ]
     /**
-     * Complex conversion with Muk (#89):
-     * - Nature, Ability, Helditem, Markings, Contest, Ribbon
+     * Basic conversion with Chding/Farfetch’d (#83):
      * - direction: forward
-     * - PK3 to all games
      * - PID predictability with existing pkm
      */
-    public async Task TestAllMukForwardConversions(string targetTypeName)
+    public async Task TestAllChdingForwardConversions(string targetTypeName)
     {
-        SetupPKDirectory("muk-front");
+        SetupPKDirectory("chding-front");
 
         var service = GetService();
 
-        FileUtil.TryGetPKM(mukForwardBytes, out var sourcePkm, "pk3");
+        FileUtil.TryGetPKM(chdingForwardBytes, out var sourcePkm, "pk3");
         Assert.NotNull(sourcePkm);
-        Assert.Equal(89, sourcePkm.Species);
+        Assert.Equal(83, sourcePkm.Species);
 
         var blank = CreateBlankTarget(targetTypeName);
 
@@ -357,16 +432,84 @@ public class PkmConvertServiceTests
 
         Assert.Equal(targetTypeName, result.GetType().Name);
 
-        File.WriteAllBytes(Path.Combine("./pkm-files", "muk-front", result.FileName), new ImmutablePKM(result).GetDecryptedDataParty());
+        File.WriteAllBytes(Path.Combine("./pkm-files", "chding-front", result.FileName), new ImmutablePKM(result).GetDecryptedDataParty());
 
-        AssertExpectedData(result, (JsonElement)mukForwardExpectedData[targetTypeName]);
+        if (!chdingForwardExpectedData.TryGetValue(targetTypeName, out var _))
+            chdingForwardExpectedData.Add(targetTypeName, JsonElement.Parse("{}"));
+
+        AssertExpectedData(result, (JsonElement)chdingForwardExpectedData[targetTypeName]);
 
         // check PID predictability
         if (result is not GBPKM && blank is not GBPKM)
         {
             var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
-                PID: result.PID,
-                EncryptionConstant: result.EncryptionConstant
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
+            )).GetMutablePkm();
+
+            Assert.Equal(result.PID, result2.PID);
+            Assert.Equal(result.EncryptionConstant, result2.EncryptionConstant);
+        }
+    }
+
+    [Theory]
+    [
+        InlineData("PK3"),
+        InlineData("CK3"),
+        InlineData("XK3")
+    ]
+    [
+        InlineData("PK4"),
+        InlineData("BK4"),
+        InlineData("RK4"),
+        InlineData("PK5")
+    ]
+    [
+        InlineData("PK6"),
+        InlineData("PK7"),
+        InlineData("PB7"),
+        InlineData("PK8")
+    ]
+    [
+        InlineData("PB8"),
+        InlineData("PA8")
+    ]
+    /**
+     * Basic conversion with Marc/Lickitung (#108):
+     * - direction: forward
+     * - PID predictability with existing pkm
+     */
+    public async Task TestAllMarcForwardConversions(string targetTypeName)
+    {
+        SetupPKDirectory("marc-front");
+
+        var service = GetService();
+
+        FileUtil.TryGetPKM(marcForwardBytes, out var sourcePkm, "pk3");
+        Assert.NotNull(sourcePkm);
+        Assert.Equal(108, sourcePkm.Species);
+
+        var blank = CreateBlankTarget(targetTypeName);
+
+        var result = service.ConvertTo(new(sourcePkm), blank.GetType(), null).GetMutablePkm();
+
+        Assert.Equal(targetTypeName, result.GetType().Name);
+
+        File.WriteAllBytes(Path.Combine("./pkm-files", "marc-front", result.FileName), new ImmutablePKM(result).GetDecryptedDataParty());
+
+        if (!marcForwardExpectedData.TryGetValue(targetTypeName, out var _))
+            marcForwardExpectedData.Add(targetTypeName, JsonElement.Parse("{}"));
+
+        AssertExpectedData(result, (JsonElement)marcForwardExpectedData[targetTypeName]);
+
+        // check PID predictability
+        if (result is not GBPKM && blank is not GBPKM)
+        {
+            var result2 = service.ConvertTo(new(sourcePkm), blank.GetType(), new(
+                SourcePkm: sourcePkm,
+                TargetPkm: result,
+                TargetSave: null
             )).GetMutablePkm();
 
             Assert.Equal(result.PID, result2.PID);
@@ -402,202 +545,203 @@ public class PkmConvertServiceTests
 
     private void AssertExpectedData(PKM pkm, JsonElement expectedData)
     {
-        Assert.Equal(expectedData.GetProperty("species").GetInt32(), pkm.Species);
-        Assert.Equal(expectedData.GetProperty("form").GetInt32(), pkm.Form);
-        Assert.Equal(expectedData.GetProperty("gender").GetByte(), pkm.Gender);
-        Assert.Equal(expectedData.GetProperty("version").GetByte(), (byte)pkm.Version);
-        Assert.Equal(expectedData.GetProperty("level").GetInt32(), pkm.CurrentLevel);
-        Assert.Equal(expectedData.GetProperty("exp").GetUInt32(), pkm.EXP);
-        Assert.Equal(expectedData.GetProperty("shiny").GetBoolean(), pkm.IsShiny);
-        if (expectedData.TryGetProperty("nicknamed", out var nicknamed))
-            Assert.Equal(nicknamed.GetBoolean(), pkm.IsNicknamed);
-        Assert.Equal(expectedData.GetProperty("nickname").GetString(), pkm.Nickname);
-        if (expectedData.TryGetProperty("nature", out var nature))
-            Assert.Equal(nature.GetByte(), (byte)pkm.Nature);
-        Assert.Equal(expectedData.GetProperty("ability").GetInt32(), pkm.Ability);
-        Assert.Equal(expectedData.GetProperty("tid").GetInt32(), pkm.TID16);
-        Assert.Equal(expectedData.GetProperty("ot").GetString(), pkm.OriginalTrainerName);
-        Assert.Equal(expectedData.GetProperty("language").GetInt32(), pkm.Language);
+        Dictionary<string, object?> missingData = [];
 
-        if (expectedData.TryGetProperty("metLocation", out var metLocation))
+        void AssertWithDebug(string property, object? pkmValue, bool required = true)
         {
-            Assert.Equal(metLocation.GetInt32(), pkm.MetLocation);
-        }
+            // avoid string detection
+            if (pkmValue is byte[] eb)
+                pkmValue = eb.Select(v => (int)v).ToArray();
 
-        if (expectedData.TryGetProperty("ball", out var ball))
-        {
-            Assert.Equal(ball.GetByte(), pkm.Ball);
-        }
+            // sort dicts
+            if (pkmValue is IDictionary ed)
+                pkmValue = ((ICollection<string>)ed.Keys).Order().ToDictionary(
+                    k => k,
+                    k => ed[k]!
+                );
 
-        // Moves
-        if (expectedData.TryGetProperty("moves", out var moves))
-        {
-            var expectedMoves = moves.EnumerateArray()
-                .Select(x => (ushort)x.GetInt32()).ToArray();
-            Assert.Equal(expectedMoves, pkm.Moves);
-        }
+            var t = pkmValue?.GetType();
+            var pkmValueStr = t != null
+                && (t.IsArray || pkmValue is IList || pkmValue is IDictionary)
+                ? JsonSerializer.Serialize(pkmValue)
+                : pkmValue?.ToString() ?? "null";
 
-        // IVs
-        if (expectedData.TryGetProperty("ivs", out var ivs))
-        {
-            var expectedIv = ivs.EnumerateArray()
-                .Select(x => x.GetInt32()).ToArray();
-            Assert.Equal(expectedIv, (int[])[
-                pkm.IV_HP,
-                pkm.IV_ATK,
-                pkm.IV_DEF,
-                pkm.IV_SPA,
-                pkm.IV_SPD,
-                pkm.IV_SPE,
-            ]);
-        }
-
-        // EVs
-        if (expectedData.TryGetProperty("evs", out var evs))
-        {
-            var expectedEv = evs.EnumerateArray()
-                .Select(x => x.GetInt32()).ToArray();
-            int[] pkmEvs = pkm is PB7 pb7
-                ? [
-                    pb7.AV_HP,
-                    pb7.AV_ATK,
-                    pb7.AV_DEF,
-                    pb7.AV_SPA,
-                    pb7.AV_SPD,
-                    pb7.AV_SPE,
-                ]
-                : [
-                    pkm.EV_HP,
-                    pkm.EV_ATK,
-                    pkm.EV_DEF,
-                    pkm.EV_SPA,
-                    pkm.EV_SPD,
-                    pkm.EV_SPE,
-                ];
-            Assert.Equal(expectedEv, pkmEvs);
-        }
-
-        // Stats
-        if (expectedData.TryGetProperty("stats", out var stats))
-        {
-            pkm.SetStats(pkm.GetStats(pkm.PersonalInfo));
-            var expectedStats = stats.EnumerateArray()
-                .Select(x => x.GetInt32()).ToArray();
-            Assert.Equal(expectedStats, (int[])[
-                pkm.Stat_HPMax,
-                pkm.Stat_ATK,
-                pkm.Stat_DEF,
-                pkm.Stat_SPA,
-                pkm.Stat_SPD,
-                pkm.Stat_SPE,
-            ]);
-        }
-
-        if (expectedData.TryGetProperty("friendship", out var friendship))
-        {
-            Assert.Equal(friendship.GetByte(), pkm.CurrentFriendship);
-        }
-
-        if (expectedData.TryGetProperty("helditem", out var helditem))
-        {
-            Assert.Equal(helditem.GetInt32(), pkm.HeldItem);
-        }
-
-        if (expectedData.TryGetProperty("sid", out var sid))
-        {
-            Assert.Equal(sid.GetInt32(), pkm.SID16);
-        }
-
-        if (expectedData.TryGetProperty("marks", out var marks))
-        {
-            if (pkm is IAppliedMarkings<bool> pkmMarkings)
+            string elementToString(JsonElement el)
             {
-                List<bool> pkmMarks = [];
-                for (var i = 0; i < pkmMarkings.MarkingCount; i++)
+                switch (el.ValueKind)
                 {
-                    pkmMarks.Add(pkmMarkings.GetMarking(i));
+                    case JsonValueKind.Array:
+                        return JsonArray.Create(el)?.ToJsonString() ?? "null";
+                    case JsonValueKind.Object:
+                        try
+                        {
+                            var dict = el.Deserialize<Dictionary<string, object>>()
+                                ?.OrderBy(e => e.Key)
+                                .ToDictionary();
+                            if (dict != null)
+                                return JsonSerializer.Serialize(dict);
+                        }
+                        catch
+                        { }
+                        return JsonObject.Create(el)?.ToJsonString() ?? "null";
+                    default:
+                        return el.ToString();
                 }
+            }
 
-                Assert.Equal(
-                    marks.EnumerateArray().Select(v => v.GetBoolean()!),
-                    pkmMarks
+            try
+            {
+                if (required)
+                    Assert.Equal(elementToString(expectedData.GetProperty(property)), pkmValueStr);
+                else if (expectedData.TryGetProperty(property, out var value))
+                    Assert.Equal(elementToString(value), pkmValueStr);
+            }
+            catch (KeyNotFoundException)
+            {
+                missingData.TryAdd(property, pkmValue);
+            }
+            catch (InvalidOperationException)
+            {
+                if (required)
+                    missingData.TryAdd(property, pkmValue);
+            }
+            catch (Xunit.Sdk.EqualException ex)
+            {
+                throw new Xunit.Sdk.XunitException(
+                    $"{pkm.GetType().Name}.{property}:"
+                    + $"\n\tExpected: {elementToString(expectedData.GetProperty(property))}"
+                    + $"\n\tActual:   {pkmValueStr}",
+                    ex
                 );
             }
         }
 
-        if (expectedData.TryGetProperty("ribbons", out var ribbons))
+        Assert.True(GameVersionUtil.IsPresentInGame(pkm.Context.GetSingleGameVersion(), pkm.Species, pkm.Form));
+
+        AssertWithDebug("species", pkm.Species);
+        AssertWithDebug("form", pkm.Form);
+        AssertWithDebug("gender", pkm.Gender);
+        AssertWithDebug("version", (byte)pkm.Version);
+        AssertWithDebug("level", pkm.CurrentLevel);
+        AssertWithDebug("exp", pkm.EXP);
+        AssertWithDebug("shiny", pkm.IsShiny);
+        AssertWithDebug("nicknamed", pkm.IsNicknamed);
+        AssertWithDebug("nickname", pkm.Nickname);
+        AssertWithDebug("nature", (byte)pkm.Nature, required: false);
+        AssertWithDebug("ability", pkm.Ability);
+        AssertWithDebug("tid", pkm.TID16);
+        AssertWithDebug("ot", pkm.OriginalTrainerName);
+        AssertWithDebug("language", pkm.Language);
+        AssertWithDebug("metLocation", pkm.MetLocation, pkm is not GBPKM);
+        AssertWithDebug("ball", pkm.Ball, required: pkm is not GBPKM);
+
+        AssertWithDebug("moves", pkm.Moves);
+
+        AssertWithDebug("ivs", (int[])[
+            pkm.IV_HP,
+            pkm.IV_ATK,
+            pkm.IV_DEF,
+            pkm.IV_SPA,
+            pkm.IV_SPD,
+            pkm.IV_SPE,
+        ]);
+
+        AssertWithDebug("evs", pkm is PB7 pb7
+            ? (int[])[
+                pb7.AV_HP,
+                pb7.AV_ATK,
+                pb7.AV_DEF,
+                pb7.AV_SPA,
+                pb7.AV_SPD,
+                pb7.AV_SPE,
+            ]
+            : [
+                pkm.EV_HP,
+                pkm.EV_ATK,
+                pkm.EV_DEF,
+                pkm.EV_SPA,
+                pkm.EV_SPD,
+                pkm.EV_SPE,
+            ]);
+
+        pkm.SetStats(pkm.GetStats(pkm.PersonalInfo));
+        AssertWithDebug("stats", (int[])[
+            pkm.Stat_HPMax,
+            pkm.Stat_ATK,
+            pkm.Stat_DEF,
+            pkm.Stat_SPA,
+            pkm.Stat_SPD,
+            pkm.Stat_SPE,
+        ], required: false);
+
+        AssertWithDebug("friendship", pkm.CurrentFriendship, required: pkm is not GBPKM);
+        AssertWithDebug("helditem", pkm.HeldItem, required: false);
+        AssertWithDebug("sid", pkm.SID16, required: pkm is not GBPKM);
+
+        if (pkm is IAppliedMarkings<bool> pkmMarkings)
         {
-            var ribbonInfos = RibbonInfo.GetRibbonInfo(pkm)
-                .Where(info => info.HasRibbon || info.RibbonCount > 0)
-                .ToDictionary(
-                    info => info.Name,
-                    info => info.HasRibbon ? (byte)1 : info.RibbonCount
-                );
+            List<bool> pkmMarks = [];
+            for (var i = 0; i < pkmMarkings.MarkingCount; i++)
+            {
+                pkmMarks.Add(pkmMarkings.GetMarking(i));
+            }
 
-            Assert.Equal(ribbons.Deserialize<Dictionary<string, byte>>(), ribbonInfos);
+            AssertWithDebug("marks", pkmMarks, required: false);
         }
 
-        if (expectedData.TryGetProperty("size", out var size))
+        var ribbonInfos = RibbonInfo.GetRibbonInfo(pkm)
+            .Where(info => info.HasRibbon || info.RibbonCount > 0)
+            .ToDictionary(
+                info => info.Name,
+                info => info.HasRibbon ? (byte)1 : info.RibbonCount
+            );
+        AssertWithDebug("ribbons", ribbonInfos, required: false);
+
+        List<int> pkmSize = [];
+        if (pkm is IScaledSizeAbsolute sa)
         {
-            var ribbonInfos = RibbonInfo.GetRibbonInfo(pkm)
-                .Where(info => info.HasRibbon || info.RibbonCount > 0)
-                .ToDictionary(
-                    info => info.Name,
-                    info => info.HasRibbon ? (byte)1 : info.RibbonCount
-                );
-
-            List<int> pkmSize = [];
-
-            if (pkm is IScaledSizeAbsolute sa)
-            {
-                pkmSize.Add((int)sa.HeightAbsolute);
-                pkmSize.Add((int)sa.WeightAbsolute);
-            }
-            else if (pkm is IScaledSize ss)
-            {
-                pkmSize.Add(ss.HeightScalar);
-                pkmSize.Add(ss.WeightScalar);
-            }
-            if (pkm is IScaledSize3 scale)
-            {
-                pkmSize.Add(scale.Scale);
-            }
-
-            Assert.Equal(size.EnumerateArray().Select(v => v.GetInt32()), pkmSize);
+            pkmSize.Add((int)sa.HeightAbsolute);
+            pkmSize.Add((int)sa.WeightAbsolute);
         }
-
-        if (expectedData.TryGetProperty("contest", out var contest))
+        else if (pkm is IScaledSize ss)
         {
-            if (pkm is IContestStats pkmContest)
-            {
-                Assert.Equal(
-                    contest.EnumerateArray().Select(v => v.GetByte()!),
-                    [
-                        pkmContest.ContestCool,
-                        pkmContest.ContestBeauty,
-                        pkmContest.ContestCute,
-                        pkmContest.ContestSmart,
-                        pkmContest.ContestTough,
-                        pkmContest.ContestSheen,
-                    ]
-                );
-            }
+            pkmSize.Add(ss.HeightScalar);
+            pkmSize.Add(ss.WeightScalar);
+        }
+        if (pkm is IScaledSize3 scale)
+        {
+            pkmSize.Add(scale.Scale);
+        }
+        AssertWithDebug("size", pkmSize, required: false);
+
+        if (pkm is IContestStats pkmContest)
+        {
+            AssertWithDebug("contest", (byte[])[
+                pkmContest.ContestCool,
+                pkmContest.ContestBeauty,
+                pkmContest.ContestCute,
+                pkmContest.ContestSmart,
+                pkmContest.ContestTough,
+                pkmContest.ContestSheen,
+            ], required: false);
         }
 
-        var legality = LegalityAnalysisService.GetLegalitySafeRaw(new(pkm));
+        var legality = new LegalityAnalysisWrapper(
+            LegalityAnalysisService.GetLegalitySafeRaw(new(pkm))
+        );
 
         if (!legality.Valid)
         {
             Console.WriteLine();
             Console.WriteLine($"{pkm.GetType().Name} - {pkm.Nickname}");
-            Console.WriteLine(legality.Report());
+            Console.WriteLine(legality.Report("en"));
         }
 
         var commonIllegalities = legality.Results.ToList()
             .FindAll(r => !r.Valid)
             .Select(r => $"{r.Identifier}-{r.Result}").ToArray();
 
-        var moveIllegalities = legality.Info.Moves.ToList()
+        var moveIllegalities = legality.Info!.Moves.ToList()
             .FindAll(r => !r.Valid)
             .Select(r => $"Move-{r.Expect}");
 
@@ -614,18 +758,9 @@ public class PkmConvertServiceTests
         if (illegalities.Length > 0)
             Console.WriteLine();
 
-        if (expectedData.TryGetProperty("illegalities", out var illegalitiesJson))
-        {
-            var expectedIllegalities = illegalitiesJson.EnumerateArray()
-                .Select(v => v.GetString()!).ToArray();
-            var expectedIllegalitiesStr = string.Join('_', expectedIllegalities);
+        AssertWithDebug("illegalities", illegalities);
 
-            Assert.Equal(expectedIllegalities.Length, illegalities.Length);
-
-            foreach (var r in illegalities)
-            {
-                Assert.Contains(r, expectedIllegalities);
-            }
-        }
+        if (missingData.Count > 0)
+            throw new Exception($"Missing properties for {pkm.GetType().Name}/{pkm.Nickname}\n{JsonSerializer.Serialize(missingData)}");
     }
 }

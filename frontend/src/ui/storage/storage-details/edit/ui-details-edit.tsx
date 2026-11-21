@@ -1,4 +1,4 @@
-import { Alert, Group, InputWrapper, NumberInput, Slider, Stack, Text } from '@mantine/core';
+import { Alert, Group, InputWrapper, NumberInput, Slider, Stack, Text, useMatches, type FloatingPosition } from '@mantine/core';
 import { InfoIcon } from 'lucide-react';
 import React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -11,10 +11,8 @@ import { usePopover } from '../../../interaction/focus-controls/components/popov
 import { UIFormCard } from '../../../popover/popover-card/ui-form-card';
 import type { UIDetailsStatName } from '../content/stats/ui-details-stats-row';
 
-type DataInput = EditPkmVariantPayload;
-
 type UIDetailsEditProps = {
-    defaultValues: DataInput;
+    defaultValues: EditPkmVariantPayload;
     hideCheats: boolean;
     nicknameMaxLength: number;
     minEv: number;
@@ -22,7 +20,7 @@ type UIDetailsEditProps = {
     availableMoves: number[];
     renderMoveItemPill: (move: number, onRemove?: () => void) => React.ReactNode;
     renderMoveItemOption: (move: number, selected: boolean, full: boolean) => React.ReactNode;
-    onSubmit: (data: DataInput) => Promise<void>;
+    onSubmit: (editPayload: EditPkmVariantPayload) => Promise<void>;
 };
 
 export const UIDetailsEdit: React.FC<UIDetailsEditProps> = ({
@@ -31,6 +29,11 @@ export const UIDetailsEdit: React.FC<UIDetailsEditProps> = ({
     const { t } = useTranslate();
 
     const popover = usePopover();
+
+    const selectPosition = useMatches<FloatingPosition>({
+        base: undefined,
+        sm: 'right-start',
+    });
 
     const { register, handleSubmit, formState, setValue, control } = useForm({
         defaultValues,
@@ -91,7 +94,11 @@ export const UIDetailsEdit: React.FC<UIDetailsEditProps> = ({
                     renderOption={({ option, checked = false }) => option && renderMoveItemOption(Number(option.value), checked, watchMoves.length === 4)}
                     searchable
                     maw={300}
-                    comboboxProps={{ withinPortal: false, position: 'right-start', floatingHeight: "viewport" }}
+                    comboboxProps={{
+                        withinPortal: false,
+                        position: selectPosition,
+                        floatingHeight: "viewport"
+                    }}
                     floatingHeight="viewport"
                 />}
             </Stack>

@@ -192,10 +192,12 @@ public class UpdateExternalPkmAction(
                 });
             }
 
-            var boxes = await boxLoader.GetEntitiesByBank(bank.Id);
+            var boxes = (await boxLoader.GetEntitiesByBank(bank.Id)).Values
+                .Where(box => box.Type != BoxType.Inventory)
+                .ToArray();
 
-            var boxMaxOrder = boxes.Count > 0
-                ? boxes.Values.Max(b => b.Order)
+            var boxMaxOrder = boxes.Length > 0
+                ? boxes.Max(b => b.Order)
                 : 0;
 
             foreach (var boxName in boxesNames)
@@ -204,7 +206,7 @@ public class UpdateExternalPkmAction(
                     .Where(pb => pb.BoxName == boxName)
                     .ToList();
 
-                var box = boxes.Values.ToList().Find(b => b.Name == boxName);
+                var box = boxes.ToList().Find(b => b.Name == boxName);
                 if (box == null)
                 {
                     boxMaxId++;
@@ -288,15 +290,15 @@ public class UpdateExternalPkmAction(
         // careful here to not delete PK files !
         foreach (var pkmVariant in externalPkmsToRemove)
         {
-            await pkmVariantLoader.DeleteEntityDBOnly(pkmVariant);
+            await pkmVariantLoader.DeleteEntityDBOnlyAndUntrackFile(pkmVariant);
         }
 
         var pkmsBoxes = (await boxLoader.GetEntitiesByIds(
             [.. externalPkmsToRemove.Select(pkm => pkm.BoxId).Distinct()]
-        )).Values;
+        )).Values.OfType<BoxEntity>();
 
         var externalBanksToCheck = (IEnumerable<BankEntity>)(await bankLoader.GetEntitiesByIds(
-            [.. pkmsBoxes.Select(box => box!.BankId).Distinct()]
+            [.. pkmsBoxes.Select(box => box.BankId).Distinct()]
         )).Values
         .Where(bank => bank!.IsExternal);
 
@@ -305,7 +307,7 @@ public class UpdateExternalPkmAction(
         .ToHashSet();
 
         var externalBoxesToCheck = pkmsBoxes
-        .Where(box => externalBankIds.Contains(box.BankId));
+            .Where(box => externalBankIds.Contains(box.BankId));
 
         foreach (var box in externalBoxesToCheck)
         {

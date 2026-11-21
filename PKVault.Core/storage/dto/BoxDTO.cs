@@ -9,19 +9,23 @@ public record BoxDTO(
     int SlotCount,
     int Order,
     string? BankId,
+    InventoryType? InventoryType = null,
     string? WallpaperName = null,
     GameVersion? version = null
 ) : IWithId
 {
     public int IdInt => int.Parse(Id);
 
-    public bool CanSaveWrite => Type == BoxType.Box;
+    public bool CanSaveWrite => Type == BoxType.Box || Type == BoxType.Inventory;
 
     public bool CanSaveReceivePkm => BoxLoader.CanIdReceivePkm((int)Type, version ?? GameVersion.Any);
 }
 
 public enum BoxType : int
 {
+    /// <summary> Items only, should not conflict with save box IDs </summary>
+    Inventory = -1000,
+
     Box = 0,
     Party = -1,
 

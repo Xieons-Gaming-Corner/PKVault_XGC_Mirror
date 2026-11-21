@@ -91,6 +91,17 @@ public class DataNormalizeAction(
                 Order = 0,
                 BankId = "0"
             });
+            await boxLoader.AddEntity(new()
+            {
+                Id = "1",
+                IdInt = 1,
+                Name = "Items",
+                Type = BoxType.Inventory,
+                SlotCount = 30,
+                Order = 1,
+                BankId = "0"
+            });
+            await boxLoader.NormalizeOrders();
         }
     }
 
@@ -114,9 +125,14 @@ public class DataNormalizeAction(
             await MigrateVariantsFrom200(input);
         }
         // <= 2.2.2
-        if (currentVersion != null && GetVersionValue(currentVersion.Value) <= GetVersionValue("2.2.2"))
+        if (currentVersion != null && GetVersionValue(currentVersion.Value) <= GetVersionValue("2.3.0"))
         {
             await MigrateIdsFrom222();
+        }
+        // <= 2.3.4
+        if (currentVersion != null && GetVersionValue(currentVersion.Value) <= GetVersionValue("2.3.4"))
+        {
+            await MigrateFrom234();
         }
 
         // --- Update version
@@ -418,7 +434,7 @@ public class DataNormalizeAction(
                 if (oldSaves.Length == 0)
                     continue;
 
-                var updatedSaves = new BankEntity.BankViewSave[oldSaves.Length];
+                List<BankEntity.BankViewSave> updatedSaves = [];
 
                 for (int i = 0; i < oldSaves.Length; i++)
                 {
@@ -437,13 +453,13 @@ public class DataNormalizeAction(
                     if (matchLoaderBank == null)
                         continue;
 
-                    updatedSaves[i] = oldSave with
+                    updatedSaves.Add(oldSave with
                     {
                         SaveId = matchLoaderBank.Save.Id
-                    };
+                    });
                 }
 
-                bank_entity.View = new(boxes, updatedSaves);
+                bank_entity.View = new(boxes, updatedSaves.ToArray());
 
                 await bankLoader.UpdateEntity(bank_entity);
             }
@@ -531,5 +547,40 @@ public class DataNormalizeAction(
 
         if (settingsChanged)
             await settingsService.UpdateSettingsSimple(settingsMutable, settings.UserId);
+    }
+
+    // add inventory boxes
+    private async Task MigrateFrom234()
+    {
+        var boxes = await boxLoader.GetAllEntities();
+
+        var maxBoxId = boxes.Values.Max(box => box.IdInt);
+
+        var boxesByBank = boxes.Values.GroupBy(box => box.BankId);
+
+        foreach (var bankBoxes in boxesByBank)
+        {
+            var bank = await bankLoader.GetEntityRequired(bankBoxes.Key);
+            if (bank.IsExternal)
+                continue;
+
+            if (bankBoxes.Any(box => box.Type == BoxType.Inventory))
+                continue;
+
+            maxBoxId++;
+            var boxOrder = bankBoxes.Max(box => box.Order) + 1;
+
+            await boxLoader.AddEntity(new()
+            {
+                Id = maxBoxId.ToString(),
+                IdInt = maxBoxId,
+                Name = "Items",
+                Type = BoxType.Inventory,
+                SlotCount = 30,
+                Order = boxOrder,
+                BankId = bank.Id
+            });
+        }
+        await boxLoader.NormalizeOrders();
     }
 }

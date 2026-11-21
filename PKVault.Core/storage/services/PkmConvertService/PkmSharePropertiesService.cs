@@ -12,10 +12,8 @@ public interface IPkmSharePropertiesService
  * Share properties from a PKM source to a PKM target,
  * handling all convert requirements and contexts differences.
  */
-public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILegalityAnalysisService legalityAnalysisService) : IPkmSharePropertiesService
+public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, PKMConverterUtils utils) : IPkmSharePropertiesService
 {
-    private readonly PKMConverterUtils utils = new(legalityAnalysisService);
-
     public void SharePropertiesTo(ImmutablePKM source, PKM targetPkm, SaveFile? save)
     {
         var sourcePkm = source.GetMutablePkm();
@@ -32,13 +30,11 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILe
         var result = pkmConvertService.ConvertTo(
             source,
             targetPkm.GetType(),
-            targetPkm is GBPKM
-                ? null
-                : new(
-                    PID: targetPkm.PID,
-                    EncryptionConstant: targetPkm.EncryptionConstant
-                ),
-            save
+            new(
+                SourcePkm: source.GetMutablePkm(),
+                TargetPkm: targetPkm,
+                TargetSave: save is null ? null : new(save)
+            )
         );
 
         var resultPkm = result.GetMutablePkm();
@@ -93,16 +89,14 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILe
             }
         }
 
+        // don't rely on targetPkm.IsNicknamed, its value may not change (CK3)
         targetPkm.IsNicknamed = resultPkm.IsNicknamed;
-        if (!targetPkm.IsNicknamed)
+        if (!resultPkm.IsNicknamed)
             targetPkm.ClearNickname();
         else if (targetPkm.MaxStringLengthNickname <= sourcePkm.MaxStringLengthNickname
             || !targetPkm.Nickname.StartsWith(resultPkm.Nickname))
         {
-            // some characters may change over generations
-            // eg: G5/CH'DING G6/CH’DING G1/CH DING
-            // https://github.com/Chnapy/PKVault/issues/205
-            if (targetPkm.Nickname.Replace('’', '\'').Replace(' ', '\'') != resultPkm.Nickname.Replace('’', '\'').Replace(' ', '\''))
+            if (ImmutablePKM.GetComparableNickname(targetPkm) != ImmutablePKM.GetComparableNickname(resultPkm))
                 targetPkm.Nickname = resultPkm.Nickname;
         }
 
@@ -160,13 +154,10 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILe
                 targetPkm.PokerusStrain = resultPkm.PokerusStrain;
             }
         }
-        
-        if (source.Format >= 2
-            && sourcePkm is not PB7
-            && sourcePkm is not PA8
-        )
+
+        if (source.CanHeldItem && resultPkm.HeldItem > 0)
         {
-            utils.CopyHeldItemFrom(targetPkm, resultPkm.HeldItem, resultPkm.Context, resultPkm.Version);
+            utils.CopyHeldItemFrom(targetPkm, resultPkm.HeldItem, resultPkm.Context.GetSingleGameVersion(), save?.Version);
         }
 
         if (sourcePkm is IAppliedMarkings)
@@ -196,6 +187,7 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILe
             if (
                 targetPkm is IContestStats targetPkmContest
                 && resultPkm is IContestStatsReadOnly resultPkmContest
+                && resultPkmContest.HasContestStats()
             )
             {
                 resultPkmContest.CopyContestStatsTo(targetPkmContest);
@@ -276,6 +268,84 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILe
             )
             {
                 resultPkmCommon7.CopyRibbonSetCommon7(targetPkmCommon7);
+            }
+        }
+
+        if (sourcePkm is IRibbonSetCommon8)
+        {
+            if (
+                targetPkm is IRibbonSetCommon8 targetPkmCommon8
+                && resultPkm is IRibbonSetCommon8 resultPkmCommon8
+            )
+            {
+                resultPkmCommon8.CopyRibbonSetCommon8(targetPkmCommon8);
+            }
+        }
+
+        if (sourcePkm is IRibbonSetCommon9)
+        {
+            if (
+                targetPkm is IRibbonSetCommon9 targetPkmCommon9
+                && resultPkm is IRibbonSetCommon9 resultPkmCommon9
+            )
+            {
+                resultPkmCommon9.CopyRibbonSetCommon9(targetPkmCommon9);
+            }
+        }
+
+        if (sourcePkm is IRibbonSetMark8)
+        {
+            if (
+                targetPkm is IRibbonSetMark8 targetPkmMark8
+                && resultPkm is IRibbonSetMark8 resultPkmMark8
+            )
+            {
+                resultPkmMark8.CopyRibbonSetMark8(targetPkmMark8);
+            }
+        }
+
+        if (sourcePkm is IRibbonSetMark9)
+        {
+            if (
+                targetPkm is IRibbonSetMark9 targetPkmMark9
+                && resultPkm is IRibbonSetMark9 resultPkmMark9
+            )
+            {
+                resultPkmMark9.CopyRibbonSetMark9(targetPkmMark9);
+            }
+        }
+
+        // no PKHeX Copy* helper for these G3-only sets (#239)
+        if (sourcePkm is IRibbonSetOnly3)
+        {
+            if (
+                targetPkm is IRibbonSetOnly3 targetPkmOnly3
+                && resultPkm is IRibbonSetOnly3 resultPkmOnly3
+            )
+            {
+                resultPkmOnly3.CopyRibbonSetOnly3(targetPkmOnly3);
+            }
+        }
+
+        if (sourcePkm is IRibbonSetUnique3)
+        {
+            if (
+                targetPkm is IRibbonSetUnique3 targetPkmUnique3
+                && resultPkm is IRibbonSetUnique3 resultPkmUnique3
+            )
+            {
+                resultPkmUnique3.CopyRibbonSetUnique3(targetPkmUnique3);
+            }
+        }
+
+        if (sourcePkm is IRibbonSetUnique4)
+        {
+            if (
+                targetPkm is IRibbonSetUnique4 targetPkmUnique4
+                && resultPkm is IRibbonSetUnique4 resultPkmUnique4
+            )
+            {
+                resultPkmUnique4.CopyRibbonSetUnique4(targetPkmUnique4);
             }
         }
 
@@ -363,17 +433,21 @@ public class PkmSharePropertiesService(IPkmConvertService pkmConvertService, ILe
             targetPb7b.Stat_CP = targetPb7b.CalcCP;
         }
 
-        var legality = legalityAnalysisService.GetLegalitySafe(new(targetPkm));
+        var la = LegalityAnalysisService.GetLegalitySafeRaw(new(targetPkm));
         var args = new RibbonVerifierArguments(
-            legality.la.Info.Entity,
-            legality.la.EncounterMatch,
-            legality.la.Info.EvoChainsAllGens
+            la.Info.Entity,
+            la.EncounterMatch,
+            la.Info.EvoChainsAllGens
         );
         RibbonApplicator.FixInvalidRibbons(args);
 
         targetPkm.Heal();
         targetPkm.ResetPartyStats();
         targetPkm.RefreshChecksum();
+
+#if DEBUG
+        ObjectComparer.DisplayDifferences(targetPkm, resultPkm);
+#endif
 
         var target = new ImmutablePKM(targetPkm);
 

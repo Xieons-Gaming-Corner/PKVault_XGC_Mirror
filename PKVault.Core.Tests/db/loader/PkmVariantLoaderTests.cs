@@ -18,12 +18,15 @@ public class PkmVariantLoaderTests : IAsyncDisposable
 
     public PkmVariantLoaderTests()
     {
+        Program.Initialize();
+
+        mockFileSystem = new(new Dictionary<string, MockFileData>(), Directory.GetCurrentDirectory());
+
         var testId = Guid.NewGuid().ToString();
         dbPath = $"db-PkmVersionLoaderTests-{testId}.db";
 
-        mockFileSystem = new MockFileSystem();
         fileIOService = new FileIOService(mockFileSystem);
-        fileIOService.Matcher.GetAllPaths = () => [.. mockFileSystem.AllPaths];
+        fileIOService.Matcher.GetAllPaths = (rootDir, globs) => [.. mockFileSystem.AllFiles];
 
         sessionService = new();
         dbSeedingService = new(fileIOService);
@@ -34,7 +37,7 @@ public class PkmVariantLoaderTests : IAsyncDisposable
         mockSettings.Setup(x => x.GetSettings()).Returns(new SettingsDTO(
             BuildID: default, RuntimeSystem: RuntimeSystem.LINUX, SourceProvider: SourceProvider.GithubRelease, FlatpakMigrated: false,
             Version: "", PkhexVersion: "", AppDirectory: "app", SettingsPath: "", UserId: "",
-            CanUpdateSettings: false, CanScanSaves: false, DemoMode: false, SettingsMutable: new(
+            SettingsMutable: new(
                 DB_PATH: "mock-db", SAVE_GLOBS: [], PKM_EXTERNAL_GLOBS: [], STORAGE_PATH: "mock-storage", BACKUP_PATH: "mock-bkp",
                 LANGUAGE: "en", HIDE_CHEATS: false, SKIP_LEGALITY_CHECKS: false
             )
@@ -268,6 +271,168 @@ public class PkmVariantLoaderTests : IAsyncDisposable
         await loader.DeleteEntity(entity);
 
         Assert.Null(await loader.GetEntity(idBase));
+    }
+
+    [Fact]
+    public async Task DeleteEntityDBOnly_ShouldKeepPkmFile()
+    {
+        var db = await GetDB();
+        var loader = await CreateLoader(db);
+
+        var pkm = CreateTestPkm();
+
+        var evolves = await StaticEvolvesLoader.LoadData();
+
+        var idBase = pkm.GetPKMIdBase(evolves);
+        var filepath = $"mock-storage/3/0025 - PIKACHU - {idBase}.pk3";
+
+        await db.Banks
+            .AddAsync(new()
+            {
+                Id = "1",
+                IdInt = 1,
+                IsDefault = true,
+                IsExternal = false,
+                Name = "Bank 1",
+                Order = 0,
+                View = new([], [])
+            }, TestContext.Current.CancellationToken);
+        await db.Boxes
+            .AddAsync(new()
+            {
+                Id = "1",
+                IdInt = 1,
+                Name = "Box 1",
+                Order = 0,
+                Type = BoxType.Box,
+                SlotCount = 30,
+                BankId = "1"
+            }, TestContext.Current.CancellationToken);
+        await db.PkmFiles
+            .AddAsync(new()
+            {
+                Filepath = filepath,
+                Data = [.. pkm.GetDecryptedDataParty()],
+                Error = null,
+                Updated = false,
+                Deleted = false
+            }, TestContext.Current.CancellationToken);
+        await db.PkmVersions
+            .AddAsync(new()
+            {
+                Id = idBase,
+                Hash = idBase,
+                Context = EntityContext.Gen3,
+                Generation = 3,
+                Filepath = filepath,
+                BoxId = "1",
+                BoxSlot = 0,
+                IsMain = true,
+                IsExternal = false,
+                AttachedSaveId = null,
+                AttachedSavePkmIdBase = null,
+
+                Species = 25,
+                Form = 0,
+                Gender = Gender.Female,
+                IsShiny = false,
+                IsAlpha = false,
+
+                PkmFile = null
+            }, TestContext.Current.CancellationToken);
+
+        await db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var entity = await db.PkmVersions
+            .Include(p => p.PkmFile)
+            .FirstAsync(p => p.Id == idBase, TestContext.Current.CancellationToken);
+
+        await loader.DeleteEntityDBOnly(entity);
+
+        Assert.Null(await loader.GetEntity(idBase));
+        Assert.NotNull(await db.PkmFiles.FindAsync([filepath], TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task DeleteEntityDBOnlyAndUntrackFile_ShouldRemovePkmFile()
+    {
+        var db = await GetDB();
+        var loader = await CreateLoader(db);
+
+        var pkm = CreateTestPkm();
+
+        var evolves = await StaticEvolvesLoader.LoadData();
+
+        var idBase = pkm.GetPKMIdBase(evolves);
+        var filepath = $"mock-storage/3/0025 - PIKACHU - {idBase}.pk3";
+
+        await db.Banks
+            .AddAsync(new()
+            {
+                Id = "1",
+                IdInt = 1,
+                IsDefault = true,
+                IsExternal = true,
+                Name = "External",
+                Order = 0,
+                View = new([], [])
+            }, TestContext.Current.CancellationToken);
+        await db.Boxes
+            .AddAsync(new()
+            {
+                Id = "1",
+                IdInt = 1,
+                Name = "Box 1",
+                Order = 0,
+                Type = BoxType.Box,
+                SlotCount = 30,
+                BankId = "1"
+            }, TestContext.Current.CancellationToken);
+        await db.PkmFiles
+            .AddAsync(new()
+            {
+                Filepath = filepath,
+                Data = [.. pkm.GetDecryptedDataParty()],
+                Error = null,
+                Updated = false,
+                Deleted = false
+            }, TestContext.Current.CancellationToken);
+        await db.PkmVersions
+            .AddAsync(new()
+            {
+                Id = idBase,
+                Hash = idBase,
+                Context = EntityContext.Gen3,
+                Generation = 3,
+                Filepath = filepath,
+                BoxId = "1",
+                BoxSlot = 0,
+                IsMain = true,
+                IsExternal = true,
+                AttachedSaveId = null,
+                AttachedSavePkmIdBase = null,
+
+                Species = 25,
+                Form = 0,
+                Gender = Gender.Female,
+                IsShiny = false,
+                IsAlpha = false,
+
+                PkmFile = null
+            }, TestContext.Current.CancellationToken);
+
+        await db.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        var entity = await db.PkmVersions
+            .Include(p => p.PkmFile)
+            .FirstAsync(p => p.Id == idBase, TestContext.Current.CancellationToken);
+
+        // file on disk must survive
+        await loader.DeleteEntityDBOnlyAndUntrackFile(entity);
+
+        Assert.Null(await loader.GetEntity(idBase));
+        Assert.Null(await db.PkmFiles.FindAsync([filepath], TestContext.Current.CancellationToken));
+        Assert.False(mockFileSystem.File.Exists(filepath));
     }
 
     [Fact]
@@ -888,9 +1053,9 @@ public class PkmVariantLoaderTests : IAsyncDisposable
 
         await db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var entity1 = await loader.GetEntity(idBase1);
-        var entity2 = await loader.GetEntity(idBase2);
-        var entity3 = await loader.GetEntity(idBase3);
+        var entity1 = await loader.GetEntityRequired(idBase1);
+        var entity2 = await loader.GetEntityRequired(idBase2);
+        var entity3 = await loader.GetEntityRequired(idBase3);
 
         entity1.BoxId = "1";
         entity1.BoxSlot = 3;

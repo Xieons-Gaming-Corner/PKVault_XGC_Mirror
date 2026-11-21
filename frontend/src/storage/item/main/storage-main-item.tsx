@@ -1,17 +1,17 @@
 import React from 'react';
+import { usePkmAttachState } from '../../../data/hooks/use-pkm-attach-state';
 import { usePkmLegalityMap } from '../../../data/hooks/use-pkm-legality';
-import { usePkmSaveIndex } from '../../../data/hooks/use-pkm-save-index';
 import { usePkmVariantIndex } from '../../../data/hooks/use-pkm-variant-index';
 import { Gender } from '../../../data/sdk/model';
 import { withErrorCatcher } from '../../../error/with-error-catcher';
 import { Route } from '../../../routes/storage';
 import { UIStorageItemIcons } from '../../../ui/storage/storage-item/ui-storage-item-icons';
-import { ItemImg } from '../../../img/item-img';
-import { StorageItem, type StorageItemProps } from '../storage-item';
 import { pick } from '../../../util/pick';
 import { useSelectCallback } from '../../../util/use-select-callback';
 import type { MoveContainerValue } from '../../move/move-container-fns';
 import { useCurrentStorage } from '../../panel/storage-panel-context';
+import { StorageItem, type StorageItemProps } from '../storage-item';
+import { StorageItemHeldItem } from '../storage-item-held-item';
 
 type StorageMainItemProps = Pick<StorageItemProps, 'nodeId' | 'selectFromPreviousSelected'> & {
     pkmId: string;
@@ -22,13 +22,6 @@ export const StorageMainItem: React.FC<StorageMainItemProps> = withErrorCatcher(
     React.memo(({ pkmId, ...rest }) => {
         const { storageIndex, getSelected } = useCurrentStorage();
         const navigate = Route.useNavigate();
-
-        const selected = Route.useSearch({
-            select: search => {
-                const value = getSelected(search.selected);
-                return !value?.saveId && value?.id === pkmId;
-            },
-        });
 
         const variantsQuery = usePkmVariantIndex(
             useSelectCallback(data => {
@@ -41,8 +34,6 @@ export const StorageMainItem: React.FC<StorageMainItemProps> = withErrorCatcher(
                 if (!mainVariant)
                     return;
 
-                const attachedVariant = variants.find(variant => variant.attachedSaveId);
-
                 const canEvolve = variants.some(variant => variant.canEvolve);
                 const hasDisabledVariant = variants.some(variant => !variant.isEnabled);
 
@@ -54,7 +45,6 @@ export const StorageMainItem: React.FC<StorageMainItemProps> = withErrorCatcher(
                         'id', 'species', 'nickname', 'level', 'boxId', 'boxSlot', 'contextVersion', 'context',
                         'form', 'gender', 'isEgg', 'isAlpha', 'isShiny', 'nSparkle', 'isShadow', 'isExternal', 'heldItem',
                     ]),
-                    attachedVariant: attachedVariant && pick(attachedVariant, [ 'attachedSaveId', 'attachedSavePkmIdBase', 'dynamicChecksum' ]),
                     canEvolve,
                     hasDisabledVariant,
                 };
@@ -62,20 +52,15 @@ export const StorageMainItem: React.FC<StorageMainItemProps> = withErrorCatcher(
         );
         const variantInfos = variantsQuery.data;
 
-        const canSynchronizeQuery = usePkmSaveIndex(variantInfos?.attachedVariant?.attachedSaveId ?? 0,
-            useSelectCallback(data => {
-                const attachedVariant = variantInfos?.attachedVariant;
-                if (!attachedVariant?.attachedSavePkmIdBase)
-                    return false;
+        const selected = Route.useSearch({
+            select: search => {
+                const value = getSelected(search.selected);
+                return !value?.saveId && variantInfos?.variants.some(v => v.id === value?.id);
+            },
+        });
 
-                const attachedSavePkms = data.data.byIdBase[ attachedVariant.attachedSavePkmIdBase ] ?? [];
-                if (attachedSavePkms.length === 0)
-                    return false;
-
-                return attachedSavePkms.every(pkm => pkm.dynamicChecksum !== attachedVariant.dynamicChecksum);
-            }, [ variantInfos?.attachedVariant ])
-        );
-        const canSynchronize = canSynchronizeQuery.data ?? false;
+        const attachStateQuery = usePkmAttachState(null, pkmId);
+        const { isAttached, canSynchronize, attachBroken } = attachStateQuery.data;
 
         const variantsIds = variantInfos?.variants.map(variant => variant.id) ?? [];
 
@@ -91,9 +76,14 @@ export const StorageMainItem: React.FC<StorageMainItemProps> = withErrorCatcher(
             return null;
         }
 
-        const { mainVariant, variants, attachedVariant, hasDisabledVariant, canEvolve } = variantInfos;
+        const { mainVariant, variants, hasDisabledVariant, canEvolve } = variantInfos;
 
         const { id, species, nickname, level, boxSlot, contextVersion, context, form, gender, isEgg, isAlpha, isShiny, nSparkle, isShadow, isExternal, heldItem } = mainVariant;
+
+        const heldItemNode = <StorageItemHeldItem
+            heldItem={heldItem} contextVersion={contextVersion}
+            container={container} slot={boxSlot} id={id}
+        />;
 
         return <StorageItem
             id={id}
@@ -118,14 +108,13 @@ export const StorageMainItem: React.FC<StorageMainItemProps> = withErrorCatcher(
                 warning={pkmLegalityMap.some(value => !value.isValid)}
                 nbrVariants={variants.length}
                 hasDisabledVariant={hasDisabledVariant}
-                attached={!!attachedVariant}
-                heldItem={heldItem > 0 && <ItemImg
-                    version={contextVersion}
-                    item={heldItem}
-                />}
+                attached={isAttached}
+                heldItem={heldItemNode}
                 canEvolve={canEvolve}
                 needSynchronize={canSynchronize}
+                attachBroken={attachBroken}
             />}
+            heldItem={heldItemNode}
             onClick={() => navigate({
                 search: search => {
                     const alreadySelected = search.selected

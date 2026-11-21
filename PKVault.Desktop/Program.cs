@@ -50,8 +50,10 @@ class Program
     [STAThread]
     private static void Main(string[] args)
     {
-        AttachConsole(ATTACH_PARENT_PROCESS);
-
+        if (WindowsOS)
+        {
+            AttachConsole(ATTACH_PARENT_PROCESS);
+        }
         Core.Program.Initialize();
 
         if (LinuxOS)
@@ -65,7 +67,8 @@ class Program
 
         try
         {
-            SettingsService.FlatpakMigrateIfAny();
+            if (!WindowsOS)
+                SettingsService.FlatpakMigrateIfAny();
 
             var window = new PhotinoWindow();
 
@@ -81,7 +84,7 @@ class Program
             window.RegisterWindowClosingHandler((sender, e) =>
             {
                 if (SetupTask is null || !SetupTask.IsCompletedSuccessfully)
-                {
+
                     return false;
                 }
 
@@ -106,7 +109,11 @@ class Program
 
             SetupWindow(window, baseUrl);
 
-            SetupTask = SetupCore();
+            var services = new ServiceCollection();
+            Core.Program.ConfigureServices(services);
+            ServiceProvider = services.BuildServiceProvider();
+
+            SetupTask = Core.Program.SetupData(ServiceProvider);
 
             _ = SetupTask.ContinueWith(task =>
             {
@@ -198,7 +205,6 @@ class Program
                 resourceName);
         }
     }
-
     private static Func<Task> SetupServer(out string baseUrl)
     {
         LogEmbeddedResourceNames();
@@ -519,9 +525,30 @@ class Program
                             "Unable to delete temporary icon file {IconPath}",
                             temporaryIconPath);
                     }
+
                 }
             })
             .Load(baseUrl + "/index.html");
+    }
+
+    private static string? LoadAppIcon()
+    {
+        var tmpIconFilepath = Path.Combine(Path.GetTempPath(), $"pkvault-icon.png");
+
+        try
+        {
+            using Stream iconStream = Assembly.GetManifestResourceStream($"{AssemblyStaticPrefix}icon.png")!;
+
+            using var fileStream = File.Create(tmpIconFilepath);
+            iconStream.CopyTo(fileStream);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, $"Error writing file {tmpIconFilepath}, skipping");
+            return null;
+        }
+
+        return tmpIconFilepath;
     }
 
     private static void InjectIntoFrontend(PhotinoWindow window)
@@ -764,7 +791,6 @@ class Program
                         "\\",
                         "\\\\");
                 }
-
                 var data = $"{{ \"detail\": {responseSerialized} }}";
 
                 await window.SendWebMessageAsync(data);

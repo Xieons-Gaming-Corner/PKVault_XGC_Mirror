@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.Json;
 using Namotion.Reflection;
 using NJsonSchema;
@@ -9,6 +11,13 @@ namespace PKVault.Core.OpenApi;
 
 public class OpenApiGenerator
 {
+    private static readonly Type[] ExtraTypes = [
+        typeof(DesktopMessageRequest),
+        typeof(DesktopMessageResponse),
+        typeof(DesktopFetchRequestInit),
+        typeof(DesktopFetchResponse),
+    ];
+
     public static void GenerateOpenApiFile(string path, IEnumerable<CoreRouter.CoreRoute> routes)
     {
 #if DEBUG
@@ -20,6 +29,7 @@ public class OpenApiGenerator
 #endif
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2070", Justification = "Run only in DEBUG, never in Trimmed context.")]
     private static string GetOpenApiDocument(IEnumerable<CoreRouter.CoreRoute> routes)
     {
         var document = new OpenApiDocument
@@ -51,7 +61,40 @@ public class OpenApiGenerator
         var schemaResolver = new OpenApiSchemaResolver(document, settings);
         var generator = new JsonSchemaGenerator(settings);
 
-        JsonSchema Resolve(Type type) => generator.GenerateWithReference<JsonSchema>(type.ToContextualType(), schemaResolver);
+        NullabilityInfoContext nullCtx = new();
+
+        JsonSchema Resolve(Type type) =>
+            generator.GenerateWithReference<JsonSchema>(type.ToContextualType(), schemaResolver, (_, schema) =>
+            {
+                var isRecord = type.GetMethods().Any(m => m.Name == "<Clone>$");
+
+                if (isRecord)
+                {
+                    var parameters = type.GetConstructors().First().GetParameters();
+
+                    foreach (var Param in parameters)
+                    {
+                        if (!schema.Properties.TryGetValue(Param.Name!, out var param))
+                            continue;
+
+                        NullabilityInfo nullInfo = nullCtx.Create(Param);
+                        var nullable = nullInfo.ReadState == NullabilityState.Nullable;
+                        var required = !nullable && !Param.HasDefaultValue;
+
+                        if (Param.HasDefaultValue && Param.DefaultValue != null)
+                        {
+                            param.Default = Param.DefaultValue;
+                            nullable = false;
+                        }
+
+                        if (nullable)
+                            param.IsNullableRaw = true;
+
+                        if (required)
+                            param.IsRequired = true;
+                    }
+                }
+            });
 
         foreach (var route in routes.OrderBy(r => r.HttpTemplate))
         {
@@ -100,7 +143,8 @@ public class OpenApiGenerator
                         Position = position
                     };
 
-                    var nullable = Param.IsOptional || Nullable.GetUnderlyingType(Param.ParameterType) != null;
+                    NullabilityInfo nullInfo = nullCtx.Create(Param);
+                    var nullable = Param.IsOptional || nullInfo.ReadState == NullabilityState.Nullable;
                     var required = !Param.HasDefaultValue;
 
                     if (Param.HasDefaultValue && Param.DefaultValue != null)
@@ -226,6 +270,9 @@ public class OpenApiGenerator
             pathItem[httpMethod] = operation;
         }
 
+        foreach (var extraType in ExtraTypes)
+            Resolve(extraType);
+
         PostProcess(document);
 
         return document.ToJson();
@@ -261,7 +308,7 @@ public class OpenApiGenerator
         if (schema.Properties?.Count > 0)
         {
             var nullableNames = schema.Properties
-                .Where(p => IsNullable(p.Value))
+                .Where(p => IsNullable(p.Value) || p.Value.Default != null)
                 .Select(p => p.Key)
                 .ToHashSet();
 

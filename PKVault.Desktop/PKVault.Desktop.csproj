@@ -28,7 +28,6 @@
 
     <!-- This source file must exist before the project can compile. -->
     <ApplicationIcon>Resources\wwwroot\icon.ico</ApplicationIcon>
-
     <Product>PKVault</Product>
     <Description>PKVault is a Pokemon storage and save manipulation tool based on PKHeX.</Description>
     <AssemblyDescription>PKVault is a Pokemon storage and save manipulation tool based on PKHeX.</AssemblyDescription>

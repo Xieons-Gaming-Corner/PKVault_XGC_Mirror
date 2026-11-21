@@ -23,6 +23,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 74,
         "evs": [
             12,
             18,
@@ -59,6 +60,7 @@
             "RibbonCountG3Beauty": 1,
             "RibbonCountG3Cute": 1,
             "RibbonChampionG3": 1,
+            "RibbonCountMemoryContest": 3,
             "RibbonEffort": 1
         },
         "illegalities": []
@@ -87,6 +89,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 74,
         "evs": [
             12,
             18,
@@ -151,6 +154,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 74,
         "evs": [
             12,
             18,
@@ -215,6 +219,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 55,
         "evs": [
             12,
             18,
@@ -281,6 +286,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 55,
         "evs": [
             12,
             18,
@@ -347,6 +353,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 55,
         "evs": [
             12,
             18,
@@ -413,6 +420,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 30001,
         "evs": [
             12,
             18,
@@ -452,7 +460,8 @@
             "RibbonG3Cute": 1,
             "RibbonChampionG3": 1,
             "RibbonEffort": 1
-        }
+        },
+        "illegalities": []
     },
     "PK6": {
         "species": 89,
@@ -478,6 +487,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 30001,
         "evs": [
             12,
             18,
@@ -542,6 +552,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 30001,
         "evs": [
             12,
             18,
@@ -579,7 +590,8 @@
             "RibbonCountMemoryContest": 3,
             "RibbonChampionG3": 1,
             "RibbonEffort": 1
-        }
+        },
+        "illegalities": []
     },
     "PB7": {
         "species": 89,
@@ -605,6 +617,7 @@
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 50,
         "evs": [
             9,
             14,
@@ -645,144 +658,12 @@
         ],
         "illegalities": []
     },
-    "PK8": {
-        "species": 89,
-        "form": 0,
-        "gender": 0,
-        "version": 1,
-        "helditem": 0,
-        "ball": 4,
-        "level": 38,
-        "exp": 55237,
-        "moves": [
-            1,
-            151,
-            103,
-            124
-        ],
-        "shiny": false,
-        "nicknamed": false,
-        "nickname": "Grotadmorv",
-        "nature": 1,
-        "ability": 0,
-        "friendship": 169,
-        "tid": 36084,
-        "sid": 58127,
-        "ot": "BOUFTOU",
-        "evs": [
-            12,
-            18,
-            2,
-            75,
-            6,
-            102
-        ],
-        "ivs": [
-            28,
-            4,
-            28,
-            9,
-            6,
-            12
-        ],
-        "language": 3,
-        "marks": [
-            true,
-            true,
-            false,
-            false,
-            false,
-            false
-        ],
-        "contest": [
-            10,
-            55,
-            41,
-            8,
-            120,
-            150
-        ],
-        "ribbons": {
-            "RibbonCountMemoryContest": 3,
-            "RibbonChampionG3": 1,
-            "RibbonEffort": 1
-        },
-        "illegalities": [
-            "PID-PIDTypeMismatch",
-            "Evolution-EvoInvalid",
-            "Encounter-TransferTrackerMissing",
-            "Encounter-TransferBad"
-        ]
-    },
-    "PA8": {
-        "species": 89,
-        "form": 0,
-        "gender": 0,
-        "version": 1,
-        "helditem": 0,
-        "ball": 4,
-        "level": 38,
-        "exp": 55237,
-        "moves": [
-            1,
-            151,
-            103,
-            124
-        ],
-        "shiny": false,
-        "nicknamed": false,
-        "nickname": "Grotadmorv",
-        "nature": 1,
-        "ability": 0,
-        "friendship": 169,
-        "tid": 36084,
-        "sid": 58127,
-        "ot": "BOUFTOU",
-        "evs": [
-            12,
-            18,
-            2,
-            75,
-            6,
-            102
-        ],
-        "ivs": [
-            28,
-            4,
-            28,
-            9,
-            6,
-            12
-        ],
-        "language": 3,
-        "marks": [
-            true,
-            true,
-            false,
-            false,
-            false,
-            false
-        ],
-        "contest": [
-            10,
-            55,
-            41,
-            8,
-            120,
-            150
-        ],
-        "ribbons": {
-            "RibbonCountMemoryContest": 3,
-            "RibbonChampionG3": 1,
-            "RibbonEffort": 1
-        }
-    },
     "PB8": {
         "species": 89,
         "form": 0,
         "gender": 0,
         "version": 1,
-        "helditem": 264,
+        "helditem": 0,
         "ball": 2,
         "level": 38,
         "exp": 55237,
@@ -796,11 +677,12 @@
         "nicknamed": false,
         "nickname": "Grotadmorv",
         "nature": 1,
-        "ability": 1,
+        "ability": 60,
         "friendship": 169,
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 30001,
         "evs": [
             12,
             18,
@@ -839,9 +721,7 @@
             "RibbonChampionG3": 1,
             "RibbonEffort": 1
         },
-        "illegalities": [
-            "Encounter-TransferTrackerMissing"
-        ]
+        "illegalities": []
     },
     "PK9": {
         "species": 89,
@@ -862,11 +742,12 @@
         "nicknamed": false,
         "nickname": "Grotadmorv",
         "nature": 1,
-        "ability": 1,
+        "ability": 60,
         "friendship": 169,
         "tid": 36084,
         "sid": 58127,
         "ot": "BOUFTOU",
+        "metLocation": 30001,
         "evs": [
             12,
             18,
@@ -910,74 +791,6 @@
             1,
             0
         ],
-        "illegalities": [
-            "Encounter-TransferTrackerMissing"
-        ]
-    },
-    "PA9": {
-        "species": 89,
-        "form": 0,
-        "gender": 0,
-        "version": 52,
-        "helditem": 0,
-        "ball": 2,
-        "level": 38,
-        "exp": 55237,
-        "moves": [
-            1,
-            103,
-            124,
-            0
-        ],
-        "shiny": false,
-        "nicknamed": false,
-        "nickname": "Grotadmorv",
-        "nature": 1,
-        "ability": 1,
-        "friendship": 169,
-        "tid": 36084,
-        "sid": 58127,
-        "ot": "BOUFTOU",
-        "evs": [
-            12,
-            18,
-            2,
-            75,
-            6,
-            102
-        ],
-        "ivs": [
-            28,
-            4,
-            28,
-            9,
-            6,
-            12
-        ],
-        "language": 3,
-        "marks": [
-            true,
-            true,
-            false,
-            false,
-            false,
-            false
-        ],
-        "contest": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-        ],
-        "ribbons": {},
-        "illegalities": [
-            "Encounter-EncInvalid",
-            "Encounter-TransferBad",
-            "Move-0",
-            "Move-0",
-            "Move-0"
-        ]
+        "illegalities": []
     }
 }

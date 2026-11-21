@@ -5,7 +5,7 @@ namespace PKVault.Core;
 
 public class PK8Converter(PKMConverterUtils utils)
 {
-    public PK9 ConvertToPK9(PK8 pk8, PKMRndValues? rndValues)
+    public PK9 ConvertToPK9(PK8 pk8, ConvertContext ctx)
     {
         var pk9 = new PK9()
         {
@@ -28,7 +28,7 @@ public class PK8Converter(PKMConverterUtils utils)
             PokerusState = pk8.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk9, pk8, 9, rndValues);
+        utils.CopyCommonPropertiesFrom(pk9, pk8, 9, ctx);
         utils.CopyIVsFrom(pk9, pk8);
         utils.CopyEVsFrom(pk9, pk8);
 
@@ -47,29 +47,20 @@ public class PK8Converter(PKMConverterUtils utils)
         pk8.CopyRibbonSetMemory6(pk9);
         pk8.CopyRibbonSetCommon7(pk9);
 
-        utils.CopyHeldItemFrom(pk9, pk8.HeldItem, pk8.Context, pk8.Version);
+        utils.CopyHeldItemFrom(pk9, pk8.HeldItem, pk8.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk9);
+        utils.FixAbility(pk9, ctx);
 
-        utils.FixMetLocation(pk9, [
-            GameVersion.S, GameVersion.R, GameVersion.E, GameVersion.FR, GameVersion.LG, GameVersion.CXD,
-            GameVersion.D, GameVersion.P, GameVersion.Pt, GameVersion.SS, GameVersion.HG,
-            GameVersion.B, GameVersion.W, GameVersion.B2, GameVersion.W2,
-            GameVersion.X, GameVersion.Y, GameVersion.OR, GameVersion.AS,
-            GameVersion.SN, GameVersion.MN, GameVersion.US, GameVersion.UM,
-            GameVersion.SW, GameVersion.SH, GameVersion.BD, GameVersion.SP, GameVersion.PLA,
-            GameVersion.SL, GameVersion.VL,
-        ]);
+        utils.FixMetLocation(pk9, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk9, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature);
+        utils.FixPersonalData(pk9, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature, pk8.Ability, false, ctx);
 
         utils.CopyMovesFrom(pk9, pk8);
 
         return pk9;
     }
 
-    public PB8 ConvertToPB8(PK8 pk8, PKMRndValues? rndValues)
+    public PB8 ConvertToPB8(PK8 pk8, ConvertContext ctx)
     {
         var pb8 = new PB8()
         {
@@ -78,6 +69,7 @@ public class PK8Converter(PKMConverterUtils utils)
             MetDate = pk8.MetDate ?? EncounterDate.GetDateSwitch(),
             MetLevel = pk8.MetLevel,
             Ability = pk8.Ability,
+            CanGigantamax = pk8.CanGigantamax,
 
             // EggLocation = Locations.LinkTrade6,
             // EggMetDate = pk7.MetDate ?? EncounterDate.GetDateSwitch(),
@@ -85,7 +77,7 @@ public class PK8Converter(PKMConverterUtils utils)
             PokerusState = pk8.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pb8, pk8, 8, rndValues);
+        utils.CopyCommonPropertiesFrom(pb8, pk8, 8, ctx);
         utils.CopyIVsFrom(pb8, pk8);
         utils.CopyEVsFrom(pb8, pk8);
 
@@ -104,28 +96,20 @@ public class PK8Converter(PKMConverterUtils utils)
         pk8.CopyRibbonSetMemory6(pb8);
         pk8.CopyRibbonSetCommon7(pb8);
 
-        utils.CopyHeldItemFrom(pb8, pk8.HeldItem, pk8.Context, pk8.Version);
+        utils.CopyHeldItemFrom(pb8, pk8.HeldItem, pk8.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pb8);
+        utils.FixAbility(pb8, ctx);
 
-        utils.FixMetLocation(pb8, [
-            GameVersion.S, GameVersion.R, GameVersion.E, GameVersion.FR, GameVersion.LG, GameVersion.CXD,
-            GameVersion.D, GameVersion.P, GameVersion.Pt, GameVersion.SS, GameVersion.HG,
-            GameVersion.B, GameVersion.W, GameVersion.B2, GameVersion.W2,
-            GameVersion.X, GameVersion.Y, GameVersion.OR, GameVersion.AS,
-            GameVersion.SN, GameVersion.MN, GameVersion.US, GameVersion.UM,
-            GameVersion.SW, GameVersion.SH, GameVersion.BD, GameVersion.SP, GameVersion.PLA,
-        ]);
+        utils.FixMetLocation(pb8, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pb8, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature);
+        utils.FixPersonalData(pb8, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature, pk8.Ability, false, ctx);
 
         utils.CopyMovesFrom(pb8, pk8);
 
         return pb8;
     }
 
-    public PA8 ConvertToPA8(PK8 pk8, PKMRndValues? rndValues)
+    public PA8 ConvertToPA8(PK8 pk8, ConvertContext ctx)
     {
         var pa8 = new PA8()
         {
@@ -136,6 +120,7 @@ public class PK8Converter(PKMConverterUtils utils)
             MetDate = pk8.MetDate ?? EncounterDate.GetDateSwitch(),
             MetLevel = pk8.MetLevel,
             Ability = pk8.Ability,
+            CanGigantamax = pk8.CanGigantamax,
 
             // EggLocation = Locations.LinkTrade6,
             // EggMetDate = pk7.MetDate ?? EncounterDate.GetDateSwitch(),
@@ -143,7 +128,19 @@ public class PK8Converter(PKMConverterUtils utils)
             PokerusState = pk8.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pa8, pk8, 8, rndValues);
+        utils.CopyCommonPropertiesFrom(pa8, pk8, 8, ctx);
+
+        if (pa8.IsAlpha && ctx.SourcePkm is PA9 srcPa9)
+        {
+            var alphaMove = srcPa9.PersonalInfo.AlphaMove;
+            var permit = pa8.Permit;
+
+            pa8.AlphaMove = alphaMove;
+
+            var masteredIndex = permit.RecordPermitIndexes.IndexOf(alphaMove);
+            pa8.SetMasteredRecordFlag(masteredIndex, true);
+        }
+
         utils.CopyIVsFrom(pa8, pk8);
         utils.CopyEVsFrom(pa8, pk8);
 
@@ -162,19 +159,11 @@ public class PK8Converter(PKMConverterUtils utils)
         pk8.CopyRibbonSetMemory6(pa8);
         pk8.CopyRibbonSetCommon7(pa8);
 
-        utils.FixAbility(pa8);
+        utils.FixAbility(pa8, ctx);
 
-        utils.FixMetLocation(pa8, [
-            GameVersion.S, GameVersion.R, GameVersion.E, GameVersion.FR, GameVersion.LG, GameVersion.CXD,
-            GameVersion.D, GameVersion.P, GameVersion.Pt, GameVersion.SS, GameVersion.HG,
-            GameVersion.B, GameVersion.W, GameVersion.B2, GameVersion.W2,
-            GameVersion.X, GameVersion.Y, GameVersion.OR, GameVersion.AS,
-            GameVersion.SN, GameVersion.MN, GameVersion.US, GameVersion.UM,
-            GameVersion.SW, GameVersion.SH, GameVersion.BD, GameVersion.SP, GameVersion.PLA,
-        ]);
+        utils.FixMetLocation(pa8, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pa8, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature);
+        utils.FixPersonalData(pa8, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature, pk8.Ability, false, ctx);
 
         utils.CopyMovesFrom(pa8, pk8);
 
@@ -184,7 +173,7 @@ public class PK8Converter(PKMConverterUtils utils)
         return pa8;
     }
 
-    public PK7 ConvertToPK7(PK8 pk8, PKMRndValues? rndValues)
+    public PK7 ConvertToPK7(PK8 pk8, ConvertContext ctx)
     {
         var pk7 = new PK7()
         {
@@ -200,7 +189,7 @@ public class PK8Converter(PKMConverterUtils utils)
             PokerusState = pk8.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk7, pk8, 7, rndValues);
+        utils.CopyCommonPropertiesFrom(pk7, pk8, 7, ctx);
         utils.CopyIVsFrom(pk7, pk8);
         utils.CopyEVsFrom(pk7, pk8);
 
@@ -214,14 +203,13 @@ public class PK8Converter(PKMConverterUtils utils)
         pk8.CopyRibbonSetMemory6(pk7);
         pk8.CopyRibbonSetCommon7(pk7);
 
-        utils.CopyHeldItemFrom(pk7, pk8.HeldItem, pk8.Context, pk8.Version);
+        utils.CopyHeldItemFrom(pk7, pk8.HeldItem, pk8.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk7);
+        utils.FixAbility(pk7, ctx);
 
-        utils.FixMetLocation(pk7, [GameVersion.SN, GameVersion.MN, GameVersion.US, GameVersion.UM]);
+        utils.FixMetLocation(pk7, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk7, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature);
+        utils.FixPersonalData(pk7, pk8.IsShiny, pk8.Form, pk8.Gender, pk8.Nature, pk8.Ability, false, ctx);
 
         utils.CopyMovesFrom(pk7, pk8);
 
@@ -233,7 +221,7 @@ public class PK8Converter(PKMConverterUtils utils)
         return pk7;
     }
 
-    public PK8 ConvertToPK8(PB8 pb8, PKMRndValues? rndValues)
+    public PK8 ConvertToPK8(PB8 pb8, ConvertContext ctx)
     {
         var pk8 = new PK8()
         {
@@ -242,6 +230,7 @@ public class PK8Converter(PKMConverterUtils utils)
             MetDate = pb8.MetDate ?? EncounterDate.GetDateSwitch(),
             MetLevel = pb8.MetLevel,
             Ability = pb8.Ability,
+            CanGigantamax = pb8.CanGigantamax,
 
             // EggLocation = Locations.LinkTrade6,
             // EggMetDate = pk7.MetDate ?? EncounterDate.GetDateSwitch(),
@@ -251,7 +240,7 @@ public class PK8Converter(PKMConverterUtils utils)
             PokerusState = pb8.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk8, pb8, 8, rndValues);
+        utils.CopyCommonPropertiesFrom(pk8, pb8, 8, ctx);
         utils.CopyIVsFrom(pk8, pb8);
         utils.CopyEVsFrom(pk8, pb8);
 
@@ -265,14 +254,13 @@ public class PK8Converter(PKMConverterUtils utils)
         pb8.CopyRibbonSetMemory6(pk8);
         pb8.CopyRibbonSetCommon7(pk8);
 
-        utils.CopyHeldItemFrom(pk8, pb8.HeldItem, pb8.Context, pb8.Version);
+        utils.CopyHeldItemFrom(pk8, pb8.HeldItem, pb8.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk8);
+        utils.FixAbility(pk8, ctx);
 
-        utils.FixMetLocation(pk8, [GameVersion.SW, GameVersion.SH]);
+        utils.FixMetLocation(pk8, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk8, pb8.IsShiny, pb8.Form, pb8.Gender, pb8.Nature);
+        utils.FixPersonalData(pk8, pb8.IsShiny, pb8.Form, pb8.Gender, pb8.Nature, pb8.Ability, false, ctx);
 
         // for Furfrou and Hoopa
         pk8.FormArgumentRemain = pb8.FormArgumentRemain;
@@ -284,7 +272,7 @@ public class PK8Converter(PKMConverterUtils utils)
         return pk8;
     }
 
-    public PK8 ConvertToPK8(PA8 pa8, PKMRndValues? rndValues)
+    public PK8 ConvertToPK8(PA8 pa8, ConvertContext ctx)
     {
         var pk8 = new PK8()
         {
@@ -293,6 +281,7 @@ public class PK8Converter(PKMConverterUtils utils)
             MetDate = pa8.MetDate ?? EncounterDate.GetDateSwitch(),
             MetLevel = pa8.MetLevel,
             Ability = pa8.Ability,
+            CanGigantamax = pa8.CanGigantamax,
 
             // EggLocation = Locations.LinkTrade6,
             // EggMetDate = pk7.MetDate ?? EncounterDate.GetDateSwitch(),
@@ -302,7 +291,7 @@ public class PK8Converter(PKMConverterUtils utils)
             PokerusState = pa8.PokerusState,
         };
 
-        utils.CopyCommonPropertiesFrom(pk8, pa8, 8, rndValues);
+        utils.CopyCommonPropertiesFrom(pk8, pa8, 8, ctx);
         utils.CopyIVsFrom(pk8, pa8);
         utils.CopyEVsFrom(pk8, pa8);
 
@@ -316,14 +305,13 @@ public class PK8Converter(PKMConverterUtils utils)
         pa8.CopyRibbonSetMemory6(pk8);
         pa8.CopyRibbonSetCommon7(pk8);
 
-        utils.CopyHeldItemFrom(pk8, pa8.HeldItem, pa8.Context, pa8.Version);
+        utils.CopyHeldItemFrom(pk8, pa8.HeldItem, pa8.Context.GetSingleGameVersion(), ctx.TargetSave?.Version);
 
-        utils.FixAbility(pk8);
+        utils.FixAbility(pk8, ctx);
 
-        utils.FixMetLocation(pk8, [GameVersion.SW, GameVersion.SH]);
+        utils.FixMetLocation(pk8, ctx);
 
-        if (rndValues == null)
-            utils.FixPID(pk8, pa8.IsShiny, pa8.Form, pa8.Gender, pa8.Nature);
+        utils.FixPersonalData(pk8, pa8.IsShiny, pa8.Form, pa8.Gender, pa8.Nature, pa8.Ability, false, ctx);
 
         // for Furfrou and Hoopa
         pk8.FormArgumentRemain = pa8.FormArgumentRemain;

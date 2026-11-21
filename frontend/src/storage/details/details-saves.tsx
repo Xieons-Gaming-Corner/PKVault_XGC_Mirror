@@ -1,3 +1,4 @@
+import { Group } from '@mantine/core';
 import type React from 'react';
 import { usePkmLegalityMap } from '../../data/hooks/use-pkm-legality';
 import { usePkmVariantIndex } from '../../data/hooks/use-pkm-variant-index';
@@ -6,12 +7,14 @@ import { useStorageMainCreatePkmVariant } from '../../data/sdk/storage/storage.g
 import { getEntityContextGenerationName } from '../../data/util/get-entity-context-generation-name';
 import { Route } from '../../routes/storage';
 import { UIDetailsSaves, type UIDetailsSavesProps } from '../../ui/storage/storage-details/saves/ui-details-saves';
-import { DetailsTab } from './details-card/details-tab';
-import { DetailsTabCreate } from './details-card/details-tab-create';
 import { filterIsDefined } from '../../util/filter-is-defined';
 import { pick } from '../../util/pick';
 import { useSelectCallback } from '../../util/use-select-callback';
 import { useCurrentStorage } from '../panel/storage-panel-context';
+import { DetailsSaveCreateExpanded } from './details-card/details-save-create-expanded';
+import { DetailsSaveExpanded } from './details-card/details-save-expanded';
+import { DetailsTab } from './details-card/details-tab';
+import { DetailsTabCreate } from './details-card/details-tab-create';
 
 type DetailsSavesProps = Pick<UIDetailsSavesProps, 'actions'>;
 
@@ -39,17 +42,17 @@ export const DetailsSaves: React.FC<DetailsSavesProps> = ({ actions }) => {
 
             const variants = data.data.byBox[ baseVariant.boxId ]?.[ baseVariant.boxSlot ] ?? [];
             const mainVariant = variants.find(v => v.isMain);
+            const attachedVariant = variants.find(v => v.attachedSaveId);
 
             const getCanCreateVariantContext = () => {
                 if (!mainVariant?.canCreateVariant || !otherStorageSave)
                     return;
 
-                const attachedVariant = variants.find(v => v.attachedSaveId);
                 if (attachedVariant?.context == otherStorageSave.context)
                     return;
 
                 const hasPkmForPageSaveContext = variants.some(variant => variant.context === otherStorageSave.context);
-                const isCompatibleWithPageSave = mainVariant.compatibleWithVersions.includes(otherStorageSave.version);
+                const isCompatibleWithPageSave = mainVariant.compatibleWithVersions.includes(otherStorageSave.displayedVersion);
 
                 if (isCompatibleWithPageSave && !hasPkmForPageSaveContext)
                     return otherStorageSave.context;
@@ -61,10 +64,11 @@ export const DetailsSaves: React.FC<DetailsSavesProps> = ({ actions }) => {
                 ),
                 mainVariant: mainVariant && pick(mainVariant, [ 'id', 'boxId', 'boxSlot', 'compatibleWithVersions', 'canCreateVariant' ]),
                 canCreateVariantContext: getCanCreateVariantContext(),
+                attachedVariantId: attachedVariant?.id,
             };
         }, [ otherStorageSave, selectedId, selectedSaveId ])
     );
-    const { variants = [], mainVariant, canCreateVariantContext } = variantsQuery.data ?? {};
+    const { variants = [], mainVariant, canCreateVariantContext, attachedVariantId } = variantsQuery.data ?? {};
 
     const pkmLegalityMapQuery = usePkmLegalityMap(variants.map(pkm => pkm.id) ?? []);
     const pkmLegalityMap = pkmLegalityMapQuery.data?.data ?? {};
@@ -87,6 +91,7 @@ export const DetailsSaves: React.FC<DetailsSavesProps> = ({ actions }) => {
                 saveId={saveId}
                 selected={selected}
             />,
+            renderExpanded: undefined,
         };
     };
 
@@ -108,48 +113,56 @@ export const DetailsSaves: React.FC<DetailsSavesProps> = ({ actions }) => {
                 : undefined,
         ].filter(filterIsDefined);
 
+        const onNavigate = (id: string) => {
+            navigate({
+                search: (search) => ({
+                    ...search,
+                    selected: {
+                        ...search.selected!,
+                        id,
+                    },
+                    selectedContext: variants.find(variant => variant.id === id)?.context,
+                }),
+            });
+        };
+
+        const onCreate = async () => {
+            if (!mainVariant || !canCreateVariantContext)
+                return;
+
+            const mutateResult = await mainCreatePkmVariantMutation.mutateAsync({
+                params: {
+                    context: canCreateVariantContext,
+                    pkmVariantId: mainVariant.id,
+                },
+            });
+
+            const pkms = Object.values(mutateResult.data.mainPkmVariants?.data ?? {});
+            const newPkm = pkms.find(p => p.boxId === mainVariant.boxId && p.boxSlot === mainVariant.boxSlot);
+            if (!newPkm)
+                return;
+
+            navigate({
+                search: (search) => ({
+                    ...search,
+                    selected: {
+                        ...search.selected!,
+                        id: newPkm.id,
+                    },
+                    selectedContext: newPkm.context,
+                }),
+            });
+        };
+
         return {
             value: selectedId ?? firstVariant?.id ?? '',
             data,
-            onSelect: async id => {
+            onSelect: async (id) => {
                 if (id === canCreateVariantContext?.toString()) {
-                    if (!mainVariant)
-                        return;
-
-                    const mutateResult = await mainCreatePkmVariantMutation.mutateAsync({
-                        params: {
-                            context: canCreateVariantContext,
-                            pkmVariantId: mainVariant.id,
-                        },
-                    });
-
-                    const pkms = Object.values(mutateResult.data.mainPkmVariants?.data ?? {});
-                    const newPkm = pkms.find(p => p.boxId === mainVariant.boxId && p.boxSlot === mainVariant.boxSlot);
-                    if (!newPkm)
-                        return;
-
-                    navigate({
-                        search: (search) => ({
-                            ...search,
-                            selected: {
-                                ...search.selected!,
-                                id: newPkm.id,
-                            },
-                            selectedContext: newPkm.context,
-                        }),
-                    });
+                    await onCreate();
 
                 } else {
-                    navigate({
-                        search: (search) => ({
-                            ...search,
-                            selected: {
-                                ...search.selected!,
-                                id,
-                            },
-                            selectedContext: variants.find(variant => variant.id === id)?.context,
-                        }),
-                    });
+                    onNavigate(id);
                 }
             },
             renderTab: ({ item, selected }) => item.id === canCreateVariantContext?.toString()
@@ -164,8 +177,31 @@ export const DetailsSaves: React.FC<DetailsSavesProps> = ({ actions }) => {
                     id={item.id}
                     saveId={null}
                     selected={selected}
+                    attached={item.id === attachedVariantId}
                     warning={!!pkmLegalityMap[ item.id ] && !pkmLegalityMap[ item.id ]!.isValid}
                 />,
+            renderExpanded: (data, { reduce }) => <Group p='md'>
+                {data.map(({ item, selected }) => item.id === canCreateVariantContext?.toString()
+                    ? <DetailsSaveCreateExpanded
+                        key={item.id}
+                        context={canCreateVariantContext}
+                        version={otherStorageSave!.displayedVersion}
+                        onCreate={async () => {
+                            await onCreate();
+                            reduce();
+                        }}
+                    />
+                    : <DetailsSaveExpanded
+                        key={item.id}
+                        {...item}
+                        selected={selected}
+                        attached={item.id === attachedVariantId}
+                        onSelect={() => {
+                            onNavigate(item.id);
+                            reduce();
+                        }}
+                    />)}
+            </Group>,
             actions,
         };
     };

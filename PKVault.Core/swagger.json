@@ -33,6 +33,24 @@
           }
         }
       },
+      "post": {
+        "tags": [
+          "Backup"
+        ],
+        "operationId": "Backup_Create",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDTO"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
           "Backup"
@@ -598,49 +616,6 @@
         }
       }
     },
-    "/api/static-data/spritesheet/{sheetName}": {
-      "get": {
-        "tags": [
-          "StaticData"
-        ],
-        "operationId": "StaticData_GetSpritesheetImg",
-        "parameters": [
-          {
-            "name": "sheetName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "buildID",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid",
-              "nullable": true
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/storage/action": {
       "get": {
         "tags": [
@@ -754,18 +729,45 @@
           "Storage"
         ],
         "operationId": "Storage_DexSync",
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DexSyncActionInput"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/storage/inventory": {
+      "get": {
+        "tags": [
+          "Storage"
+        ],
+        "operationId": "Storage_GetInventoryItems",
         "parameters": [
           {
-            "name": "saveIds",
+            "name": "saveId",
             "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer"
-              }
+              "type": "integer",
+              "nullable": true
             },
             "x-position": 1
           }
@@ -776,7 +778,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DataDTO"
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/InventoryItemDTO"
+                  }
                 }
               }
             }
@@ -823,64 +828,23 @@
             }
           }
         }
-      }
-    },
-    "/api/storage/main/bank/{bankId}": {
+      },
       "put": {
         "tags": [
           "Storage"
         ],
         "operationId": "Storage_UpdateMainBank",
-        "parameters": [
-          {
-            "name": "bankId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "bankName",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "isDefault",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 4
-          }
-        ],
         "requestBody": {
-          "x-name": "view",
+          "x-name": "input",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BankView"
+                "$ref": "#/components/schemas/MainUpdateBankActionInput"
               }
             }
           },
           "required": true,
-          "x-position": 5
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -894,7 +858,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/storage/main/bank/{bankId}": {
       "delete": {
         "tags": [
           "Storage"
@@ -954,72 +920,24 @@
             }
           }
         }
-      }
-    },
-    "/api/storage/main/box/{boxId}": {
+      },
       "put": {
         "tags": [
           "Storage"
         ],
         "operationId": "Storage_UpdateMainBox",
-        "parameters": [
-          {
-            "name": "boxId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MainUpdateBoxActionInput"
+              }
+            }
           },
-          {
-            "name": "boxName",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "order",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "bankId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "slotCount",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 5
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/BoxType"
-            },
-            "x-position": 6
-          }
-        ],
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1032,7 +950,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/storage/main/box/{boxId}": {
       "delete": {
         "tags": [
           "Storage"
@@ -1123,36 +1043,53 @@
           }
         }
       },
+      "put": {
+        "tags": [
+          "Storage"
+        ],
+        "operationId": "Storage_MainEditPkmVariant",
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPkmVariantActionInput"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDTO"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Storage"
         ],
         "operationId": "Storage_MainDeletePkmVariant",
-        "parameters": [
-          {
-            "name": "pkmVariantIds",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePkmVariantActionInput"
               }
-            },
-            "x-position": 1
+            }
           },
-          {
-            "name": "deleteAllRelatedVariants",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            },
-            "x-position": 2
-          }
-        ],
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1167,12 +1104,12 @@
         }
       }
     },
-    "/api/storage/main/pkm-version/{pkmVariantId}": {
-      "put": {
+    "/api/storage/main/pkm-version/{pkmVariantId}/diff": {
+      "get": {
         "tags": [
           "Storage"
         ],
-        "operationId": "Storage_MainEditPkmVariant",
+        "operationId": "Storage_GetMainPkmVariantDiff",
         "parameters": [
           {
             "name": "pkmVariantId",
@@ -1184,18 +1121,40 @@
             "x-position": 1
           }
         ],
-        "requestBody": {
-          "x-name": "payload",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditPkmVariantPayload"
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/TupleOfStringAndString"
+                  }
+                }
               }
             }
-          },
-          "required": true,
-          "x-position": 2
-        },
+          }
+        }
+      }
+    },
+    "/api/storage/main/pkm-version/{pkmVariantId}/main": {
+      "put": {
+        "tags": [
+          "Storage"
+        ],
+        "operationId": "Storage_MainSetPkmVariantMain",
+        "parameters": [
+          {
+            "name": "pkmVariantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1216,22 +1175,82 @@
           "Storage"
         ],
         "operationId": "Storage_MainPkmDetachSave",
-        "parameters": [
-          {
-            "name": "pkmVariantIds",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetachPkmSaveActionInput"
               }
-            },
-            "x-position": 1
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDTO"
+                }
+              }
+            }
           }
+        }
+      }
+    },
+    "/api/storage/move/item": {
+      "put": {
+        "tags": [
+          "Storage"
         ],
+        "operationId": "Storage_MoveItem",
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveItemActionInput"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/storage/move/item/bank": {
+      "put": {
+        "tags": [
+          "Storage"
+        ],
+        "operationId": "Storage_MoveItemBank",
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveItemBankActionInput"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1252,75 +1271,18 @@
           "Storage"
         ],
         "operationId": "Storage_MovePkm",
-        "parameters": [
-          {
-            "name": "pkmIds",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovePkmActionInput"
               }
-            },
-            "x-position": 1
+            }
           },
-          {
-            "name": "sourceSaveId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "targetSaveId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "targetBoxId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "targetBoxSlots",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              }
-            },
-            "x-position": 5
-          },
-          {
-            "name": "attached",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            },
-            "x-position": 6
-          }
-        ],
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1341,50 +1303,18 @@
           "Storage"
         ],
         "operationId": "Storage_MovePkmBank",
-        "parameters": [
-          {
-            "name": "pkmIds",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovePkmBankActionInput"
               }
-            },
-            "x-position": 1
+            }
           },
-          {
-            "name": "sourceSaveId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "bankId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "attached",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            },
-            "x-position": 4
-          }
-        ],
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1449,32 +1379,18 @@
           "Storage"
         ],
         "operationId": "Storage_EvolvePkms",
-        "parameters": [
-          {
-            "name": "ids",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvolvePkmActionInput"
               }
-            },
-            "x-position": 1
+            }
           },
-          {
-            "name": "saveId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "nullable": true
-            },
-            "x-position": 2
-          }
-        ],
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1544,56 +1460,18 @@
           "Storage"
         ],
         "operationId": "Storage_SortPkms",
-        "parameters": [
-          {
-            "name": "saveId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "nullable": true
-            },
-            "x-position": 1
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SortPkmActionInput"
+              }
+            }
           },
-          {
-            "name": "fromBoxId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "toBoxId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "pokedexName",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "leaveEmptySlot",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            },
-            "x-position": 5
-          }
-        ],
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1640,37 +1518,26 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/storage/save/pkm": {
       "delete": {
         "tags": [
           "Storage"
         ],
         "operationId": "Storage_SaveDeletePkms",
-        "parameters": [
-          {
-            "name": "saveId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "pkmIds",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
+        "requestBody": {
+          "x-name": "input",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDeletePkmActionInput"
               }
-            },
-            "x-position": 2
-          }
-        ],
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1683,45 +1550,23 @@
             }
           }
         }
-      }
-    },
-    "/api/storage/save/{saveId}/pkm/{pkmId}": {
+      },
       "put": {
         "tags": [
           "Storage"
         ],
         "operationId": "Storage_SaveEditPkm",
-        "parameters": [
-          {
-            "name": "saveId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "pkmId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          }
-        ],
         "requestBody": {
-          "x-name": "payload",
+          "x-name": "input",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditPkmVariantPayload"
+                "$ref": "#/components/schemas/EditPkmSaveActionInput"
               }
             }
           },
           "required": true,
-          "x-position": 3
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -1803,6 +1648,12 @@
           },
           "mainPkmLegalities": {
             "$ref": "#/components/schemas/DataDTOStateOfDictionaryOfStringAndPkmLegalityDTO"
+          },
+          "mainInventoryItems": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/InventoryItemDTO"
+            }
           },
           "dex": {
             "$ref": "#/components/schemas/DataDTOStateOfDictionaryOfUInt16AndDictionaryOfUInt32AndDexItemDTO"
@@ -2097,6 +1948,10 @@
           "VL",
           "ZA",
           "CP",
+          "WI",
+          "WA",
+          "FRX",
+          "LGX",
           "RB",
           "RBY",
           "GS",
@@ -2220,6 +2075,10 @@
           89,
           90,
           91,
+          92,
+          93,
+          94,
+          95,
           255
         ]
       },
@@ -2503,7 +2362,8 @@
         "additionalProperties": false,
         "required": [
           "versions",
-          "comboItems"
+          "comboInventoryItems",
+          "allowedHeldItems"
         ],
         "properties": {
           "versions": {
@@ -2513,10 +2373,16 @@
               "format": "byte"
             }
           },
-          "comboItems": {
+          "comboInventoryItems": {
             "type": "object",
             "additionalProperties": {
               "type": "string"
+            }
+          },
+          "allowedHeldItems": {
+            "type": "array",
+            "items": {
+              "type": "integer"
             }
           }
         }
@@ -2660,18 +2526,21 @@
         "additionalProperties": false,
         "required": [
           "key",
-          "spriteKey",
-          "name"
+          "name",
+          "sprites"
         ],
         "properties": {
           "key": {
             "type": "string"
           },
-          "spriteKey": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
+          },
+          "sprites": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
           }
         }
       },
@@ -2887,6 +2756,9 @@
           "bankId": {
             "type": "string"
           },
+          "inventoryType": {
+            "$ref": "#/components/schemas/InventoryType"
+          },
           "wallpaperName": {
             "type": "string"
           },
@@ -2910,6 +2782,7 @@
         "description": "",
         "x-enumNames": [
           "Box",
+          "Inventory",
           "SurpriseTrade",
           "PGL",
           "Scripted",
@@ -2927,6 +2800,7 @@
         ],
         "enum": [
           0,
+          -1000,
           -42,
           -41,
           -31,
@@ -2941,6 +2815,46 @@
           -3,
           -2,
           -1
+        ]
+      },
+      "InventoryType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Items",
+          "KeyItems",
+          "TMHMs",
+          "Medicine",
+          "Berries",
+          "Balls",
+          "BattleItems",
+          "MailItems",
+          "PCItems",
+          "FreeSpace",
+          "ZCrystals",
+          "Candy",
+          "Treasure",
+          "Ingredients",
+          "MegaStones"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
         ]
       },
       "DataDTOStateOfDictionaryOfStringAndPkmVariantDTO": {
@@ -3078,6 +2992,7 @@
           "hiddenPowerCategory",
           "nature",
           "ability",
+          "abilityNumber",
           "isAbilityHidden",
           "moves",
           "tid",
@@ -3103,6 +3018,7 @@
           "canMoveToSave",
           "canEdit",
           "canEvolve",
+          "canHeldItem",
           "hasLoadError",
           "isEnabled"
         ],
@@ -3260,6 +3176,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "abilityNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
           "isAbilityHidden": {
             "type": "boolean"
           },
@@ -3318,8 +3238,7 @@
             "type": "boolean"
           },
           "heldItem": {
-            "type": "integer",
-            "format": "int32"
+            "type": "integer"
           },
           "dynamicChecksum": {
             "type": "string"
@@ -3385,6 +3304,9 @@
             "type": "boolean"
           },
           "canEvolve": {
+            "type": "boolean"
+          },
+          "canHeldItem": {
             "type": "boolean"
           },
           "loadError": {
@@ -3587,6 +3509,58 @@
           }
         }
       },
+      "InventoryItemDTO": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "item",
+          "name",
+          "type",
+          "version",
+          "count",
+          "boxId",
+          "boxSlot",
+          "inventorySlot",
+          "canBeHeld"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "item": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/InventoryType"
+          },
+          "version": {
+            "$ref": "#/components/schemas/GameVersion"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boxId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boxSlot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inventorySlot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "canBeHeld": {
+            "type": "boolean"
+          }
+        }
+      },
       "DataDTOStateOfDictionaryOfUInt16AndDictionaryOfUInt32AndDexItemDTO": {
         "type": "object",
         "additionalProperties": false,
@@ -3751,6 +3725,12 @@
           },
           "savePkmLegality": {
             "$ref": "#/components/schemas/DataDTOStateOfDictionaryOfStringAndPkmLegalityDTO"
+          },
+          "saveInventoryItems": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/InventoryItemDTO"
+            }
           }
         }
       },
@@ -3877,7 +3857,9 @@
           "SORT_PKM",
           "DEX_SYNC",
           "DATA_NORMALIZE",
-          "UPDATE_EXTERNAL_PKM"
+          "UPDATE_EXTERNAL_PKM",
+          "SET_PKM_VERSION_MAIN",
+          "MOVE_ITEM"
         ],
         "enum": [
           0,
@@ -3898,7 +3880,9 @@
           15,
           16,
           17,
-          18
+          18,
+          19,
+          20
         ]
       },
       "WarningsDTO": {
@@ -4078,10 +4062,16 @@
           "appDirectory",
           "settingsPath",
           "userId",
+          "settingsMutable",
+          "isDesktop",
           "canUpdateSettings",
           "canScanSaves",
+          "canUploadSaves",
+          "canDeleteSaves",
+          "canCreateBackup",
+          "canOpenFolder",
+          "canUseDesktopFileExplorer",
           "demoMode",
-          "settingsMutable",
           "savesUploadsPath"
         ],
         "properties": {
@@ -4113,17 +4103,38 @@
           "userId": {
             "type": "string"
           },
+          "settingsMutable": {
+            "$ref": "#/components/schemas/SettingsMutableDTO"
+          },
+          "isDesktop": {
+            "type": "boolean"
+          },
+          "updateUrl": {
+            "type": "string"
+          },
           "canUpdateSettings": {
             "type": "boolean"
           },
           "canScanSaves": {
             "type": "boolean"
           },
-          "demoMode": {
+          "canUploadSaves": {
             "type": "boolean"
           },
-          "settingsMutable": {
-            "$ref": "#/components/schemas/SettingsMutableDTO"
+          "canDeleteSaves": {
+            "type": "boolean"
+          },
+          "canCreateBackup": {
+            "type": "boolean"
+          },
+          "canOpenFolder": {
+            "type": "boolean"
+          },
+          "canUseDesktopFileExplorer": {
+            "type": "boolean"
+          },
+          "demoMode": {
+            "type": "boolean"
           },
           "savesUploadsPath": {
             "type": "string"
@@ -4139,7 +4150,8 @@
           "WINDOWS",
           "LINUX",
           "STEAMDECK",
-          "MACOS"
+          "MACOS",
+          "ANDROID"
         ],
         "enum": [
           0,
@@ -4147,7 +4159,8 @@
           2,
           3,
           4,
-          5
+          5,
+          6
         ]
       },
       "SourceProvider": {
@@ -4663,6 +4676,100 @@
           }
         }
       },
+      "DexSyncActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "saveIds"
+        ],
+        "properties": {
+          "saveIds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "MainUpdateBankActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "bankId",
+          "bankName",
+          "isDefault",
+          "order",
+          "view"
+        ],
+        "properties": {
+          "bankId": {
+            "type": "string"
+          },
+          "bankName": {
+            "type": "string"
+          },
+          "isDefault": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "view": {
+            "$ref": "#/components/schemas/BankView"
+          }
+        }
+      },
+      "MainUpdateBoxActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "boxId",
+          "boxName",
+          "order",
+          "bankId",
+          "slotCount",
+          "type"
+        ],
+        "properties": {
+          "boxId": {
+            "type": "string"
+          },
+          "boxName": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bankId": {
+            "type": "string"
+          },
+          "slotCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "$ref": "#/components/schemas/BoxType"
+          }
+        }
+      },
+      "EditPkmVariantActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pkmVariantId",
+          "editPayload"
+        ],
+        "properties": {
+          "pkmVariantId": {
+            "type": "string"
+          },
+          "editPayload": {
+            "$ref": "#/components/schemas/EditPkmVariantPayload"
+          }
+        }
+      },
       "EditPkmVariantPayload": {
         "type": "object",
         "additionalProperties": false,
@@ -4690,6 +4797,187 @@
           }
         }
       },
+      "DeletePkmVariantActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pkmVariantIds",
+          "deleteAllRelatedVariants"
+        ],
+        "properties": {
+          "pkmVariantIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deleteAllRelatedVariants": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TupleOfStringAndString": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item1",
+          "item2"
+        ],
+        "properties": {
+          "item1": {
+            "type": "string"
+          },
+          "item2": {
+            "type": "string"
+          }
+        }
+      },
+      "DetachPkmSaveActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pkmVariantIds"
+        ],
+        "properties": {
+          "pkmVariantIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MoveItemActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sourceBoxId",
+          "sourcePkmIds",
+          "sourceItemIds",
+          "targetBoxId"
+        ],
+        "properties": {
+          "sourceSaveId": {
+            "type": "integer"
+          },
+          "sourceBoxId": {
+            "type": "string"
+          },
+          "sourcePkmIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceItemIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "targetSaveId": {
+            "type": "integer"
+          },
+          "targetBoxId": {
+            "type": "string"
+          },
+          "targetPkmId": {
+            "type": "string"
+          }
+        }
+      },
+      "MoveItemBankActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sourcePkmIds",
+          "sourceItemIds",
+          "bankId"
+        ],
+        "properties": {
+          "sourceSaveId": {
+            "type": "integer"
+          },
+          "sourcePkmIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceItemIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bankId": {
+            "type": "string"
+          }
+        }
+      },
+      "MovePkmActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pkmIds",
+          "targetBoxId",
+          "targetBoxSlots",
+          "attached"
+        ],
+        "properties": {
+          "pkmIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceSaveId": {
+            "type": "integer"
+          },
+          "targetSaveId": {
+            "type": "integer"
+          },
+          "targetBoxId": {
+            "type": "string"
+          },
+          "targetBoxSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "attached": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MovePkmBankActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pkmIds",
+          "bankId",
+          "attached"
+        ],
+        "properties": {
+          "pkmIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sourceSaveId": {
+            "type": "integer"
+          },
+          "bankId": {
+            "type": "string"
+          },
+          "attached": {
+            "type": "boolean"
+          }
+        }
+      },
       "MoveItem": {
         "type": "object",
         "additionalProperties": false,
@@ -4700,6 +4988,220 @@
           "id": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "EvolvePkmActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ids"
+        ],
+        "properties": {
+          "saveId": {
+            "type": "integer"
+          },
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SortPkmActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fromBoxId",
+          "toBoxId",
+          "pokedexName",
+          "leaveEmptySlot"
+        ],
+        "properties": {
+          "saveId": {
+            "type": "integer"
+          },
+          "fromBoxId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toBoxId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pokedexName": {
+            "type": "string"
+          },
+          "leaveEmptySlot": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SaveDeletePkmActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "saveId",
+          "pkmIds"
+        ],
+        "properties": {
+          "saveId": {
+            "type": "integer"
+          },
+          "pkmIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "EditPkmSaveActionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "saveId",
+          "pkmSaveId",
+          "editPayload"
+        ],
+        "properties": {
+          "saveId": {
+            "type": "integer"
+          },
+          "pkmSaveId": {
+            "type": "string"
+          },
+          "editPayload": {
+            "$ref": "#/components/schemas/EditPkmVariantPayload"
+          }
+        }
+      },
+      "DesktopMessageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DesktopMessageType"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "directoryOnly": {
+            "type": "boolean",
+            "default": false
+          },
+          "basePath": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "multiselect": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "DesktopMessageType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "FILE_EXPLORE",
+          "OPEN_FOLDER",
+          "ANDROID_PKVAULT_DIRECTORY"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "DesktopMessageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "id"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DesktopMessageType"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "directoryOnly": {
+            "type": "boolean",
+            "default": true
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DesktopFetchRequestInit": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "method",
+          "headers"
+        ],
+        "properties": {
+          "method": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "DesktopFetchResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "url",
+          "status",
+          "statusText",
+          "ok",
+          "headers"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusText": {
+            "type": "string"
+          },
+          "ok": {
+            "type": "boolean"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {
+            "type": "string"
           }
         }
       }

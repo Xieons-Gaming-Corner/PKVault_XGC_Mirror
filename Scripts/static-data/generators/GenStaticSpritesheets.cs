@@ -1,18 +1,9 @@
-using Microsoft.Extensions.Logging;
 using PKVault.Core;
 using Serilog;
 using SixLabors.ImageSharp;
-// using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-
-// public record StaticSpritesheetsData(
-//     Dictionary<string, SpriteInfo> Species,
-//     Dictionary<string, SpriteInfo> Items
-// );
-
-// public record SpriteInfo(string SheetName, int X, int Y, int Width, int Height);
 
 /**
  * Generator not used during classic run.
@@ -20,17 +11,20 @@ using SixLabors.ImageSharp.Processing;
  * Generates species and items spritesheets.
  */
 public class GenStaticSpritesheets(
-    IFileIOService fileIOService,
+    IFileIOService fileIOService_,
     StaticSpeciesData staticSpecies, StaticItem[] staticItems
 ) : StaticDataGenerator<StaticSpritesheetsData>(
    jsonTypeInfo: StaticDataJsonContext.Default.StaticSpritesheetsData,
    jsonTypeInfoIndented: new StaticDataJsonContext(JsonIndentedOptions).StaticSpritesheetsData,
-   fileIOService
+   fileIOService_
 )
 {
+    private readonly IFileIOService fileIOService = fileIOService_;
+
     private const string SourcePath = "../pokeapi/sprites";
     private const string CustomSourcePath = "./static-data/generators";
 
+    private static readonly string[] ImgsPathParts = "../frontend/public/imgs".Split('/');
     private static readonly string Filename = $"StaticSpritesheets";
 
     protected override async Task<StaticSpritesheetsData> GetData(string[] rootParts)
@@ -46,7 +40,7 @@ public class GenStaticSpritesheets(
         StaticItem[] staticItems
     )
     {
-        var targetPath = Path.Combine([.. rootParts, "sheets"]);
+        var targetPath = Path.Combine([.. ImgsPathParts, "sheets"]);
 
         fileIOService.Delete(targetPath);
         fileIOService.CreateDirectory(targetPath);
@@ -85,7 +79,7 @@ public class GenStaticSpritesheets(
                 ),
             ],
             20, // 20 cols * 96 px = 1920 px width
-            SpritesheetFileClient.GetSpeciesImgFilename(sheetIndex)
+            GetSpeciesImgFilename(sheetIndex)
         )));
 
         return GetSpritesheetAtlas(spritesInfosList);
@@ -101,7 +95,7 @@ public class GenStaticSpritesheets(
             targetPath,
             itemsList.ToList(),
             64, // 64 cols * 30 px = 1920 px width
-            SpritesheetFileClient.GetItemsImgFilename(sheetIndex)
+            GetItemsImgFilename(sheetIndex)
         )));
 
         return GetSpritesheetAtlas(itemsInfosList);
@@ -179,6 +173,9 @@ public class GenStaticSpritesheets(
 
         return allSpriteInfo;
     }
+
+    private static string GetSpeciesImgFilename(int sheetIndex) => $"spritesheet_species_{sheetIndex}.webp";
+    private static string GetItemsImgFilename(int sheetIndex) => $"spritesheet_items_{sheetIndex}.webp";
 
     private static Dictionary<string, SpriteInfo> GetSpritesheetAtlas(Dictionary<string, SpriteInfo>[] spritesInfosList)
     {

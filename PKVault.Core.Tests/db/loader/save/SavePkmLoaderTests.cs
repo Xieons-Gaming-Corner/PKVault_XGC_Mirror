@@ -4,17 +4,19 @@ using PKVault.Core;
 
 public class SavePkmLoaderTests : IAsyncLifetime
 {
-    private StaticEvolvesData evolves;
+    private StaticEvolvesData evolves = [];
 
     private readonly Mock<IPkmConvertService> mockConvertService;
     private readonly SaveWrapper mockSave;
 
     public SavePkmLoaderTests()
     {
+        Program.Initialize();
+
         mockConvertService = new Mock<IPkmConvertService>();
         mockConvertService.Setup(x => x
-            .ConvertTo(It.IsAny<ImmutablePKM>(), It.IsAny<Type>(), It.IsAny<PKMRndValues?>(), It.IsAny<SaveFile?>())
-        ).Returns((ImmutablePKM pkm, Type _, PKMRndValues? __, SaveFile? ___) => pkm);
+            .ConvertTo(It.IsAny<ImmutablePKM>(), It.IsAny<Type>(), It.IsAny<ConvertContext?>())
+        ).Returns((ImmutablePKM pkm, Type _, ConvertContext? __) => pkm);
         mockSave = CreateTestSave();
     }
 
@@ -162,7 +164,7 @@ public class SavePkmLoaderTests : IAsyncLifetime
 
         var result = loader.GetDto(boxId: "0", boxSlot: 5);
 
-        Assert.Equal(150, result.Species);
+        Assert.Equal(150, result!.Species);
         Assert.Single(loader.GetAllDtos());
     }
 

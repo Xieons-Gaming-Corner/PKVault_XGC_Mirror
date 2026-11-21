@@ -4,9 +4,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { useSettingsGet } from '../../data/sdk/settings/settings.gen';
 import type { SettingsFormData } from '../../pages/settings';
 import { useTranslate } from '../../translate/i18n';
-import { GlobsInputItem } from '../globs-input/globs-input-item';
 import { GlobsInputList } from '../globs-input/globs-input-list';
-import { isDesktop } from '../globs-input/hooks/use-desktop-message';
 
 export const SettingsMainRight: React.FC = () => {
     const { t } = useTranslate();
@@ -30,13 +28,7 @@ export const SettingsMainRight: React.FC = () => {
             onChange={(value) => form.setValue('savE_GLOBS', value, { shouldDirty: true })}
             disabled={!settings?.canUpdateSettings}
             limit={200}
-        >
-            {!isDesktop && settings && <GlobsInputItem
-                name='uploads-path'
-                value={settings.savesUploadsPath}
-                disabled
-                limit={200}
-            />}
-        </GlobsInputList>
+            extraValue={settings?.canUploadSaves ? settings.savesUploadsPath : undefined}
+        />
     </Card>;
 };

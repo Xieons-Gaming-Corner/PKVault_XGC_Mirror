@@ -10,11 +10,7 @@ public abstract record PkmBaseDTO(
     int BoxId,
     int BoxSlot,
 
-    bool IsDuplicate,
-
-    [property: JsonIgnore] string SettingsLanguage,
-    [property: JsonIgnore] ImmutablePKM Pkm,
-    [property: JsonIgnore] Dictionary<ushort, StaticEvolve> Evolves
+    bool IsDuplicate
 ) : IWithId
 {
     public virtual string IdBase => Pkm.GetPKMIdBase(Evolves);
@@ -57,6 +53,7 @@ public abstract record PkmBaseDTO(
     public MoveCategory HiddenPowerCategory => Pkm.HiddenPowerCategory;
     public Nature Nature => Pkm.Nature;
     public int Ability => Pkm.Ability;
+    public int AbilityNumber => Pkm.AbilityNumber;
     public bool IsAbilityHidden => Pkm.IsAbilityHidden;
 
     public List<ushort> Moves => Pkm.Moves;
@@ -77,7 +74,7 @@ public abstract record PkmBaseDTO(
     public byte? OriginMetLevel => Pkm.OriginMetLevel;
     public bool FatefulEncounter => Pkm.FatefulEncounter;
 
-    public int HeldItem => Pkm.HeldItem;
+    public ushort HeldItem => Pkm.HeldItem;
     public string DynamicChecksum => Pkm.DynamicChecksum;
     public int NicknameMaxLength => Pkm.MaxStringLengthNickname;
     public LanguageID LanguageID => Pkm.LanguageID;
@@ -132,9 +129,20 @@ public abstract record PkmBaseDTO(
         }
     }
 
+    public bool CanHeldItem => Pkm.CanHeldItem;
+
     public PKMLoadError? LoadError => Pkm.LoadError;
     public bool HasLoadError => Pkm.HasLoadError;
     public bool IsEnabled => Pkm.IsEnabled;
+
+    [property: JsonIgnore]
+    public string SettingsLanguage { get; init; } = default!;
+
+    [property: JsonIgnore]
+    public ImmutablePKM Pkm { get; init; } = default!;
+
+    [property: JsonIgnore]
+    public Dictionary<ushort, StaticEvolve> Evolves { get; init; } = default!;
 };
 
 public record MoveItem(int Id);

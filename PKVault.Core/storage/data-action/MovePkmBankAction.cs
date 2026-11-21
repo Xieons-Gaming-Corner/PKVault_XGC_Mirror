@@ -20,8 +20,7 @@ public class MovePkmBankAction(
             throw new ArgumentException($"Pkm ids cannot be empty");
         }
 
-        var bank = (await bankLoader.GetEntity(input.bankId))
-            ?? throw new ArgumentException($"Bank not found");
+        var bank = await bankLoader.GetEntityRequired(input.bankId);
 
         if (bank.IsExternal)
         {
@@ -29,6 +28,7 @@ public class MovePkmBankAction(
         }
 
         var mainBoxes = (await boxLoader.GetEntitiesByBank(input.bankId)).Values
+            .Where(box => box.Type != BoxType.Inventory)
             .OrderBy(box => box.Order).ToList();
 
         var boxDict = new Dictionary<int, int[]>();
@@ -46,7 +46,7 @@ public class MovePkmBankAction(
 
         foreach (var boxId in boxesOccupationDict.Keys)
         {
-            var box = mainBoxes.Find(box => box.Id == boxId);
+            var box = mainBoxes.First(box => box.Id == boxId);
             HashSet<int> unoccupiedSlots = [];
             for (int slot = 0; slot < box.SlotCount; slot++)
             {
@@ -82,6 +82,7 @@ public class MovePkmBankAction(
         }
 
         var boxesDict = (await boxLoader.GetAllDtos())
+            .Where(p => p.Type != BoxType.Inventory)
             .ToDictionary(p => p.Id);
 
         async Task<DataActionPayload> act(string pkmId)
@@ -118,7 +119,7 @@ public class MovePkmBankAction(
 
     private async Task<DataActionPayload> MainToMain(MovePkmBankActionInput input, string pkmVariantId, BoxDTO targetBox, int targetBoxSlot)
     {
-        var baseEntity = (await pkmVariantLoader.GetEntity(pkmVariantId)) ?? throw new KeyNotFoundException("PkmVariant not found");
+        var baseEntity = await pkmVariantLoader.GetEntityRequired(pkmVariantId);
         var entities = await pkmVariantLoader.GetEntitiesByBox(baseEntity.BoxId, baseEntity.BoxSlot);
         var pkm = await pkmVariantLoader.GetPKM(baseEntity);
 
@@ -143,18 +144,10 @@ public class MovePkmBankAction(
 
     private async Task<DataActionPayload> SaveToMain(MovePkmBankActionInput input, DataUpdateFlags flags, string pkmId, BoxDTO targetBox, int targetBoxSlot)
     {
-        var saveLoaders = savesLoadersService.GetLoaders((uint)input.sourceSaveId!);
+        var saveLoaders = savesLoadersService.GetLoadersRequired((uint)input.sourceSaveId!);
 
         var savePkm = saveLoaders.Pkms.GetDto(pkmId)
             ?? throw new ArgumentException($"Save Pkm not found, id={pkmId}");
-
-        if (input.attached)
-        {
-            if (savePkm.IsDuplicate)
-            {
-                throw new ArgumentException($"Target save already have a pkm with same ID, move attached cannot be done.");
-            }
-        }
 
         var existingSlots = await pkmVariantLoader.GetEntitiesByBox(targetBox.Id, targetBoxSlot);
         if (existingSlots.Count > 0)
@@ -183,7 +176,7 @@ public class MovePkmBankAction(
         PkmSaveDTO savePkm
     )
     {
-        var saveLoaders = savesLoadersService.GetLoaders(sourceSaveId);
+        var saveLoaders = savesLoadersService.GetLoadersRequired(sourceSaveId);
 
         if (savePkm.Pkm.GetMutablePkm() is IShadowCapture savePkmShadow && savePkmShadow.IsShadow)
         {
@@ -219,7 +212,15 @@ public class MovePkmBankAction(
         // if moved to already attached pkm, just update it
         if (mainPkmAlreadyExists && pkmVariantEntity.AttachedSaveId != null)
         {
-            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([(pkmVariantEntity.Id, pkmVariantEntity.AttachedSavePkmIdBase!)]));
+            var entityBox = await boxLoader.GetEntity(pkmVariantEntity.BoxId);
+            if (entityBox?.BankId != targetBox.BankId)
+                throw new ArgumentException($"Attached pkm cannot change bank");
+
+            var variantPkm = await pkmVariantLoader.GetPKM(pkmVariantEntity);
+            if (!variantPkm.IsEnabled)
+                throw new ArgumentException($"Attached variant is invalid and cannot be synchronized");
+
+            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([new(pkmVariantEntity.Id, pkmVariantEntity.AttachedSavePkmIdBase!, savePkm.Id)]));
 
             if (!input.attached)
             {

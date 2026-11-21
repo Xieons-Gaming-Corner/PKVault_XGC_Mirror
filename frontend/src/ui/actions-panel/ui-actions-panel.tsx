@@ -78,13 +78,13 @@ const UIActionsPanelContent: React.FC<UIActionsPanelProps> = ({ data, onDelete, 
 
     const reversedData = data.reverse();
 
-    return <Group wrap='nowrap' style={{ flexGrow: 1 }}>
+    return <Group mih={32} wrap='nowrap' style={{ flexGrow: 1 }}>
         <Title
             order={5}
             lh={1}
-            w='min-content'
-            miw={i18n.language === 'de' || i18n.language === 'pt-br'
-                ? 94 : undefined}
+            w={i18n.language === 'en'
+                ? 'min-content'
+                : 94}
             ta='center'
         >{t('storage.save-actions.title')}</Title>
 

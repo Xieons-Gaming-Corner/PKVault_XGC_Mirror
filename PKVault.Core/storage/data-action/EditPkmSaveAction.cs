@@ -11,7 +11,7 @@ public class EditPkmSaveAction(
 {
     protected override async Task<DataActionPayload> Execute(EditPkmSaveActionInput input, DataUpdateFlags flags)
     {
-        var saveLoaders = savesLoadersService.GetLoaders(input.saveId);
+        var saveLoaders = savesLoadersService.GetLoadersRequired(input.saveId);
         var pkmSave = saveLoaders.Pkms.GetDto(input.pkmSaveId);
 
         var availableMoves = await actionService.GetPkmAvailableMoves(input.saveId, input.pkmSaveId);
@@ -30,15 +30,20 @@ public class EditPkmSaveAction(
 
         saveLoaders.Pkms.WriteDto(pkmSave with { Pkm = pkm });
 
-        var pkmVariant = await pkmVariantLoader.GetEntityBySave(pkmSave.SaveId, pkmSave.IdBase);
-        if (pkmVariant != null)
-        {
-            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([(pkmVariant.Id, pkmSave.IdBase)]));
-        }
+        await ShareChangesToAttached(pkmSave);
 
         return new(
             type: DataActionType.EDIT_PKM_SAVE,
             parameters: [saveLoaders.Save.Version, pkmSave.Nickname, pkmSave.Species]
         );
+    }
+
+    public async Task ShareChangesToAttached(PkmSaveDTO pkmSave)
+    {
+        var pkmVariant = await pkmVariantLoader.GetEntityBySave(pkmSave.SaveId, pkmSave.IdBase);
+        if (pkmVariant != null)
+        {
+            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([new(pkmVariant.Id, pkmSave.IdBase, pkmSave.Id)]));
+        }
     }
 }

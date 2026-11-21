@@ -105,23 +105,23 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.2.2/PKVault.Desktop/publishers/flatpak/snaps/snap_storage.png</image>
+      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.5.2/PKVault.Desktop/publishers/flatpak/snaps/snap_storage.png</image>
       <caption>Collection view</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.2.2/PKVault.Desktop/publishers/flatpak/snaps/snap_storage_dark.png</image>
+      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.5.2/PKVault.Desktop/publishers/flatpak/snaps/snap_storage_dark.png</image>
       <caption>Dark mode</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.2.2/PKVault.Desktop/publishers/flatpak/snaps/snap_storage_details.png</image>
+      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.5.2/PKVault.Desktop/publishers/flatpak/snaps/snap_storage_details.png</image>
       <caption>Pokémon edit</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.2.2/PKVault.Desktop/publishers/flatpak/snaps/snap_dex.png</image>
+      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.5.2/PKVault.Desktop/publishers/flatpak/snaps/snap_dex.png</image>
       <caption>Pokédex</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.2.2/PKVault.Desktop/publishers/flatpak/snaps/snap_saves.png</image>
+      <image>https://raw.githubusercontent.com/Chnapy/PKVault/v2.5.2/PKVault.Desktop/publishers/flatpak/snaps/snap_saves.png</image>
       <caption>Saves view</caption>
     </screenshot>
   </screenshots>
@@ -141,6 +141,127 @@
   </developer>
 
   <releases>
+    <release version="2.5.2" date="2026-11-05">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.5.2</url>
+      <description>
+        <ul>
+          <li>Hotfix new box created not showing its content</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.5.1" date="2026-10-31">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.5.1</url>
+      <description>
+        <ul>
+          <li>Fix alpha flag lost when moving pokémon between Legends Arceus and Legends ZA</li>
+          <li>Fix app auto-closing on authorization error</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.5.0" date="2026-10-23">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.5.0</url>
+      <description>
+        <ul>
+          <li>Update PKHeX to 26.10.18</li>
+          <li>Allow pokémon move action from and to saves with duplicates</li>
+          <li>Fix app crash because of pokémon with some not recognized held-item</li>
+          <li>Fix saves language for first generations when PKHeX override is used</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.4.5" date="2026-10-18">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.4.5</url>
+      <description>
+        <ul>
+          <li>Hotfix details content not showing up with not-attached pokémons</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.4.4" date="2026-10-16">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.4.4</url>
+      <description>
+        <ul>
+          <li>Fix some save boxes being readonly</li>
+          <li>Fix errors when moving attached pokémons in some cases</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.4.3" date="2026-10-12">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.4.3</url>
+      <description>
+        <ul>
+          <li>Fix saves inventories not being changed after save action</li>
+          <li>Fix saves add with path containing accents</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.4.0" date="2026-10-08">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.4.0</url>
+      <description>
+        <ul>
+          <li>Add items mode with full management between inventories and pokémons held items</li>
+          <li>Add setting input to disable gamepad/keyboard navigation</li>
+          <li>Fix gamepad/keyboard conflicts</li>
+          <li>Fix move action error with lot of pokémons (150+)</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.3.4" date="2026-09-28">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.3.4</url>
+      <description>
+        <ul>
+          <li>Fix crash with skip legality checks enabled</li>
+          <li>Fix forms with wrong sprites (Flabebe, Floette, and others)</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.3.3" date="2026-09-26">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.3.3</url>
+      <description>
+        <ul>
+          <li>Add "Create backup" button</li>
+          <li>Add button to change main variant</li>
+          <li>Add "diff" button to see differences from main variant</li>
+          <li>Fix failing PKM edit</li>
+          <li>Fix multiple legality issues: ability, origin, relearn-moves, contest, PID</li>
+          <li>Fix LetsGo in-game artifacts post-save</li>
+          <li>Fix Colosseum/XD PKM nickname synchronization</li>
+          <li>Fix Colosseum/XD shadow sprite</li>
+          <li>Reduce legality reports verbosity</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.3.2" date="2026-09-15">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.3.2</url>
+      <description>
+        <ul>
+          <li>Fix adding new save files.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.3.1" date="2026-09-15">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.3.1</url>
+      <description>
+        <ul>
+          <li>Fix backup restore.</li>
+          <li>Fix data migration from 2.2.2 that may crash in some cases.</li>
+          <li>Fix ribbons synchronization between storages.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.3.0" date="2026-09-14">
+      <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.3.0</url>
+      <description>
+        <ul>
+          <li>This release was mainly focused on Android and macOS new export.</li>
+          <li>Add translations: Italian.</li>
+          <li>Fix save files conflicts when OT, TID and SID are the same.</li>
+          <li>Fix synchronization broken when baby pkm evolved in save file.</li>
+          <li>Fix some ribbons not displayed.</li>
+          <li>Fix error on pkm loading when it has illegal marking.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.2.2" date="2026-09-01">
       <url type="details">https://github.com/Chnapy/PKVault/releases/tag/v2.2.2</url>
       <description>

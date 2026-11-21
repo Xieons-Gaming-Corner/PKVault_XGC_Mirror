@@ -30,6 +30,7 @@ public interface IPkmVariantLoader : IEntityLoader<PkmVariantDTO, PkmVariantEnti
     public Task UpdateEntity(PkmVariantEntity entity, BoxDTO? box = null);
     public Task UpdateEntity(PkmVariantEntity entity, ImmutablePKM pkm, BoxDTO? box = null);
     public Task DeleteEntityDBOnly(PkmVariantEntity entity);
+    public Task DeleteEntityDBOnlyAndUntrackFile(PkmVariantEntity entity);
 
     public Task<Dictionary<int, Dictionary<string, PkmVariantEntity>>> GetEntitiesByBox(int boxId);
     public Task<Dictionary<int, Dictionary<string, PkmVariantEntity>>> GetEntitiesByBox(string boxId);
@@ -92,8 +93,6 @@ public class PkmVariantLoader : EntityLoader<PkmVariantDTO, PkmVariantEntity>, I
         var dto = new PkmVariantDTO(
             Id: entity.Id,
             Generation: entity.Generation,
-            SettingsLanguage: language,
-            Pkm: pkm,
 
             BoxId: int.Parse(entity.BoxId),
             BoxSlot: entity.BoxSlot,
@@ -104,11 +103,14 @@ public class PkmVariantLoader : EntityLoader<PkmVariantDTO, PkmVariantEntity>, I
 
             IsFilePresent: isFilePresent,
             Filepath: entity.Filepath,
-            FilepathAbsolute: filepathAbsolute,
-
-            VersionChecker: versionChecker,
-            Evolves: evolves
-        );
+            FilepathAbsolute: filepathAbsolute
+        )
+        {
+            SettingsLanguage = language,
+            Evolves = evolves,
+            Pkm = pkm,
+            VersionChecker = versionChecker,
+        };
 
         return dto;
     }
@@ -338,6 +340,9 @@ public class PkmVariantLoader : EntityLoader<PkmVariantDTO, PkmVariantEntity>, I
 
         var box = payload.Box;
 
+        if (box.Type == BoxType.Inventory)
+            throw new ArgumentException($"Cannot add PkmVariant in box Inventory");
+
         if (payload.BoxSlot >= box.SlotCount)
         {
             throw new ArgumentException($"Wrong PkmVariant BoxSlot={payload.BoxSlot}, should be less than box.SlotCount={box.SlotCount}");
@@ -428,6 +433,19 @@ public class PkmVariantLoader : EntityLoader<PkmVariantDTO, PkmVariantEntity>, I
 
     public async Task DeleteEntityDBOnly(PkmVariantEntity entity)
     {
+        await base.DeleteEntity(entity);
+    }
+
+    /**
+     * Like DeleteEntityDBOnly, but also drops the now-unreferenced PkmFile row.
+     */
+    public async Task DeleteEntityDBOnlyAndUntrackFile(PkmVariantEntity entity)
+    {
+        if (entity.PkmFile != null)
+        {
+            db.PkmFiles.Remove(entity.PkmFile);
+        }
+
         await base.DeleteEntity(entity);
     }
 

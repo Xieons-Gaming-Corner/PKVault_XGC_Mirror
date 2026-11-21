@@ -32,14 +32,18 @@ public class MovePkmAction(
         var sourceBoxId = (await GetPkmSlot(input.sourceSaveId, input.pkmIds[0])).BoxId;
 
         BoxDTO? sourceBox = input.sourceSaveId != null
-            ? (savesLoadersService.GetLoaders((uint)input.sourceSaveId)?.Boxes.GetDto(sourceBoxId))
+            ? savesLoadersService.GetLoadersRequired((uint)input.sourceSaveId).Boxes.GetDto(sourceBoxId)
             : await boxLoader.GetDto(sourceBoxId);
         ArgumentNullException.ThrowIfNull(sourceBox);
+        if (sourceBox.Type == BoxType.Inventory)
+            throw new ArgumentException($"Cannot move Pkm from Box Inventory");
 
         BoxDTO? targetBox = input.targetSaveId != null
-            ? (savesLoadersService.GetLoaders((uint)input.targetSaveId)?.Boxes.GetDto(input.targetBoxId))
+            ? savesLoadersService.GetLoadersRequired((uint)input.targetSaveId).Boxes.GetDto(input.targetBoxId)
             : await boxLoader.GetDto(input.targetBoxId);
         ArgumentNullException.ThrowIfNull(targetBox);
+        if (targetBox.Type == BoxType.Inventory)
+            throw new ArgumentException($"Cannot move Pkm to Box Inventory");
 
         async Task<DataActionPayload> act(string pkmId, int targetBoxSlot)
         {
@@ -107,13 +111,13 @@ public class MovePkmAction(
     {
         if (saveId == null)
         {
-            var mainDto = await pkmVariantLoader.GetEntity(pkmId);
+            var mainDto = await pkmVariantLoader.GetEntityRequired(pkmId);
             return (mainDto.BoxId, mainDto.BoxSlot);
         }
 
-        var saveLoaders = savesLoadersService.GetLoaders((uint)saveId);
+        var saveLoaders = savesLoadersService.GetLoadersRequired((uint)saveId);
         var saveDto = saveLoaders.Pkms.GetDto(pkmId);
-        return (saveDto.BoxId.ToString(), saveDto.BoxSlot);
+        return (saveDto!.BoxId.ToString(), saveDto.BoxSlot);
     }
 
     private async Task<DataActionPayload> MainToMain(MovePkmActionInput input, string pkmVariantId, BoxDTO sourceBox, BoxDTO targetBox, int targetBoxSlot)
@@ -146,8 +150,8 @@ public class MovePkmAction(
 
     private async Task<DataActionPayload> SaveToSave(MovePkmActionInput input, string pkmId, BoxDTO sourceBox, BoxDTO targetBox, int targetBoxSlot)
     {
-        var sourceSaveLoaders = savesLoadersService.GetLoaders((uint)input.sourceSaveId!);
-        var targetSaveLoaders = savesLoadersService.GetLoaders((uint)input.targetSaveId!);
+        var sourceSaveLoaders = savesLoadersService.GetLoadersRequired((uint)input.sourceSaveId!);
+        var targetSaveLoaders = savesLoadersService.GetLoadersRequired((uint)input.targetSaveId!);
 
         var sourcePkmDto = sourceSaveLoaders.Pkms.GetDto(pkmId);
         if (sourcePkmDto == default)
@@ -165,7 +169,7 @@ public class MovePkmAction(
             throw new ArgumentException($"Save Pkm not compatible with save for id={sourcePkmDto.Id}, context={sourcePkmDto.Context}, save.context={targetSaveLoaders.Save.Context}");
         }
 
-        if (!targetSaveLoaders.Save.IsSpeciesAllowed(sourcePkmDto.Species))
+        if (!targetSaveLoaders.Save.Personal.IsPresentInGame(sourcePkmDto.Species, sourcePkmDto.Form))
         {
             throw new ArgumentException($"Save Pkm Species not compatible with save for id={sourcePkmDto.Id}, species={sourcePkmDto.Species}, save.maxSpecies={targetSaveLoaders.Save.MaxSpeciesID}");
         }
@@ -191,8 +195,7 @@ public class MovePkmAction(
 
             if (switchAttachedVariant != null && switchAttachedVariant.AttachedSaveId != sourceSaveLoaders.Save.Id)
             {
-                switchAttachedVariant.AttachedSaveId = sourceSaveLoaders.Save.Id;
-                switchAttachedVariant.AttachedSavePkmIdBase = switchedSourcePkmDto.IdBase;
+                await SetVariantAttachedSaveWithCheck(switchAttachedVariant, sourceSaveLoaders.Save.Id, switchedSourcePkmDto.IdBase);
                 await pkmVariantLoader.UpdateEntity(switchAttachedVariant);
             }
         }
@@ -205,8 +208,7 @@ public class MovePkmAction(
 
         if (sourceAttachedVariant != null && sourceAttachedVariant.AttachedSaveId != targetSaveLoaders.Save.Id)
         {
-            sourceAttachedVariant.AttachedSaveId = targetSaveLoaders.Save.Id;
-            sourceAttachedVariant.AttachedSavePkmIdBase = sourcePkmDto.IdBase;
+            await SetVariantAttachedSaveWithCheck(sourceAttachedVariant, targetSaveLoaders.Save.Id, sourcePkmDto.IdBase);
             await pkmVariantLoader.UpdateEntity(sourceAttachedVariant);
         }
 
@@ -221,12 +223,12 @@ public class MovePkmAction(
 
     private async Task<DataActionPayload> MainToSave(MovePkmActionInput input, DataUpdateFlags flags, string pkmVariantId, BoxDTO sourceBox, BoxDTO targetBox, int targetBoxSlot)
     {
-        var saveLoaders = savesLoadersService.GetLoaders((uint)input.targetSaveId!);
+        var saveLoaders = savesLoadersService.GetLoadersRequired((uint)input.targetSaveId!);
 
-        var pkmVariant = await pkmVariantLoader.GetEntity(pkmVariantId);
+        var pkmVariant = await pkmVariantLoader.GetEntityRequired(pkmVariantId);
         var pkm = await pkmVariantLoader.GetPKM(pkmVariant);
 
-        var pkmVariants = (await pkmVariantLoader.GetEntitiesByBox(pkmVariant.BoxId!, pkmVariant.BoxSlot!)).Values.ToList();
+        var pkmVariants = (await pkmVariantLoader.GetEntitiesByBox(pkmVariant.BoxId, pkmVariant.BoxSlot)).Values.ToList();
 
         var pkmVariantForContext = pkmVariants.Find(version => version.Context == saveLoaders.Save.Context);
 
@@ -235,7 +237,7 @@ public class MovePkmAction(
         // and retry action
         if (pkmVariantForContext == default)
         {
-            var mainVariant = pkmVariants.Find(variant => variant.IsMain);
+            var mainVariant = pkmVariants.First(variant => variant.IsMain);
 
             await mainCreatePkmVariantAction.ExecuteWithPayload(new(
                 pkmVariantId: mainVariant.Id,
@@ -269,15 +271,6 @@ public class MovePkmAction(
             );
         }
 
-        if (input.attached)
-        {
-            var hasDuplicates = pkmVariants.Any(pkm => saveLoaders.Pkms.GetDtosByIdBase(pkm.Id).Count > 0);
-            if (hasDuplicates)
-            {
-                throw new ArgumentException($"Target save already have a pkm with same ID, move attached cannot be done.");
-            }
-        }
-
         var existingSlot = saveLoaders.Pkms.GetDto(targetBox.Id, targetBoxSlot);
         if (input.attached && existingSlot != null)
         {
@@ -303,18 +296,10 @@ public class MovePkmAction(
 
     private async Task<DataActionPayload> SaveToMain(MovePkmActionInput input, DataUpdateFlags flags, string pkmId, BoxDTO sourceBox, BoxDTO targetBox, int targetBoxSlot)
     {
-        var saveLoaders = savesLoadersService.GetLoaders((uint)input.sourceSaveId!);
+        var saveLoaders = savesLoadersService.GetLoadersRequired((uint)input.sourceSaveId!);
 
         var savePkm = saveLoaders.Pkms.GetDto(pkmId)
             ?? throw new ArgumentException($"Save Pkm not found, id={pkmId}");
-
-        if (input.attached)
-        {
-            if (savePkm.IsDuplicate)
-            {
-                throw new ArgumentException($"Target save already have a pkm with same ID, move attached cannot be done.");
-            }
-        }
 
         var existingSlots = (await pkmVariantLoader.GetEntitiesByBox(input.targetBoxId, targetBoxSlot)).Values.ToList();
         if (input.attached && existingSlots.Count > 0)
@@ -322,11 +307,14 @@ public class MovePkmAction(
             throw new ArgumentException("Switch not possible with attached move");
         }
 
+        var targetAttached = existingSlots.Any(entity => entity.AttachedSaveId == saveLoaders.Save.Id
+            && entity.AttachedSavePkmIdBase == savePkm.IdBase);
+
         await SaveToMainWithoutCheckTarget(
             input, flags, (uint)input.sourceSaveId, targetBox, targetBoxSlot, savePkm
         );
 
-        if (existingSlots.Count > 0)
+        if (existingSlots.Count > 0 && !targetAttached)
         {
             await MainToSaveWithoutCheckTarget(
                 input, flags, (uint)input.sourceSaveId, sourceBox, savePkm.BoxSlot, existingSlots
@@ -350,7 +338,7 @@ public class MovePkmAction(
         List<PkmVariantEntity> relatedPkmVariants
     )
     {
-        var saveLoaders = savesLoadersService.GetLoaders(targetSaveId);
+        var saveLoaders = savesLoadersService.GetLoadersRequired(targetSaveId);
 
         if (!input.attached && relatedPkmVariants.Count > 1)
         {
@@ -389,7 +377,7 @@ public class MovePkmAction(
 
         var pkm = await pkmVariantLoader.GetPKM(pkmVariant);
 
-        if (!saveLoaders.Save.IsSpeciesAllowed(pkm.Species))
+        if (!saveLoaders.Save.Personal.IsPresentInGame(pkm.Species, pkm.Form))
         {
             throw new ArgumentException($"PkmVariantEntity Species not compatible with save for id={pkmVariant.Id}, species={pkm.Species}, save.maxSpecies={saveLoaders.Save.MaxSpeciesID}");
         }
@@ -403,8 +391,7 @@ public class MovePkmAction(
 
         if (input.attached)
         {
-            pkmVariant.AttachedSaveId = saveLoaders.Save.Id;
-            pkmVariant.AttachedSavePkmIdBase = pkmSaveDTO.IdBase;
+            await SetVariantAttachedSaveWithCheck(pkmVariant, saveLoaders.Save.Id, pkmSaveDTO.IdBase);
             await pkmVariantLoader.UpdateEntity(pkmVariant);
         }
         else
@@ -419,7 +406,7 @@ public class MovePkmAction(
 
         if (pkmVariant.AttachedSaveId != null)
         {
-            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([(pkmVariant.Id, pkmVariant.AttachedSavePkmIdBase!)]));
+            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([new(pkmVariant.Id, pkmVariant.AttachedSavePkmIdBase!, pkmSaveDTO.Id)]));
         }
     }
 
@@ -430,7 +417,7 @@ public class MovePkmAction(
         PkmSaveDTO savePkm
     )
     {
-        var saveLoaders = savesLoadersService.GetLoaders(sourceSaveId);
+        var saveLoaders = savesLoadersService.GetLoadersRequired(sourceSaveId);
 
         if (savePkm.Pkm.GetMutablePkm() is IShadowCapture savePkmShadow && savePkmShadow.IsShadow)
         {
@@ -464,9 +451,13 @@ public class MovePkmAction(
         input.CreatedVariantIds[inputKey] = pkmVariantEntity.Id;
 
         // if moved to already attached pkm, just update it
-        if (mainPkmAlreadyExists && pkmVariantEntity!.AttachedSaveId != null)
+        if (mainPkmAlreadyExists && pkmVariantEntity.AttachedSaveId != null)
         {
-            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([(pkmVariantEntity.Id, pkmVariantEntity.AttachedSavePkmIdBase!)]));
+            var variantPkm = await pkmVariantLoader.GetPKM(pkmVariantEntity);
+            if (!variantPkm.IsEnabled)
+                throw new ArgumentException($"Attached variant is invalid and cannot be synchronized");
+
+            await synchronizePkmAction.SynchronizeSaveToPkmVariant(new([new(pkmVariantEntity.Id, pkmVariantEntity.AttachedSavePkmIdBase!, savePkm.Id)]));
 
             if (!input.attached)
             {
@@ -483,6 +474,18 @@ public class MovePkmAction(
         }
 
         await new DexMainService(sp).EnablePKM(savePkm.Pkm, savePkm.Save);
+    }
+
+    public async Task SetVariantAttachedSaveWithCheck(PkmVariantEntity variant, uint saveId, string pkmIdBase)
+    {
+        var variantsAttachedToSave = await pkmVariantLoader.GetEntitiesBySave(saveId);
+
+        var hasOtherVariantAlreadyAttached = variantsAttachedToSave.Values.Any(v => v.AttachedSavePkmIdBase == pkmIdBase && v.Id != variant.Id);
+        if (hasOtherVariantAlreadyAttached)
+            throw new ArgumentException($"An other variant is already attached to a save pkm with same ID");
+
+        variant.AttachedSaveId = saveId;
+        variant.AttachedSavePkmIdBase = pkmIdBase;
     }
 
     private async Task CheckG3NationalDex(SaveWrapper save, int species)

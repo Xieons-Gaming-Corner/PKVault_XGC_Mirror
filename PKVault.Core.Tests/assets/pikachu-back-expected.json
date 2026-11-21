@@ -3,7 +3,7 @@
         "species": 25,
         "form": 0,
         "gender": 0,
-        "version": 55,
+        "version": 59,
         "level": 50,
         "exp": 125000,
         "moves": [
@@ -44,7 +44,7 @@
         "species": 25,
         "form": 0,
         "gender": 0,
-        "version": 57,
+        "version": 61,
         "level": 50,
         "exp": 125000,
         "moves": [
@@ -98,6 +98,9 @@
         "nicknamed": false,
         "nickname": "PIKACHU",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 70,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -128,7 +131,7 @@
         "species": 25,
         "form": 0,
         "gender": 0,
-        "version": 10,
+        "version": 7,
         "level": 50,
         "exp": 125000,
         "moves": [
@@ -141,6 +144,9 @@
         "nicknamed": false,
         "nickname": "PIKACHU",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 70,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -161,7 +167,7 @@
             23
         ],
         "language": 3,
-        "metLocation": 68,
+        "metLocation": 224,
         "illegalities": [
             "PID-PIDTypeMismatch"
         ]
@@ -170,7 +176,7 @@
         "species": 25,
         "form": 0,
         "gender": 0,
-        "version": 21,
+        "version": 7,
         "level": 50,
         "exp": 125000,
         "moves": [
@@ -183,6 +189,9 @@
         "nicknamed": false,
         "nickname": "Pikachu",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 70,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -203,9 +212,9 @@
             23
         ],
         "language": 3,
-        "metLocation": 75,
+        "metLocation": 30001,
         "illegalities": [
-            "Encounter-EncInvalid"
+            "PID-PIDTypeMismatch"
         ]
     },
     "PK6": {
@@ -225,6 +234,9 @@
         "nicknamed": false,
         "nickname": "Pikachu",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 50,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -268,6 +280,9 @@
         "nicknamed": false,
         "nickname": "Pikachu",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 50,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -310,6 +325,9 @@
         "nicknamed": false,
         "nickname": "Pikachu",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 50,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -352,6 +370,9 @@
         "nicknamed": false,
         "nickname": "Pikachu",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 50,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -397,6 +418,9 @@
         "nicknamed": false,
         "nickname": "Pikachu",
         "ability": 9,
+        "nature": 5,
+        "ball": 4,
+        "friendship": 50,
         "tid": 12345,
         "sid": 6112,
         "ot": "PKHeX",
@@ -417,6 +441,7 @@
             23
         ],
         "language": 3,
-        "metLocation": 206
+        "metLocation": 206,
+        "illegalities": []
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using PKHeX.Core;
 using PKVault.Core;
@@ -12,6 +13,8 @@ public class BoxLoaderTests : IAsyncDisposable
 
     public BoxLoaderTests()
     {
+        Program.Initialize();
+
         var testId = Guid.NewGuid().ToString();
         dbPath = $"db-{testId}.db";
 
@@ -38,7 +41,13 @@ public class BoxLoaderTests : IAsyncDisposable
     {
         Mock<IPkmVariantLoader> mockPkmVariantLoader = new();
         mockPkmVariantLoader.Setup(l => l.GetEntitiesByBox(It.IsAny<string>())).ReturnsAsync([]);
-        return new BoxLoader(sessionService.Object, db, mockPkmVariantLoader.Object);
+
+        Mock<IInventoryLoader> inventoryLoader = new();
+        var coll = new ServiceCollection();
+        coll.AddScoped((_) => inventoryLoader.Object);
+        var sp = coll.BuildServiceProvider();
+
+        return new BoxLoader(sessionService.Object, db, mockPkmVariantLoader.Object, sp);
     }
 
     #region CRUD operations
@@ -114,7 +123,7 @@ public class BoxLoaderTests : IAsyncDisposable
 
         var loader = await CreateLoader(db);
 
-        var entity = await loader.GetEntity("1");
+        var entity = await loader.GetEntityRequired("1");
 
         entity.Name = "Updated";
         await loader.UpdateEntity(entity);
@@ -155,7 +164,7 @@ public class BoxLoaderTests : IAsyncDisposable
 
         var loader = await CreateLoader(db);
 
-        var entity = await loader.GetEntity("1");
+        var entity = await loader.GetEntityRequired("1");
 
         await loader.DeleteEntity(entity);
 

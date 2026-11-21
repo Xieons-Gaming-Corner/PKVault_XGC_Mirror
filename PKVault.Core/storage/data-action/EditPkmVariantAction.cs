@@ -12,7 +12,7 @@ public class EditPkmVariantAction(
 {
     protected override async Task<DataActionPayload> Execute(EditPkmVariantActionInput input, DataUpdateFlags flags)
     {
-        var pkmVariantEntity = await pkmVariantLoader.GetEntity(input.pkmVariantId);
+        var pkmVariantEntity = await pkmVariantLoader.GetEntityRequired(input.pkmVariantId);
         var dto = await pkmVariantLoader.CreateDTO(pkmVariantEntity);
 
         if (!dto.CanEdit)
@@ -38,8 +38,18 @@ public class EditPkmVariantAction(
 
         await pkmVariantLoader.UpdateEntity(pkmVariantEntity, pkm);
 
+        await ShareChangesToVariantsAndAttached(pkmVariantEntity, pkm, flags);
+
+        return new(
+            type: DataActionType.EDIT_PKM_VERSION,
+            parameters: [pkmVariantPKM.Nickname, pkmVariantPKM.Context, pkmVariantPKM.Species]
+        );
+    }
+
+    public async Task ShareChangesToVariantsAndAttached(PkmVariantEntity pkmVariantEntity, ImmutablePKM pkm, DataUpdateFlags flags)
+    {
         var relatedPkmVariants = (await pkmVariantLoader.GetEntitiesByBox(pkmVariantEntity.BoxId, pkmVariantEntity.BoxSlot)).Values.ToList()
-            .FindAll(value => value.Id != input.pkmVariantId);
+            .FindAll(value => value.Id != pkmVariantEntity.Id);
 
         foreach (var variantEntity in relatedPkmVariants)
         {
@@ -59,13 +69,8 @@ public class EditPkmVariantAction(
 
         if (attachedVariant != null)
         {
-            await synchronizePkmAction.SynchronizePkmVariantToSave(new([(attachedVariant.Id, attachedVariant.AttachedSavePkmIdBase!)]));
+            await synchronizePkmAction.SynchronizePkmVariantToSave(new([new(attachedVariant.Id, attachedVariant.AttachedSavePkmIdBase!, null)]), flags);
         }
-
-        return new(
-            type: DataActionType.EDIT_PKM_VERSION,
-            parameters: [pkmVariantPKM.Nickname, pkmVariantPKM.Context, pkmVariantPKM.Species]
-        );
     }
 
     public static void EditPkmNickname(PkmUpdateService pkmUpdateService, PKM pkm, string nickname)

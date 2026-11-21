@@ -1,5 +1,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
+using PKHeX.Core;
 
 namespace PKVault.Core;
 
@@ -96,6 +97,25 @@ public class StorageQueryService(
         }).ToDictionary();
     }
 
+    public async Task<Dictionary<string, InventoryItemDTO>> GetSaveInventory(uint saveId)
+    {
+        var saveLoaders = savesLoadersService.GetLoaders(saveId);
+        if (saveLoaders == null)
+            return [];
+
+        return saveLoaders.Inventory.GetAllDtos();
+    }
+
+    public async Task<Dictionary<string, InventoryItemDTO>> GetMainInventory()
+    {
+        using var scope = sp.CreateScope();
+        var inventoryLoader = scope.ServiceProvider.GetRequiredService<IInventoryLoader>();
+
+        var dtos = await inventoryLoader.GetAllDtos();
+
+        return dtos.ToDictionary(dto => dto.Id);
+    }
+
     public async Task<Dictionary<string, PkmLegalityDTO?>> GetPkmsLegality(string[] pkmIds, uint? saveId)
     {
         using var scope = sp.CreateScope();
@@ -124,5 +144,34 @@ public class StorageQueryService(
             var pkmSave = savesLoadersService.GetLoaders((uint)saveId)?.Pkms.GetDto(id);
             return (id, pkmSave == null ? null : pkmLegalityService.CreateDTO(pkmSave));
         }))).ToDictionary();
+    }
+
+    public async Task<Dictionary<string, Tuple<string, string>>> GetMainPkmVariantDiff(string pkmVariantId)
+    {
+        using var scope = sp.CreateScope();
+        var pkmVariantLoader = scope.ServiceProvider.GetRequiredService<IPkmVariantLoader>();
+
+        var pkmVariant = await pkmVariantLoader.GetEntityRequired(pkmVariantId);
+        var mainPkmVariant = (await pkmVariantLoader.GetEntitiesByBox(pkmVariant.BoxId)).TryGetValue(pkmVariant.BoxSlot, out var pv)
+            ? pv.Values.First(p => p.IsMain)
+            : null;
+        ArgumentNullException.ThrowIfNull(mainPkmVariant);
+
+        var dto1 = await pkmVariantLoader.CreateDTO(mainPkmVariant);
+        var dto2 = await pkmVariantLoader.CreateDTO(pkmVariant);
+
+        var legalities = (await GetPkmsLegality([dto1.Id, dto2.Id], null)).Values.ToArray();
+
+        Dictionary<string, Tuple<string, string>> dict = [];
+
+        foreach (var e in ObjectComparer.GetObjectsDiff(dto1, dto2)
+            .Where(e => DtoCompareProperties.PkmVariantPropertiesToUse.Contains(e.Key)))
+            dict.TryAdd(e.Key, e.Value);
+
+        foreach (var e in ObjectComparer.GetObjectsDiff(legalities[0]!, legalities[1]!)
+            .Where(e => DtoCompareProperties.PkmLegalityPropertiesToUse.Contains(e.Key)))
+            dict.TryAdd(e.Key, e.Value);
+
+        return dict;
     }
 }

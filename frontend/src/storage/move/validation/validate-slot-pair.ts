@@ -1,5 +1,5 @@
 import type { PkmVariantIndexes } from '../../../data/hooks/use-pkm-variant-index';
-import { validateCommon } from './rules/validate-common';
+import { validateCommon, type IsItemCompatibleFn } from './rules/validate-common';
 import { validateMainToMain } from './rules/validate-main-to-main';
 import { validateMainToSave } from './rules/validate-main-to-save';
 import { validateSaveToMain } from './rules/validate-save-to-main';
@@ -10,11 +10,13 @@ export const validateSlotPair = (
     info: SlotInfos,
     attached: boolean,
     pkmVariantIndexes: PkmVariantIndexes,
+    isItemCompatible: IsItemCompatibleFn,
 ): DropValidationResult => {
 
     const commonResult = validateCommon(
         info,
         attached,
+        isItemCompatible,
     );
     if (!commonResult.canDrop) return commonResult;
 
@@ -24,11 +26,15 @@ export const validateSlotPair = (
         }
 
         case 'main-to-save': {
-            const relatedPkmVariants = pkmVariantIndexes.byBox[ info.sourcePkm.boxId ]?.[ info.sourcePkm.boxSlot ] ?? [];
+            const relatedPkmVariants = info.sourcePkm
+                ? pkmVariantIndexes.byBox[ info.sourcePkm.boxId ]?.[ info.sourcePkm.boxSlot ] ?? []
+                : [];
             const context = info.targetPkm?.context ?? info.targetSave.context;
 
             const sourceForContext = relatedPkmVariants.find(variant => variant.context === context);
             const sourceAttached = relatedPkmVariants.find(variant => variant.attachedSaveId);
+
+            attached ||= relatedPkmVariants.length > 1 || !sourceForContext;
 
             return validateMainToSave(
                 info,
@@ -45,7 +51,13 @@ export const validateSlotPair = (
 
         case 'save-to-bank':
         case 'save-to-main': {
-            return validateSaveToMain(info, attached);
+            const targetVariants = (info.targetPkm && pkmVariantIndexes.byBox[ info.targetPkm.boxId ]?.[ info.targetPkm.boxSlot ]) ?? [];
+
+            return validateSaveToMain(
+                info,
+                attached,
+                targetVariants,
+            );
         }
     }
 };

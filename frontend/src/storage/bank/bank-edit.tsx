@@ -40,7 +40,7 @@ export const BankEdit: React.FC<{ bankId: string; }> = ({ bankId }) => {
         if (!save)
             return '-';
 
-        return `${staticData.versions[ save.version ]?.name} (${save.trainerName})`;
+        return `${staticData.versions[ save.displayedVersion ]?.name} (${save.trainerName})`;
     };
 
     const bankViewNames = (bankViewStorages ?? []).map(getViewName);
@@ -58,6 +58,7 @@ export const BankEdit: React.FC<{ bankId: string; }> = ({ bankId }) => {
         bankId={bankId}
         selected={selected}
         defaultValues={{
+            bankId,
             bankName: bank.name,
             isDefault: bank.isDefault,
             order: bank.order,
@@ -90,13 +91,13 @@ export const BankEdit: React.FC<{ bankId: string; }> = ({ bankId }) => {
         }}
         onSubmit={async ({ bankName, isDefault, order, view }) => {
             await bankUpdateMutation.mutateAsync({
-                bankId,
-                params: {
+                data: {
+                    bankId,
                     bankName,
                     isDefault,
                     order,
+                    view,
                 },
-                data: view,
             });
         }}
     />;

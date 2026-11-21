@@ -53,6 +53,7 @@ public class GenStaticSpecies(
             tasks.Add(Task.Run(async () =>
             {
                 var pkmSpeciesObj = await pokeApiService.GetPokemonSpecies(species);
+                ArgumentNullException.ThrowIfNull(pkmSpeciesObj);
                 var generation = PokeApiService.GetGenerationValue(pkmSpeciesObj.Generation.Name);
 
                 PKHeX.Core.Gender[] genders = pkmSpeciesObj.GenderRate switch
@@ -70,10 +71,11 @@ public class GenStaticSpecies(
                 async Task<(Pokemon, PokemonForm[])> getVarietyFormsData(PokemonSpeciesVarieties pkmVariety)
                 {
                     var pkmObj = await pokeApiService.GetPokemon(pkmVariety.Pokemon);
+                    ArgumentNullException.ThrowIfNull(pkmObj);
                     var apiForms = await Task.WhenAll(pkmObj.Forms.Select((formUrl) => pokeApiService.GetPokemonForms(formUrl)));
                     // .ToList().FindAll(form => !form.IsBattleOnly).ToArray();
 
-                    return (pkmObj, apiForms);
+                    return (pkmObj, (PokemonForm[])apiForms!);
                 }
 
                 StaticSpeciesForm getVarietyForm(EntityContext context, Pokemon pkmObj, PokemonForm[] formObjs, int formIndex, StaticSpeciesForm? defaultForm)
@@ -146,53 +148,25 @@ public class GenStaticSpecies(
 
                     var frontDefaultUrl = formObj.Sprites.FrontDefault;
                     var frontShinyUrl = formObj.Sprites.FrontShiny;
+                    var frontFemaleUrl = formObj.Sprites.FrontFemale ?? frontDefaultUrl;
+                    var frontShinyFemaleUrl = formObj.Sprites.FrontShinyFemale ?? frontShinyUrl;
 
-                    if (formName != "mega")
-                    {
-                        frontDefaultUrl ??= pkmObj.Sprites.FrontDefault;
-                        frontShinyUrl ??= pkmObj.Sprites.FrontShiny;
-                    }
+                    frontDefaultUrl ??= pkmObj.Sprites.FrontDefault;
+                    frontShinyUrl ??= pkmObj.Sprites.FrontShiny;
+                    frontFemaleUrl ??= pkmObj.Sprites.FrontFemale ?? frontDefaultUrl;
+                    frontShinyFemaleUrl ??= pkmObj.Sprites.FrontShinyFemale ?? frontShinyUrl;
 
-                    string? spriteFemale;
-                    // = (maleOnly || !formObj.IsDefault || formObj.IsMega) ? null : (
-                    //     pkmObj.Sprites.FrontFemale != null ? GetGHProxyUrl(pkmObj.Sprites.FrontFemale) : defaultForm?.SpriteFemale
-                    // );
-                    string? spriteShinyFemale;
-                    // = (maleOnly || !formObj.IsDefault || formObj.IsMega) ? null : (
-                    //     pkmObj.Sprites.FrontShinyFemale != null ? GetGHProxyUrl(pkmObj.Sprites.FrontShinyFemale) : defaultForm?.SpriteShinyFemale
-                    // );
-                    var spriteDefault = (
-                        frontDefaultUrl != null ? GetPokeapiRelativePath(frontDefaultUrl) : null
-                    );
-                    var spriteShiny = (
-                        frontShinyUrl != null ? GetPokeapiRelativePath(frontShinyUrl) : null
-                    );
+                    var spriteDefault = frontDefaultUrl != null ? GetPokeapiRelativePath(frontDefaultUrl) : null;
+                    var spriteShiny = frontShinyUrl != null ? GetPokeapiRelativePath(frontShinyUrl) : null;
+                    var spriteFemale = frontFemaleUrl != null ? GetPokeapiRelativePath(frontFemaleUrl) : null;
+                    var spriteShinyFemale = frontShinyFemaleUrl != null ? GetPokeapiRelativePath(frontShinyFemaleUrl) : null;
 
                     if (formName != "mega")
                     {
                         spriteDefault ??= defaultForm?.SpriteDefault;
                         spriteShiny ??= defaultForm?.SpriteShiny;
-                    }
-
-                    if (formName == "")
-                    {
-                        spriteFemale = pkmObj.Sprites.FrontFemale != null ? GetPokeapiRelativePath(pkmObj.Sprites.FrontFemale) : defaultForm?.SpriteFemale;
-                        spriteShinyFemale = pkmObj.Sprites.FrontShinyFemale != null ? GetPokeapiRelativePath(pkmObj.Sprites.FrontShinyFemale) : defaultForm?.SpriteShinyFemale;
-                    }
-                    else
-                    {
-                        spriteFemale = pkmObj.Sprites.FrontFemale != null ? GetPokeapiRelativePath(pkmObj.Sprites.FrontFemale) : spriteDefault;
-                        spriteShinyFemale = pkmObj.Sprites.FrontShinyFemale != null ? GetPokeapiRelativePath(pkmObj.Sprites.FrontShinyFemale) : spriteShiny;
-                    }
-
-
-                    if (spriteDefault == null && formName != "mega")
-                    {
-                        spriteDefault = frontDefaultUrl != null ? GetPokeapiRelativePath(frontDefaultUrl) : defaultForm?.SpriteDefault;
-                    }
-                    if (spriteShiny == null && formName != "mega")
-                    {
-                        spriteShiny = frontShinyUrl != null ? GetPokeapiRelativePath(frontShinyUrl) : defaultForm?.SpriteShiny;
+                        spriteFemale ??= defaultForm?.SpriteFemale;
+                        spriteShinyFemale ??= defaultForm?.SpriteShinyFemale;
                     }
 
                     var hasGenderDifferences = generation > 3
@@ -219,9 +193,9 @@ public class GenStaticSpecies(
                         Id: formObj.Id,
                         Name: name,
                         SpriteDefault: spriteDefault ?? "",
-                        SpriteFemale: spriteFemale,
+                        SpriteFemale: spriteFemale == spriteDefault ? null : spriteFemale,
                         SpriteShiny: spriteShiny ?? "",
-                        SpriteShinyFemale: spriteShinyFemale,
+                        SpriteShinyFemale: spriteShinyFemale == spriteShiny ? null : spriteShinyFemale,
                         SpriteShadow: generation == 3 && species == (ushort)Species.Lugia
                             ? GetLugiaShadowSprite()
                             : null,
@@ -231,7 +205,7 @@ public class GenStaticSpecies(
                     );
                 }
 
-                var defaultVariety = pkmSpeciesObj.Varieties.FirstOrDefault(variety => variety.IsDefault);
+                var defaultVariety = pkmSpeciesObj.Varieties.First(variety => variety.IsDefault);
                 var otherVarieties = pkmSpeciesObj.Varieties.Where(variety => !variety.IsDefault);
 
                 var defaultDataTask = getVarietyFormsData(defaultVariety);
@@ -384,7 +358,7 @@ public class GenStaticSpecies(
                             var data = allDatas.Find(data => data.Item2.Any(predicate));
                             (Pokemon, PokemonForm?, int)? result = data == default ? null : (
                                 data.Item1,
-                                data.Item2.ToList().Find(form => predicate(form))!,
+                                data.Item2.First(form => predicate(form)),
                                 formIndex
                             );
 

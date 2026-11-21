@@ -9,6 +9,16 @@ public class BackupController(BackupService backupService, DataService dataServi
         return backupService.GetBackupList();
     }
 
+    [HttpPost()]
+    public async Task<DataDTO> Create()
+    {
+        DataUpdateFlags flags = new();
+
+        await backupService.CreateBackup("backup_manually", flags);
+
+        return await dataService.CreateDataFromUpdateFlags(flags);
+    }
+
     [HttpPut()]
     public async Task<DataDTO> Edit(DateTime createdAt, string name)
     {

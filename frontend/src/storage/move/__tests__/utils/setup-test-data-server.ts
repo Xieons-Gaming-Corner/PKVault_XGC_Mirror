@@ -63,7 +63,7 @@ export const setupTestDataServer = () => {
         boxId: 0,
         boxSlot: 0,
         isDuplicate: false,
-        idBase: '',
+        idBase: (data.id ?? 'G3_001__-1') + '_variant',
         boxKey: '',
         version: 1,
         contextVersion: 1,
@@ -97,6 +97,7 @@ export const setupTestDataServer = () => {
         hiddenPowerCategory: 0,
         nature: 0,
         ability: -1,
+        abilityNumber: 0,
         isAbilityHidden: false,
         moves: [],
         pokerusStrain: 0,
@@ -118,6 +119,7 @@ export const setupTestDataServer = () => {
         dynamicChecksum: '',
         nicknameMaxLength: -1,
         isShadow: false,
+        canHeldItem: true,
         canMove: true,
         canDelete: true,
         canMoveToSave: true,
@@ -144,7 +146,7 @@ export const setupTestDataServer = () => {
         boxId: -1,
         boxSlot: -1,
         isDuplicate: false,
-        idBase: '',
+        idBase: (data.id ?? 'G3_001__-1') + '_save',
         boxKey: '',
         version: 1,
         contextVersion: 1,
@@ -178,6 +180,7 @@ export const setupTestDataServer = () => {
         hiddenPowerCategory: 0,
         nature: 0,
         ability: -1,
+        abilityNumber: 0,
         isAbilityHidden: false,
         moves: [],
         pokerusStrain: 0,
@@ -199,6 +202,7 @@ export const setupTestDataServer = () => {
         dynamicChecksum: '',
         nicknameMaxLength: -1,
         isShadow: false,
+        canHeldItem: true,
         canMove: true,
         canDelete: true,
         canMoveToSave: true,
@@ -220,7 +224,7 @@ export const setupTestDataServer = () => {
 
     const server = setupServer(
         http.get(getSaveInfosGetAllUrl(), () => {
-            return HttpResponse.json<saveInfosGetAllResponse200['data']>({
+            return HttpResponse.json<saveInfosGetAllResponse200[ 'data' ]>({
                 123: createSaveInfos({
                     id: 123,
                     generation: 3,
@@ -655,22 +659,10 @@ export const setupTestDataServer = () => {
                 }),
             ]);
         }),
-        http.put(getStorageMovePkmUrl({
-            targetBoxId: '',
-            attached: false,
-            pkmIds: [],
-            sourceSaveId: null,
-            targetBoxSlots: [],
-            targetSaveId: null,
-        }), () => {
+        http.put(getStorageMovePkmUrl(), () => {
             return HttpResponse.json({});
         }),
-        http.put(getStorageMovePkmBankUrl({
-            bankId: '',
-            attached: false,
-            pkmIds: [],
-            sourceSaveId: null,
-        }), () => {
+        http.put(getStorageMovePkmBankUrl(), () => {
             return HttpResponse.json({});
         }),
     );

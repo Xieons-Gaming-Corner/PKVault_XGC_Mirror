@@ -19,6 +19,8 @@ using Serilog.Events;
 using System.Web;
 using System.Collections.Specialized;
 using PKVault.Core.OpenApi;
+using System.Net.Mime;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PKVault.Core;
 
@@ -47,6 +49,7 @@ public partial class CoreRouter
     public readonly IEnumerable<CoreRoute> Routes = GetAllRoutes();
 
     public async Task<ICoreResponse> Dispatch(
+        Task SetupTask,
         IServiceProvider sp,
         string httpMethod, string httpPath,
         string queriesString, Stream bodyStream
@@ -68,39 +71,61 @@ public partial class CoreRouter
             }
             var (Route, PathVariables) = match.Value;
 
+            await SetupTask;
+
+            var controllerType = Route.MethodInfo.DeclaringType!;
+            object controller = sp.GetRequiredService(controllerType);
+
             List<object?> parameters = [];
             foreach (var (Param, Kind) in Route.Parameters)
             {
                 parameters.Add(await BindParameter(Param, Kind, PathVariables, queries, bodyStream));
             }
 
-            var controllerType = Route.MethodInfo.DeclaringType!;
-            object controller = sp.GetRequiredService(controllerType);
-
             var result = Route.MethodInfo.Invoke(controller, parameters.ToArray());
             object? resultValue = await UnwrapResultAsync(result);
 
             if (resultValue is not ICoreResponse response)
                 response = new CoreJSONResponse(
-                    Data: resultValue
+                    Data: resultValue,
+                    StatusCode: 200,
+                    ContentType: MediaTypeNames.Application.Json,
+                    Header: new()
+                    {
+                        ["Content-Type"] = MediaTypeNames.Application.Json
+                    }
                 );
 
             if (response is CoreFileResponse fileResponse)
+            {
+                var contentDispositionHeader = new ContentDisposition()
+                {
+                    FileName = fileResponse.File.FileName,
+                    DispositionType = "attachment"
+                };
+                response.Header["Content-Disposition"] = contentDispositionHeader.ToString();
+
+                if (fileResponse.LastModified is not null)
+                    response.Header["LastModified"] = fileResponse.LastModified.ToString()!;
+
                 response = fileResponse with
                 {
                     ContentType = fileResponse.ContentType ?? fileResponse.File.ContentType,
                 };
+            }
 
             statusCode = response is CoreJSONResponse jsonResponse && jsonResponse.Data == null
                 ? 204
                 : 200;
+
+            response.Header["Content-Type"] = response.ContentType;
 
             return response;
         }
         catch (Exception ex)
         {
             if (ex is TargetInvocationException tex)
-                ex = tex.GetBaseException();
+                ex = tex.InnerException ?? tex;
 
             statusCode = GetStatusCode(ex);
             exception = ex;
@@ -108,10 +133,11 @@ public partial class CoreRouter
             return new CoreJSONResponse(
                 Data: null,
                 StatusCode: statusCode,
-                ContentType: "text/plain",
+                ContentType: MediaTypeNames.Text.Plain,
                 Header: new()
                 {
-                    ["access-control-expose-headers"] = new StringValues(["error-message", "error-stack"]),
+                    ["Content-Type"] = MediaTypeNames.Text.Plain,
+                    ["access-control-expose-headers"] = new StringValues(["error-message", "error-stack"]).ToString(),
                     ["error-message"] = JsonSerializer.Serialize(
                         InvalidCharacterRegex().Replace(ex.Message, "\n").Replace("\n\n", "\n"),
                         RouteJsonContext.Default.String
@@ -131,7 +157,7 @@ public partial class CoreRouter
                     statusCode >= 400 ? LogEventLevel.Warning
                         : LogEventLevel.Information,
                 exception,
-                $"HTTP {httpMethod} {httpPath} responded {statusCode} in {sw.ElapsedMilliseconds} ms"
+                $"HTTP {httpMethod} {httpPath} responded {statusCode} in {sw.ElapsedMilliseconds} ms{(exception != null ? "\n" : "")}"
             );
         }
     }
@@ -171,7 +197,7 @@ public partial class CoreRouter
                 var seg = templateSegments[i];
                 if (seg.StartsWith('{') && seg.EndsWith('}'))
                 {
-                    values[seg[1..^1]] = pathSegments[i];
+                    values[seg[1..^1]] = HttpUtility.UrlDecode(pathSegments[i]);
                 }
                 else if (!string.Equals(seg, pathSegments[i], StringComparison.OrdinalIgnoreCase))
                 {
@@ -225,8 +251,12 @@ public partial class CoreRouter
             {
                 if (p.HasDefaultValue)
                     return p.DefaultValue;
-                if (Nullable.GetUnderlyingType(p.ParameterType) != null)
+                NullabilityInfoContext nullCtx = new();
+                NullabilityInfo info = nullCtx.Create(p);
+                if (info.ReadState == NullabilityState.Nullable)
                     return null;
+                if (p.ParameterType.IsArray)
+                    return Array.CreateInstanceFromArrayType(p.ParameterType, 0);
                 throw new ArgumentException($"Missing required parameter: {p.Name}");
             }
 
@@ -255,8 +285,9 @@ public partial class CoreRouter
         if (kind == OpenApiParameterKind.Body)
         {
             using var reader = new StreamReader(bodyStream);
-            var body = JsonNode.Parse(reader.ReadToEnd())?.AsObject() ?? [];
-            return body?.Deserialize(p.ParameterType, RouteJsonContext.Default);
+            var jsonText = await reader.ReadToEndAsync();
+            var body = JsonNode.Parse(jsonText)?.AsObject() ?? [];
+            return body?.Deserialize(p.ParameterType, RouteJsonContext.DefaultWithOptions);
         }
 
         throw new ArgumentException($"A {kind} parameter is missing: {p.Name} of type {p.ParameterType} {queries[p.Name!]?.GetType()}");
@@ -300,6 +331,7 @@ public partial class CoreRouter
         };
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Task<T>.Result is known.")]
     private static async Task<object?> UnwrapResultAsync(object? invokeResult)
     {
         if (invokeResult is not Task task)
@@ -314,6 +346,7 @@ public partial class CoreRouter
         return resultProperty.GetValue(task);
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2065", Justification = "controllerType.GetMethods() are known.")]
     private static List<CoreRoute> GetAllRoutes()
     {
         List<CoreRoute> routes = [];

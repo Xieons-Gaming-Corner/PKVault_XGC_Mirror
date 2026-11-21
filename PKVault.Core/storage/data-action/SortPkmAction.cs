@@ -22,12 +22,13 @@ public class SortPkmAction(
 
     private async Task<DataActionPayload> ExecuteForSave(uint saveId, int fromBoxId, int toBoxId, string pokedexName, bool leaveEmptySlot)
     {
-        var saveLoaders = savesLoadersService.GetLoaders(saveId);
-        ArgumentNullException.ThrowIfNull(saveLoaders);
+        var saveLoaders = savesLoadersService.GetLoadersRequired(saveId);
 
         var boxes = (await GetBoxes(saveId, fromBoxId, toBoxId,
             GetBoxDto: async (id) => saveLoaders.Boxes.GetDto(id),
             GetBoxDtoByBank: async (bankId) => saveLoaders.Boxes.GetAllDtos()
+                .Where(dto => dto.Type != BoxType.Inventory)
+                .ToList()
         ))
             .FindAll(box => box.CanSaveReceivePkm);
         var boxesDict = boxes.ToDictionary(p => p.Id);
@@ -83,13 +84,14 @@ public class SortPkmAction(
             GetBoxDtoByBank: async (bankId) =>
             {
                 return [.. (await boxLoader.GetEntitiesByBank(bankId)).Values
+                    .Where(box => box.Type != BoxType.Inventory)
                     .Select(box => boxLoader.CreateDTO(box))];
             }
         );
         var boxesDict = boxes.ToDictionary(p => p.Id);
         var boxesIds = boxes.Select(box => box.IdInt).ToHashSet();
 
-        var bankId = boxes[0].BankId;
+        var bankId = boxes.First().BankId;
         ArgumentNullException.ThrowIfNull(bankId);
 
         var pkms = (await Task.WhenAll(boxesIds.Select(async boxId =>
@@ -159,6 +161,8 @@ public class SortPkmAction(
     {
         var fromBox = await GetBoxDto(fromBoxId.ToString());
         ArgumentNullException.ThrowIfNull(fromBox);
+        if (fromBox.Type == BoxType.Inventory)
+            throw new ArgumentException($"Cannot sort Pkm from Box Inventory");
         var bankId = fromBox.BankId;
         ArgumentNullException.ThrowIfNull(bankId);
 

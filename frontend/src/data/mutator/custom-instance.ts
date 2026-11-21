@@ -1,4 +1,5 @@
 import z from 'zod';
+import { MAUIDesktop } from '../../settings/globs-input/hooks/desktops/maui-desktop';
 
 const baseURL = new URL(window.location.href).searchParams.get('server') || window.location.origin;
 
@@ -13,19 +14,55 @@ export const responseBackSchema = z.object({
     status: z.number().int(),
 });
 
+export type SerializableResponse = Pick<Response, 'url' | 'ok' | 'status' | 'statusText' | 'headers'> & {
+    body?: string;
+};
+
 export const customInstance = async <T extends ResponseBack>(url: string, init?: RequestInit): Promise<T> => {
     const targetUrl = normalizeUrlParams(getApiFullUrl(url));
 
-    const res = await fetch(targetUrl, init);
+    try {
+        if (MAUIDesktop.isEnabled()) {
 
-    if (!res.ok) {
-        throw new QueryError(res);
+            const res = await MAUIDesktop.fetch(targetUrl, init);
+
+            const headers = new Headers(res.headers);
+
+            if (!res.ok) {
+                throw new QueryError({ ...res, headers });
+            }
+
+            const body = res.body?.toString();
+            const data = body ? JSON.parse(body) : {};
+
+            return { data, status: res.status, headers } satisfies ResponseBack as T;
+        }
+
+        const res = await fetch(targetUrl, init);
+
+        if (!res.ok) {
+            throw new QueryError(res);
+        }
+
+        const body = [ 204, 205, 304 ].includes(res.status) ? null : await res.text();
+        const data = body ? JSON.parse(body) : {};
+
+        return { data, status: res.status, headers: res.headers } satisfies ResponseBack as T;
+    } catch (err) {
+        if (err instanceof QueryError)
+            throw err;
+
+        if (err instanceof DOMException && err.name === 'AbortError') {
+            throw err;
+        }
+
+        throw new QueryError({
+            url: targetUrl,
+            status: 500,
+            statusText: 'Internal Error',
+            headers: new Headers(),
+        }, err instanceof Error ? err : undefined);
     }
-
-    const body = [ 204, 205, 304 ].includes(res.status) ? null : await res.text();
-    const data = body ? JSON.parse(body) : {};
-
-    return { data, status: res.status, headers: res.headers } satisfies ResponseBack as T;
 };
 
 /**
@@ -56,9 +93,12 @@ export class QueryError extends Error {
     public readonly errorMessage: string | null;
     public readonly errorStack: string | null;
 
-    constructor(res: Response) {
-        const errorMessage = QueryError.getHeaderContent(res.headers.get('error-message'));
-        const errorStack = QueryError.getHeaderContent(res.headers.get('error-stack'));
+    constructor(res: Pick<SerializableResponse, 'url' | 'status' | 'statusText' | 'headers'>, error?: Error) {
+        if (error && error instanceof QueryError)
+            console.error('Inner error cannot be a QueryError', { error });
+
+        const errorMessage = error?.message ?? QueryError.getHeaderContent(res.headers.get('error-message'));
+        const errorStack = error?.stack ?? QueryError.getHeaderContent(res.headers.get('error-stack'));
 
         super("Query error:"
             + `\nurl = ${res.url}`
@@ -73,6 +113,8 @@ export class QueryError extends Error {
         this.errorStack = errorStack;
 
         Object.setPrototypeOf(this, QueryError.prototype);
+
+        console.error(this.message);
     }
 
     private static getHeaderContent(value: string | null): string | null {

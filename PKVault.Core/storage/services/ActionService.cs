@@ -43,25 +43,25 @@ public class ActionService(
         );
     }
 
-    public async Task<DataUpdateFlags> MainCreateBox(string bankId)
+    public async Task<DataUpdateFlags> MainCreateBox(MainCreateBoxActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<MainCreateBoxAction>(),
-            new(bankId, null)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> MainUpdateBox(string boxId, string boxName, int order, string bankId, int slotCount, BoxType type)
+    public async Task<DataUpdateFlags> MainUpdateBox(MainUpdateBoxActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<MainUpdateBoxAction>(),
-            new(boxId, boxName, order, bankId, slotCount, type)
+            input
         );
     }
 
@@ -87,14 +87,14 @@ public class ActionService(
         );
     }
 
-    public async Task<DataUpdateFlags> MainUpdateBank(string bankId, string bankName, bool isDefault, int order, BankEntity.BankView view)
+    public async Task<DataUpdateFlags> MainUpdateBank(MainUpdateBankActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<MainUpdateBankAction>(),
-            new(bankId, bankName, isDefault, order, view)
+            input
         );
     }
 
@@ -109,132 +109,157 @@ public class ActionService(
         );
     }
 
-    public async Task<DataUpdateFlags> MovePkm(
-        string[] pkmIds, uint? sourceSaveId,
-        uint? targetSaveId, string targetBoxId, int[] targetBoxSlots,
-        bool attached
-    )
+    public async Task<DataUpdateFlags> MovePkm(MovePkmActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<MovePkmAction>(),
-            new(pkmIds, sourceSaveId, targetSaveId, targetBoxId, targetBoxSlots, attached)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> MovePkmBank(
-        string[] pkmIds, uint? sourceSaveId,
-        string bankId,
-        bool attached
-    )
+    public async Task<DataUpdateFlags> MovePkmBank(MovePkmBankActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<MovePkmBankAction>(),
-            new(pkmIds, sourceSaveId, bankId, attached)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> MainCreatePkmVariant(string pkmVariantId, EntityContext context)
+    public async Task<DataUpdateFlags> MoveItem(MoveItemActionInput input)
+    {
+        using var scope = sp.CreateScope();
+
+        return await AddAction(
+            scope,
+            (scope) => scope.ServiceProvider.GetRequiredService<MoveItemAction>(),
+            input
+        );
+    }
+
+    public async Task<DataUpdateFlags> MoveItemBank(MoveItemBankActionInput input)
+    {
+        using var scope = sp.CreateScope();
+
+        return await AddAction(
+            scope,
+            (scope) => scope.ServiceProvider.GetRequiredService<MoveItemBankAction>(),
+            input
+        );
+    }
+
+    public async Task<DataUpdateFlags> MainCreatePkmVariant(MainCreatePkmVariantActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<MainCreatePkmVariantAction>(),
-            new(pkmVariantId, context)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> MainEditPkmVariant(string pkmVariantId, EditPkmVariantPayload payload)
+    public async Task<DataUpdateFlags> MainEditPkmVariant(EditPkmVariantActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<EditPkmVariantAction>(),
-            new(pkmVariantId, payload)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> SaveEditPkm(uint saveId, string pkmId, EditPkmVariantPayload payload)
+    public async Task<DataUpdateFlags> MainSetPkmVariantMain(string pkmVariantId)
+    {
+        using var scope = sp.CreateScope();
+
+        return await AddAction(
+            scope,
+            (scope) => scope.ServiceProvider.GetRequiredService<SetPkmVariantMainAction>(),
+            new(pkmVariantId)
+        );
+    }
+
+    public async Task<DataUpdateFlags> SaveEditPkm(EditPkmSaveActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<EditPkmSaveAction>(),
-            new(saveId, pkmId, payload)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> MainPkmDetachSaves(string[] pkmIds)
+    public async Task<DataUpdateFlags> MainPkmDetachSaves(DetachPkmSaveActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<DetachPkmSaveAction>(),
-            new(pkmIds)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> MainPkmVariantsDelete(string[] pkmVariantIds, bool deleteAllRelatedVariants)
+    public async Task<DataUpdateFlags> MainPkmVariantsDelete(DeletePkmVariantActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<DeletePkmVariantAction>(),
-            new(pkmVariantIds, deleteAllRelatedVariants)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> SaveDeletePkms(uint saveId, string[] pkmIds)
+    public async Task<DataUpdateFlags> SaveDeletePkms(SaveDeletePkmActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<SaveDeletePkmAction>(),
-            new(saveId, pkmIds)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> EvolvePkms(uint? saveId, string[] ids)
+    public async Task<DataUpdateFlags> EvolvePkms(EvolvePkmActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<EvolvePkmAction>(),
-            new(saveId, ids)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> SortPkms(uint? saveId, int fromBoxId, int toBoxId, string pokedexName, bool leaveEmptySlot)
+    public async Task<DataUpdateFlags> SortPkms(SortPkmActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<SortPkmAction>(),
-            new(saveId, fromBoxId, toBoxId, pokedexName, leaveEmptySlot)
+            input
         );
     }
 
-    public async Task<DataUpdateFlags> DexSync(uint[] saveIds)
+    public async Task<DataUpdateFlags> DexSync(DexSyncActionInput input)
     {
         using var scope = sp.CreateScope();
 
         return await AddAction(
             scope,
             (scope) => scope.ServiceProvider.GetRequiredService<DexSyncAction>(),
-            new(saveIds)
+            input
         );
     }
 
@@ -374,6 +399,7 @@ public class ActionService(
                 ..db.PkmVariantsFlags.Ids,
             ]
         };
+        flags.MainInventoryItems = flags.MainInventoryItems || db.InventoryItemsFlags.All || db.InventoryItemsFlags.Ids.Count > 0;
         flags.Dex = new()
         {
             All = flags.Dex.All || db.DexFlags.All,
@@ -416,8 +442,7 @@ public class ActionService(
         {
             if (saveLoader == null)
             {
-                var pkmVariant = await pkmVariantLoader.GetEntity(pkmId);
-                ArgumentNullException.ThrowIfNull(pkmVariant);
+                var pkmVariant = await pkmVariantLoader.GetEntityRequired(pkmId);
 
                 return await pkmVariantLoader.GetPKM(pkmVariant);
             }

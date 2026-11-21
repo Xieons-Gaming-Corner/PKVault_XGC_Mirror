@@ -14,13 +14,15 @@ public class GenStaticOthers(
 {
     protected override async Task<StaticOthersData> GetData(string[] rootParts)
     {
-        var versions = GetStaticVersions();
+        var versionsSavesAllowedItems = StaticOthersLoader.ComputeStaticVersionsSavesAllowedItems();
+
+        var versions = GetStaticVersions(versionsSavesAllowedItems);
         var stats = GetStaticStats();
         var types = GetStaticTypes();
         var moves = GetStaticMoves();
         var natures = GetStaticNatures();
         var abilities = GetStaticAbilities();
-        var items = GetStaticItems();
+        var items = GetStaticItems(versionsSavesAllowedItems);
         var generations = GetStaticGenerations();
         var pokedexes = GetStaticPokedexes();
 
@@ -40,7 +42,7 @@ public class GenStaticOthers(
         );
     }
 
-    private async Task<Dictionary<byte, StaticVersion>> GetStaticVersions()
+    private async Task<Dictionary<byte, StaticVersion>> GetStaticVersions(StaticOthersLoader.VersionsSavesAllowedItems versionsSavesAllowedItems)
     {
         using var _ = Log.Logger.Time("static-data process versions");
         List<Task<StaticVersion>> tasks = [];
@@ -50,10 +52,7 @@ public class GenStaticOthers(
         {
             tasks.Add(Task.Run(async () =>
             {
-                var saveVersion = GameVersionUtil.GetSingleVersion(version);
-                var blankSave = saveVersion == default
-                    ? null
-                    : BlankSaveFile.Get(saveVersion);
+                var (blankSave, _, _) = versionsSavesAllowedItems.SavesAllowedItems[(byte)version];
 
                 var versionName = GetVersionName(version);
                 var versionRegion = GetVersionRegionName(version);
@@ -113,6 +112,7 @@ public class GenStaticOthers(
             tasks.Add(Task.Run(async () =>
             {
                 var statObj = await pokeApiService.GetStat(statIndex);
+                ArgumentNullException.ThrowIfNull(statObj);
 
                 return new StaticStat(
                     Id: statIndex,
@@ -216,6 +216,7 @@ public class GenStaticOthers(
                             tmpAccuracyUrl = accuracy;
 
                             var versionGroup = await pokeApiService.GetVersionGroup(pastValue.VersionGroup);
+                            ArgumentNullException.ThrowIfNull(versionGroup);
                             byte untilGeneration = (byte) (PokeApiService.GetGenerationValue(versionGroup.Generation.Name) - 1);
 
                             return new StaticMoveGeneration(
@@ -241,7 +242,7 @@ public class GenStaticOthers(
                     && oldCategory != category
                     && !dataUntilGeneration.Any(data => data.UntilGeneration == 3))
                 {
-                    var dataPostG3 = dataUntilGeneration.Find(data => data.UntilGeneration > 3);
+                    var dataPostG3 = dataUntilGeneration.First(data => data.UntilGeneration > 3);
                     dataUntilGeneration.Add(new(
                         UntilGeneration: 3,
                         Type: dataPostG3.Type,
@@ -284,6 +285,7 @@ public class GenStaticOthers(
             {
                 var natureNameEn = GameInfo.Strings.natures[natureId];
                 var natureObj = await pokeApiService.GetNature(natureNameEn);
+                ArgumentNullException.ThrowIfNull(natureObj);
 
                 return new StaticNature(
                     Id: natureId,
@@ -325,78 +327,43 @@ public class GenStaticOthers(
         return dict;
     }
 
-    private async Task<StaticItemsData> GetStaticItems()
+    private async Task<StaticItemsData> GetStaticItems(StaticOthersLoader.VersionsSavesAllowedItems versionsSavesAllowedItems)
     {
         using var _ = Log.Logger.Time($"static-data {lang} process items");
 
-        List<StaticVersionsItems> VersionItems = [];
+        var (staticVersionsItems, savesAllowedItems, allVersionsItemStrings) = versionsSavesAllowedItems;
+
         Dictionary<string, StaticItem> Items = [];
 
         // var notFound = new List<string>();
         // log.LogInformation(string.Join('\n', GameInfo.Strings.itemlist.ToList().FindAll(item => item.ToLower().Contains("ball"))));
 
-        List<ComboItem> getItemStrings(GameVersion _version, GameStrings strings)
+        ComboItem[] getInventoryItemStrings(GameVersion _version, GameStrings strings)
         {
-            var version = GameVersionUtil.GetSingleVersion(_version);
-            if (version == default)
+            var (save, allowedInventoryItems, allowedHeldItems) = savesAllowedItems[(byte)_version];
+
+            if (save == default)
             {
-                return _version == GameVersion.Any
-                    ? Util.GetCBList(strings.itemlist)
-                    : [];
-            }
-
-            var save = BlankSaveFile.Get(version);
-            var items = Util.GetCBList(strings.GetItemStrings(save.Context, save.Version), save.HeldItems);
-            items.RemoveAll(i => i.Value > save.MaxItemID);
-            return items;
-        }
-
-        foreach (var version in Enum.GetValues<GameVersion>())
-        {
-            var itemlist = getItemStrings(version, GameInfo.Strings);
-            var itemlistStr = string.Join('.', itemlist.Select(it => $"{it.Text},{it.Value}"));
-
-            var versionItem = VersionItems.FirstOrDefault(st =>
-            {
-                var vers = (GameVersion)st.Versions.FirstOrDefault();
-
-                var itemlist2 = getItemStrings(vers, GameInfo.Strings);
-                return itemlist.Count == itemlist2.Count
-                    && itemlistStr == string.Join('.', itemlist2.Select(it => $"{it.Text},{it.Value}"));
-            });
-
-            if (versionItem == default)
-            {
-                Dictionary<int, string> comboItems = [];
-                foreach (var item in itemlist)
+                if (_version == GameVersion.Any)
                 {
-                    var itemNamePokeapi = PokeApiFromPKHeX.GetPokeapiItemName(item.Text);
-                    if (comboItems.TryGetValue(item.Value, out var textPokeapi))
-                    {
-                        if (textPokeapi == itemNamePokeapi)
-                        {
-                            continue;
-                        }
-
-                        throw new Exception($"Key exists, key={item.Value} existingText={textPokeapi} tryText={itemNamePokeapi}");
-                    }
-                    comboItems.Add(item.Value, itemNamePokeapi);
+                    return Util.GetCBList(strings.itemlist).ToArray();
                 }
-
-                versionItem = new(
-                    Versions: [],
-                    ComboItems: comboItems
-                );
-                VersionItems.Add(versionItem);
+                return [];
             }
-            versionItem.Versions.Add((byte)version);
+
+            var allowedInventoryItemsCombo = Util.GetCBList(strings.GetItemStrings(save.Context, save.Version), allowedInventoryItems.ToArray());
+            allowedInventoryItemsCombo.RemoveAll(i => i.Value > save.MaxItemID);
+
+            return allowedInventoryItemsCombo.OrderBy(i => i.Value).ToArray();
         }
 
-        foreach (var (Versions, _) in VersionItems)
+        foreach (var (Versions, _, _) in staticVersionsItems)
         {
             var version = (GameVersion)Versions.First();
-            var itemsEn = getItemStrings(version, GameInfo.Strings);
-            var items = getItemStrings(version, GameInfo.GetStrings(pkhexLang));
+            var itemsEn = allVersionsItemStrings[version].ItemsEn;
+            var items = GameInfo.CurrentLanguage == pkhexLang
+                ? itemsEn
+                : getInventoryItemStrings(version, GameInfo.GetStrings(pkhexLang));
 
             for (var i = 0; i < items.Count; i++)
             {
@@ -405,7 +372,7 @@ public class GenStaticOthers(
                 var itemEn = itemsEn.FirstOrDefault(it => it.Value == item.Value);
                 if (itemEn == default)
                 {
-                    Serilog.Log.Error($"Item value not found in default items list, lang={lang} version={version} item={item.Value}/{item.Text}");
+                    Log.Error($"Item value not found in default items list, lang={lang} version={version} item={item.Value}/{item.Text}");
                     continue;
                 }
 
@@ -440,7 +407,7 @@ public class GenStaticOthers(
         }
 
         return new(
-            VersionItems,
+            VersionItems: staticVersionsItems,
             Items
         );
     }
@@ -454,6 +421,7 @@ public class GenStaticOthers(
             try
             {
                 var region = await pokeApiService.GetRegion(id);
+                ArgumentNullException.ThrowIfNull(region);
 
                 if (region.MainGeneration == null)
                 {
@@ -510,15 +478,72 @@ public class GenStaticOthers(
             .Where(e => e.IsValid)
             .Select(e => BlankSaveFile.Get(e).BlankPKM)
             .SelectMany(RibbonInfo.GetRibbonInfo)
-            .Select(ribbon => ribbon.Name)
+            .Select(r =>
+            {
+                if (r.Type == RibbonValueType.Boolean)
+                    return (
+                        r.Name,
+                        MaxCount: 0,
+                        RibbonCount: 0
+                    );
+
+                return (
+                    r.Name,
+                    r.MaxCount,
+                    r.RibbonCount
+                );
+            })
             .Distinct()
             .Order()
-            .Select(name => new StaticRibbon(
-                Key: name,
-                SpriteKey: name.Replace("CountG3", "G3").ToLowerInvariant(),
-                Name: ribbonsTxt.GetName(name)
-            ))
+            .Select(r =>
+            {
+                Dictionary<byte, string> sprites = [];
+
+                if (r.MaxCount == 0)
+                {
+                    sprites.Add(1, GetRibbonSprite(r.Name));
+                }
+                else
+                {
+                    for (byte i = 1; i <= r.MaxCount; i++)
+                    {
+                        sprites.Add(i, GetRibbonSprite(r.Name, r.MaxCount, i));
+                    }
+                }
+
+                return new StaticRibbon(
+                    Key: r.Name,
+                    Name: ribbonsTxt.GetName(r.Name),
+                    Sprites: sprites
+                );
+            })
             .ToDictionary(p => p.Key);
+    }
+
+    private static string GetRibbonSprite(string name)
+    {
+        return name.Replace("CountG3", "G3").ToLowerInvariant();
+    }
+
+    private static string GetRibbonSprite(string name, int max, int value)
+    {
+        if (max != 4) // Memory
+        {
+            var sprite = name.ToLowerInvariant();
+            if (value >= max)
+                return sprite + "2";
+            return sprite;
+        }
+
+        // Count ribbons
+        string n = name.Replace("Count", string.Empty).ToLowerInvariant();
+        return value switch
+        {
+            2 => n + "super",
+            3 => n + "hyper",
+            4 => n + "master",
+            _ => n,
+        };
     }
 
     private Dictionary<byte, string> GetStaticLanguages()
@@ -571,7 +596,7 @@ public class GenStaticOthers(
 
         List<string> names = [];
 
-        foreach(var name in pokeapiVersions
+        foreach (var name in pokeapiVersions
             .OfType<PokeApi.Models.Version>()
             .Select(ver => PokeApiService.GetNameForLang(ver.Names, lang)))
         {
@@ -598,10 +623,11 @@ public class GenStaticOthers(
                     }
 
                     var versionGroup = await pokeApiService.GetVersionGroup(ver.VersionGroup);
+                    ArgumentNullException.ThrowIfNull(versionGroup);
                     var regions = await Task.WhenAll(versionGroup.Regions.Select(region =>
-                        pokeApiService.GetRegion(region)
+                        pokeApiService.GetRegion(region)!
                     ));
-                    return regions.Select(region => PokeApiService.GetNameForLang(region.Names, lang));
+                    return regions.Select(region => PokeApiService.GetNameForLang(region!.Names, lang));
                 })
             ))
             .SelectMany(v => v).Distinct()];
@@ -624,6 +650,7 @@ public class GenStaticOthers(
                         }
 
                         var versionGroup = await pokeApiService.GetVersionGroup(ver.VersionGroup);
+                        ArgumentNullException.ThrowIfNull(versionGroup);
                         return versionGroup.Pokedexes.Select(pokedex => pokedex.Name);
                     })
             ))
@@ -636,6 +663,7 @@ public class GenStaticOthers(
         static async Task<PokeApi.Models.Version?> FixJapVersionNames(Task<PokeApi.Models.Version?> versionTask)
         {
             var version = await versionTask;
+            ArgumentNullException.ThrowIfNull(version);
             version.Names = [.. version.Names.Select(n =>
             {
                 if (!n.Name1.EndsWith("(J)"))
@@ -649,6 +677,8 @@ public class GenStaticOthers(
         {
             var version1 = await versionTask1;
             var version2 = await versionTask2;
+            ArgumentNullException.ThrowIfNull(version1);
+            ArgumentNullException.ThrowIfNull(version2);
             version1.Names = [.. version1.Names.Select(n =>
             {
                 var name2 = version2.Names.FirstOrDefault(n2 => n2.Language.Name == n.Language.Name)
@@ -736,6 +766,10 @@ public class GenStaticOthers(
             GameVersion.VL => [pokeApiService.GetVersion(41)],
             GameVersion.ZA => [pokeApiService.GetVersion(47)],
             GameVersion.CP => [pokeApiService.GetVersion(49)],
+            GameVersion.WI => [],
+            GameVersion.WA => [],
+            GameVersion.FRX => [pokeApiService.GetVersion(10)],
+            GameVersion.LGX => [pokeApiService.GetVersion(11)],
             #endregion
 
             // The following values are not actually stored values in pk data,
@@ -818,6 +852,8 @@ public class GenStaticOthers(
             ],
             GameVersion.EFL => [.. GetPokeApiVersion(GameVersion.E), .. GetPokeApiVersion(GameVersion.FRLG)],
             #endregion
+
+            _ => throw new NotImplementedException($"GameVersion not handled, version={version}"),
         };
     }
 

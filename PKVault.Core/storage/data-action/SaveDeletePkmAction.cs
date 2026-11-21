@@ -16,7 +16,7 @@ public class SaveDeletePkmAction(
 
         async Task<DataActionPayload> act(string pkmId)
         {
-            var saveLoaders = savesLoadersService.GetLoaders(input.saveId);
+            var saveLoaders = savesLoadersService.GetLoadersRequired(input.saveId);
 
             var dto = saveLoaders.Pkms.GetDto(pkmId);
             if (dto == default)
@@ -25,15 +25,23 @@ public class SaveDeletePkmAction(
             }
 
             var attachedVariant = await pkmVariantLoader.GetEntityBySave(dto.SaveId, dto.IdBase);
+            var attachedSavePkms = saveLoaders.Pkms.GetDtosByIdBase(dto.IdBase);
+
             if (attachedVariant != null)
             {
-                attachedVariant.AttachedSaveId = null;
-                attachedVariant.AttachedSavePkmIdBase = null;
-                await pkmVariantLoader.UpdateEntity(attachedVariant);
+                if (attachedSavePkms.Count < 2)
+                {
+                    attachedVariant.AttachedSaveId = null;
+                    attachedVariant.AttachedSavePkmIdBase = null;
+                    await pkmVariantLoader.UpdateEntity(attachedVariant);
+                }
             }
 
             saveLoaders.Pkms.DeleteDto(pkmId);
             saveLoaders.Pkms.FlushParty();
+
+            foreach (var pkm in attachedSavePkms.Values)
+                flags.Saves.UseSave(input.saveId).SavePkms.Ids.Add(pkm.Id);
 
             return new(
                 type: DataActionType.SAVE_DELETE_PKM,

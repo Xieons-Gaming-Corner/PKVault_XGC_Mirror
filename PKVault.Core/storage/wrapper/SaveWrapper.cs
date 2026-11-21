@@ -52,6 +52,8 @@ public class SaveWrapper(SaveFile Save)
     public string PlayTimeString => Save.PlayTimeString;
     public int PlayTimeInSeconds => PlayedSeconds + PlayedMinutes * 60 + PlayedHours * 3600;
 
+    public PlayerBag CreateInventory() => Save.Inventory;
+
     #region Metadata & Limits
     public GameVersion Version => Save.Version;
     public bool ChecksumsValid => Save.ChecksumsValid;
@@ -221,11 +223,6 @@ public class SaveWrapper(SaveFile Save)
         }
 
         return (LanguageID)Save.Language;
-    }
-
-    public bool IsSpeciesAllowed(ushort species)
-    {
-        return species <= Save.MaxSpeciesID && Save.Personal.IsSpeciesInGame(species);
     }
 
     // public ImmutableSave Update(Action<SaveFile> mutator)

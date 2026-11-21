@@ -1,9 +1,13 @@
 import { Group, ThemeIcon } from '@mantine/core';
-import { BoxIcon, CalendarSyncIcon, ChevronsRight, Database, ImportIcon, LandmarkIcon, LinkIcon, MoveIcon, PenIcon, PlusCircleIcon, RefreshCcw, SortDescIcon, TrashIcon, UnlinkIcon } from 'lucide-react';
-import { DataActionType, EntityContext, type DataActionPayload } from '../../data/sdk/model';
-import { UIBallIcon } from '../../ui/icon/ui-ball-icon';
-import { SpeciesImg } from '../../img/species-img';
+import { BoxIcon, CalendarSyncIcon, ChevronsRight, CircleSmallIcon, Database, ImportIcon, LandmarkIcon, LinkIcon, MoveIcon, PenIcon, PlusCircleIcon, RefreshCcw, SortDescIcon, TrashIcon, UnlinkIcon } from 'lucide-react';
 import type React from 'react';
+import { DataActionType, EntityContext, GameVersion, type DataActionPayload } from '../../data/sdk/model';
+import { useSaveInfosGetAll } from '../../data/sdk/save-infos/save-infos.gen';
+import { ItemImg } from '../../img/item-img';
+import { SpeciesImg } from '../../img/species-img';
+import { UIBallIcon } from '../../ui/icon/ui-ball-icon';
+import { UIPokedexIcons } from '../../ui/pokedex/icons/ui-pokedex-icons';
+import { UIGameImg } from '../../ui/sprite-img/ui-game-img';
 import { switchUtil } from '../../util/switch-util';
 
 const ActionLabelMap = {
@@ -64,11 +68,12 @@ const ActionLabelMap = {
         </>;
     },
     CreateVariant: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+        const context = parameters[ 1 ] as EntityContext | undefined;
         const species = parameters[ 2 ];
 
         return <>
             {typeof species === 'number'
-                ? <SpeciesImg context={EntityContext.Gen9a} species={species} form={0} />
+                ? <SpeciesImg context={context ?? EntityContext.Gen9a} species={species} form={0} />
                 : <UIBallIcon />}
 
             <ThemeIcon variant='transparent' color='green' size='xs' fz='sm'>
@@ -94,6 +99,18 @@ const ActionLabelMap = {
             </ThemeIcon>}
         </>;
     },
+    MoveItem: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+        const item = Number(parameters[ 0 ]);
+        const version = parameters[ 1 ] as GameVersion;
+
+        return <>
+            <ItemImg item={item} version={version} />
+
+            <ThemeIcon variant='transparent' color='gray' size='xs' fz='sm'>
+                <MoveIcon />
+            </ThemeIcon>
+        </>;
+    },
     DetachPkm: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
         const species = parameters[ 2 ];
 
@@ -108,11 +125,12 @@ const ActionLabelMap = {
         </>;
     },
     EditPkmVariant: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+        const context = parameters[ 1 ] as EntityContext | undefined;
         const species = parameters[ 2 ];
 
         return <>
             {typeof species === 'number'
-                ? <SpeciesImg context={EntityContext.Gen9a} species={species} form={0} />
+                ? <SpeciesImg context={context ?? EntityContext.Gen9a} species={species} form={0} />
                 : <UIBallIcon />}
 
             <ThemeIcon variant='transparent' color='blue' size='xs' fz='sm'>
@@ -133,12 +151,27 @@ const ActionLabelMap = {
             </ThemeIcon>
         </>;
     },
-    DeletePkmVariant: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+    SetPkmVariantMain: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+        const context = parameters[ 1 ] as EntityContext | undefined;
         const species = parameters[ 2 ];
 
         return <>
             {typeof species === 'number'
-                ? <SpeciesImg context={EntityContext.Gen9a} species={species} form={0} />
+                ? <SpeciesImg context={context ?? EntityContext.Gen9a} species={species} form={0} />
+                : <UIBallIcon />}
+
+            <ThemeIcon variant='transparent' color='blue' size='xs' fz='sm'>
+                <CircleSmallIcon />
+            </ThemeIcon>
+        </>;
+    },
+    DeletePkmVariant: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+        const context = parameters[ 1 ] as EntityContext | undefined;
+        const species = parameters[ 2 ];
+
+        return <>
+            {typeof species === 'number'
+                ? <SpeciesImg context={context ?? EntityContext.Gen9a} species={species} form={0} />
                 : <UIBallIcon />}
 
             <ThemeIcon variant='transparent' color='red' size='xs' fz='sm'>
@@ -157,6 +190,19 @@ const ActionLabelMap = {
             <ThemeIcon variant='transparent' color='red' size='xs' fz='sm'>
                 <TrashIcon />
             </ThemeIcon>
+        </>;
+    },
+    PkmSynchronize: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
+        const saveId = Number(parameters[ 0 ]);
+        const save = useSaveInfosGetAll().data?.data[ saveId ];
+
+        return <>
+            {save && <UIGameImg
+                version={save.displayedVersion}
+                size={16}
+            />}
+
+            <UIPokedexIcons.Attached size='xs' fz='sm' needSynchronize />
         </>;
     },
     EvolvePkm: ({ parameters }: Pick<DataActionPayload, 'parameters'>) => {
@@ -220,9 +266,11 @@ export const ActionLabel: React.FC<DataActionPayload> = ({ type, parameters }) =
         [ DataActionType.DETACH_PKM_SAVE ]: ActionLabelMap.DetachPkm,
         [ DataActionType.EDIT_PKM_VERSION ]: ActionLabelMap.EditPkmVariant,
         [ DataActionType.EDIT_PKM_SAVE ]: ActionLabelMap.EditPkmSave,
+        [ DataActionType.MOVE_ITEM ]: ActionLabelMap.MoveItem,
+        [ DataActionType.SET_PKM_VERSION_MAIN ]: ActionLabelMap.SetPkmVariantMain,
         [ DataActionType.DELETE_PKM_VERSION ]: ActionLabelMap.DeletePkmVariant,
         [ DataActionType.SAVE_DELETE_PKM ]: ActionLabelMap.DeletePkmSave,
-        [ DataActionType.PKM_SYNCHRONIZE ]: () => null,
+        [ DataActionType.PKM_SYNCHRONIZE ]: ActionLabelMap.PkmSynchronize,
         [ DataActionType.EVOLVE_PKM ]: ActionLabelMap.EvolvePkm,
 
         [ DataActionType.SORT_PKM ]: ActionLabelMap.SortBox,

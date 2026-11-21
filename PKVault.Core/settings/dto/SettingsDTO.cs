@@ -12,12 +12,21 @@ public record SettingsDTO(
     string AppDirectory,
     string SettingsPath,
     string UserId,
-    bool CanUpdateSettings,
-    bool CanScanSaves,
-    bool DemoMode,
-    SettingsMutableDTO SettingsMutable
+    SettingsMutableDTO SettingsMutable,
+    bool IsDesktop = false,
+    string? UpdateUrl = null,
+    bool CanUpdateSettings = false,
+    bool CanScanSaves = false,
+    bool CanUploadSaves = false,
+    bool CanDeleteSaves = false,
+    bool CanCreateBackup = false,
+    bool CanOpenFolder = false,
+    bool CanUseDesktopFileExplorer = false,
+    bool DemoMode = false
 )
 {
+    public static bool IsScriptsContext { get; set; }
+
     public string SavesUploadsPath => "./saves-uploads/";
 
     public string GetStoragePath() => NormalizeSafePath(SettingsMutable.STORAGE_PATH);
@@ -31,6 +40,8 @@ public record SettingsDTO(
 
     public string GetLanguageOrDefault()
     {
+        if (IsScriptsContext)
+            return SettingsService.DefaultLanguage;
         return SettingsMutable.LANGUAGE ?? SettingsService.DefaultLanguage;
     }
 
@@ -52,7 +63,7 @@ public record SettingsDTO(
     }
 
     private static string NormalizeSafePath(string path) => MatcherUtil.NormalizePath(Path.Combine(
-        SettingsService.GetAppDirectory(),
+        Directory.GetCurrentDirectory(),
         path
     ));
 }
@@ -78,6 +89,7 @@ public enum RuntimeSystem
     LINUX,
     STEAMDECK,
     MACOS,
+    ANDROID,
 }
 
 public enum SourceProvider

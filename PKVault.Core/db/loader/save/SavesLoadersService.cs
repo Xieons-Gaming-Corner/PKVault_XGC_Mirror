@@ -7,6 +7,7 @@ namespace PKVault.Core;
 public interface ISavesLoadersService
 {
     public SaveLoadersRecord[] GetAllLoaders();
+    public SaveLoadersRecord GetLoadersRequired(uint saveId);
     public SaveLoadersRecord? GetLoaders(uint saveId);
 
     public IDictionary<uint, SaveWrapper> GetSaveById();
@@ -28,7 +29,8 @@ public class SavesLoadersService(
     IFileIOService fileIOService,
     ISettingsService settingsService,
     IPkmConvertService pkmConvertService,
-    StaticDataService staticDataService
+    StaticDataService staticDataService,
+    PKMConverterUtils pkmConverterUtils
 ) : ISavesLoadersService
 {
     private IDictionary<uint, SaveLoadersRecord> Loaders = new Dictionary<uint, SaveLoadersRecord>();
@@ -44,6 +46,13 @@ public class SavesLoadersService(
         return [.. Loaders.Values];
     }
 
+    public SaveLoadersRecord GetLoadersRequired(uint saveId)
+    {
+        var saveLoaders = GetLoaders(saveId);
+        ArgumentNullException.ThrowIfNull(saveLoaders, $"SaveLoaders not found with saveId={saveId}");
+        return saveLoaders;
+    }
+
     public SaveLoadersRecord? GetLoaders(uint saveId)
     {
         if (!Initialized)
@@ -53,6 +62,7 @@ public class SavesLoadersService(
 
         if (!Loaders.TryGetValue(saveId, out var loaders))
         {
+            Log.Warning($"Save loaders not found for saveId={saveId}");
             return null;
         }
         return loaders;
@@ -117,7 +127,7 @@ public class SavesLoadersService(
 
         foreach (var loaders in Loaders.Values.ToList())
         {
-            if (loaders.Pkms.HasWritten || loaders.Boxes.HasWritten)
+            if (loaders.HasWritten)
             {
                 tasks.Add(
                     WriteSave(loaders.Save)
@@ -130,6 +140,9 @@ public class SavesLoadersService(
 
     private async Task WriteSave(SaveWrapper save)
     {
+        if (save.GetSave() is IStorageCleanup scSave)
+            scSave.FixStoragePreWrite();
+
         var path = save.Metadata.FilePath;
         ArgumentException.ThrowIfNullOrWhiteSpace(path);
         await fileIOService.WriteBytes(path, save.GetSaveFileData());
@@ -302,12 +315,13 @@ public class SavesLoadersService(
 
         var boxLoader = new SaveBoxLoader(save, sp);
         var pkmLoader = new SavePkmLoader(pkmConvertService, language, evolves, save);
+        var inventoryLoader = new SaveInventoryLoader(save, settingsService, pkmConverterUtils);
 
         duplicates ??= loaders.TryGetValue(save.Id, out var existingSave)
             ? existingSave.Duplicates
             : [];
 
-        loaders[save.Id] = new(save, boxLoader, pkmLoader, duplicates);
+        loaders[save.Id] = new(save, boxLoader, pkmLoader, inventoryLoader, duplicates);
     }
 
     public async Task<SaveWrapper> CheckSaveData(byte[] fileBytes, string filename, bool overwrite)
@@ -360,5 +374,9 @@ public record SaveLoadersRecord(
     SaveWrapper Save,
     ISaveBoxLoader Boxes,
     ISavePkmLoader Pkms,
+    ISaveInventoryLoader Inventory,
     SaveInfosDTO[] Duplicates
-);
+)
+{
+    public bool HasWritten => Boxes.HasWritten || Pkms.HasWritten || Inventory.HasWritten;
+};

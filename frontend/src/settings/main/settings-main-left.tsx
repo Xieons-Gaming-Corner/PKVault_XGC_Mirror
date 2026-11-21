@@ -1,17 +1,21 @@
 import { Card, SimpleGrid } from '@mantine/core';
-import { FileIcon, FolderIcon, GlobeIcon, PenOffIcon, ShieldOff } from 'lucide-react';
-import type React from "react";
+import { FileIcon, FolderIcon, Gamepad2Icon, GlobeIcon, PenOffIcon, ShieldOffIcon } from 'lucide-react';
+import React from "react";
 import { useFormContext, useWatch } from 'react-hook-form';
 import { RuntimeSystem } from '../../data/sdk/model';
 import { useSettingsGet } from '../../data/sdk/settings/settings.gen';
 import type { SettingsFormData } from '../../pages/settings';
 import { languages, useTranslate } from '../../translate/i18n';
+import { UIPathButton } from '../../ui/form/globs-input/ui-path-button';
 import { UISelect } from '../../ui/form/select/ui-select';
 import { UISwitch } from '../../ui/form/switch/ui-switch';
 import { UIInputLabel } from '../../ui/form/ui-input-label';
 import { UIBallIcon } from '../../ui/icon/ui-ball-icon';
+import { useControlsContext } from '../../ui/interaction/controls/provider/use-controls-context';
 import { UIPathLine } from '../../ui/path/ui-path-line';
+import { UIPopover } from '../../ui/popover/ui-popover';
 import { switchUtil } from '../../util/switch-util';
+import { SettingsAndroidDirectory } from './settings-android-directory';
 
 export const SettingsMainLeft: React.FC = () => {
     const { t } = useTranslate();
@@ -22,6 +26,10 @@ export const SettingsMainLeft: React.FC = () => {
     const form = useFormContext<SettingsFormData>();
 
     const [ language ] = useWatch({ control: form.control, name: [ 'language' ] });
+
+    const { enableGamepad, toggleGamepad } = useControlsContext();
+
+    const appDirectory = settings?.appDirectory ?? '-';
 
     return <>
         <Card>
@@ -34,11 +42,26 @@ export const SettingsMainLeft: React.FC = () => {
                     [ RuntimeSystem.LINUX ]: t('settings.system.linux'),
                     [ RuntimeSystem.STEAMDECK ]: t('settings.system.steamdeck'),
                     [ RuntimeSystem.MACOS ]: t('settings.system.macos'),
+                    [ RuntimeSystem.ANDROID ]: t('settings.system.android'),
                 })}</div>
+
                 <UIInputLabel leftSection={<img src="https://projectpokemon.org/favicon.ico" />} label='PKHeX' />
                 <div>{settings?.pkhexVersion}</div>
+
                 <UIInputLabel leftSection={<FolderIcon />} label={t('settings.relative-paths')} />
-                <UIPathLine>{settings?.appDirectory ?? '-'}</UIPathLine>
+                {settings?.runtimeSystem === RuntimeSystem.ANDROID
+                    ? <UIPopover
+                        dropdown={<SettingsAndroidDirectory />}
+                    >
+                        <UIPathButton
+                            value={appDirectory}
+                            pkvaultPath={appDirectory}
+                            uploadPath={settings?.savesUploadsPath ?? '-'}
+                            icons={null}
+                        />
+                    </UIPopover>
+                    : <UIPathLine>{appDirectory}</UIPathLine>}
+
                 <UIInputLabel leftSection={<FileIcon />} label={t('settings.form.config')} />
                 <UIPathLine>{settings?.settingsPath ?? '-'}</UIPathLine>
             </SimpleGrid>
@@ -54,13 +77,14 @@ export const SettingsMainLeft: React.FC = () => {
                     data={Object.entries(languages)
                         .map(([ value, label ]) => ({ value, label }))}
                     onChange={value => value && form.setValue('language', value, { shouldDirty: true })}
+                    disabled={!settings?.canUpdateSettings}
                     scrollAreaProps={{ type: 'always' }}
                 />
             </SimpleGrid>
         </Card>
 
         <Card>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={2} spacing={0} verticalSpacing='md'>
                 <UIInputLabel leftSection={<PenOffIcon />} forInput='hidE_CHEATS'
                     label={t('settings.form.hide-cheats')}
                     description={t('settings.form.hide-cheats.description')}
@@ -73,7 +97,7 @@ export const SettingsMainLeft: React.FC = () => {
                     my='sm'
                 />
 
-                <UIInputLabel leftSection={<ShieldOff />} forInput='skiP_LEGALITY_CHECKS'
+                <UIInputLabel leftSection={<ShieldOffIcon />} forInput='skiP_LEGALITY_CHECKS'
                     label={t('settings.form.skip-legality')}
                     description={t('settings.form.skip-legality.description')}
                 />
@@ -81,6 +105,19 @@ export const SettingsMainLeft: React.FC = () => {
                     {...form.register('skiP_LEGALITY_CHECKS')}
                     defaultChecked={form.getValues('skiP_LEGALITY_CHECKS')}
                     controlLabel={t('settings.form.skip-legality')}
+                    ml='auto'
+                    mt='sm'
+                />
+
+                <UIInputLabel leftSection={<Gamepad2Icon />} forInput='enable-gamepad'
+                    label={t('settings.form.enable-gamepad')}
+                    description={t('settings.form.enable-gamepad.description')}
+                />
+                <UISwitch
+                    name='enable-gamepad'
+                    checked={enableGamepad}
+                    onChange={toggleGamepad}
+                    controlLabel={t('settings.form.enable-gamepad')}
                     ml='auto'
                     mt='sm'
                 />

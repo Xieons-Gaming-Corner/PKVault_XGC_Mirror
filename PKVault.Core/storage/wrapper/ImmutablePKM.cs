@@ -159,7 +159,7 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
         : null;
     public Dictionary<string, byte>? Ribbons => Format > 2 && Pkm is not PB7
         ? RibbonInfo.GetRibbonInfo(Pkm)
-            .Where(ribbon => ribbon.HasRibbon)
+            .Where(ribbon => ribbon.HasRibbon || (ribbon.Type == RibbonValueType.Byte && ribbon.RibbonCount > 0))
             .ToDictionary(
                 p => p.Name,
                 p => p.Type == RibbonValueType.Byte
@@ -263,7 +263,7 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
     public string GetOriginMetLocation(string language) => GameInfo.GetStrings(language)
         .GetLocationName(Pkm.WasEgg, Pkm.MetLocation, Pkm.Format, Pkm.Generation, Pkm.Version);
 
-    public int HeldItem => Pkm.HeldItem;
+    public ushort HeldItem => (ushort)Pkm.HeldItem;
 
     public int GetConvertedHeldItem() => ItemConverter.GetItemForFormat(HeldItem, Context, StaticDataService.LAST_ENTITY_CONTEXT);
 
@@ -276,7 +276,24 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
     }
 
     // Data used here is considered to be mutable over pkm lifetime
-    public string DynamicChecksum => $"{Species}.{Form}.{Nickname}.{CurrentLevel}.{EXP}.{string.Join("-", EVs)}.{string.Join("-", Moves)}.{HeldItem}";
+    public string DynamicChecksum => $"{Species}.{Form}.{GetComparableNickname(Pkm)}.{CurrentLevel}.{EXP}.{string.Join("-", EVs)}.{string.Join("-", Moves)}.{HeldItem}";
+
+    public static string GetComparableNickname(PKM pkm)
+    {
+        if (!pkm.IsNicknamed)
+            return "";
+
+        // some characters may change over generations
+        // eg: G5/CH'DING G6/CH’DING G1/CH DING
+        // https://github.com/Chnapy/PKVault/issues/205
+        return pkm.Nickname.Replace('’', '\'').Replace(' ', '\'');
+    }
+
+    public bool CanHeldItem => Pkm.Format >= 2
+        && Pkm is not PB7
+        && Pkm is not PA8
+        && IsEnabled
+        && !Pkm.IsEgg;
 
     public bool IsSpeciesValid => Species > 0 && Species < GameInfo.Strings.Species.Count;
 
@@ -295,27 +312,9 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
      */
     public string GetPKMIdBase(Dictionary<ushort, StaticEvolve> evolves, int boxId = (int)BoxType.Box)
     {
-        ushort GetBaseSpecies(ushort species)
-        {
-            if (species == 0
-                // specific case with Shedinja which is created with Ninjask exact same data
-                || species == (ushort)PKHeX.Core.Species.Shedinja
-            )
-            {
-                return species;
-            }
-
-            var previousSpecies = evolves[species].PreviousSpecies;
-            if (previousSpecies != null)
-            {
-                return GetBaseSpecies((ushort)previousSpecies);
-            }
-            return species;
-        }
-
         var clone = Update(clone =>
         {
-            clone.Species = GetBaseSpecies(Pkm.Species);
+            clone.Species = EvolveUtil.GetBaseSpecies(evolves, Pkm.Species);
             clone.Form = 0;
             if (GetMutablePkm() is GBPKM gbpkm && clone is GBPKM gbclone)
             {
@@ -452,7 +451,8 @@ public class ImmutablePKM(PKM Pkm, PKMLoadError? loadError = null)
                     MarkingColor.None => MarkingColorUniversal.NotMarked,
                     MarkingColor.Blue => MarkingColorUniversal.MarkedBlue,
                     MarkingColor.Pink => MarkingColorUniversal.MarkedPink,
-                    _ => throw new NotImplementedException(),
+                    // may happen when marking is illegal
+                    _ => MarkingColorUniversal.Marked,
                 });
             }
             return [.. markings];
